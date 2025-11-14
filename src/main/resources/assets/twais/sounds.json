@@ -1,0 +1,10 @@
+{
+  "snore": {
+    "sounds": [
+      {
+        "name": "twais:snore",
+        "stream": false
+      }
+    ]
+  }
+}

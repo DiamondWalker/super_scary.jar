@@ -1,0 +1,8 @@
+{
+  "death.attack.calculation": "%1$s failed Math class",
+  "item.twais.inventory_bug": "Inventory Bug",
+
+  "twais.configuration.title": "The Working-As-Intended Script Configs",
+  "twais.configuration.section.twais.common.toml": "The Working-As-Intended Script Configs",
+  "twais.configuration.section.twais.common.toml.title": "The Working-As-Intended Script Configs"
+}
