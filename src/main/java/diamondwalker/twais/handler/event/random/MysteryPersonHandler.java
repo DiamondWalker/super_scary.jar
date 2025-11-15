@@ -24,13 +24,11 @@ public class MysteryPersonHandler {
             "It's all your fault.",
             "I'm coming.",
             "You skin is so soft. I can't wait to see it rip.",
-            "LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN LET ME IN",
             "Help.",
             "Please.",
             "You're running out of time.",
             "Give up.",
             "Do you feel safe?",
-            "You are in danger.",
             "You forgot to flush the last time you went. I have fished your turd out of the toilet and I can't wait to use it on you."
     };
 
