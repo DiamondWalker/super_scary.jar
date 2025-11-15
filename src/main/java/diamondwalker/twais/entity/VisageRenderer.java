@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -32,15 +33,13 @@ public class VisageRenderer extends EntityRenderer<EntityVisage> {
 
     @Override
     public void render(EntityVisage p_114080_, float p_114081_, float p_114082_, PoseStack p_114083_, MultiBufferSource p_114084_, int p_114085_) {
-        // FIXME: for some reason the texture is mirrored?
         int frame = (p_114080_.tickCount / TICKS_PER_FRAME) % FRAMES;
         float u1 = frame * (1.0f / FRAMES);
         float u2 = (frame + 1) * (1.0f / FRAMES);
 
         p_114083_.pushPose();
-        p_114083_.scale(2.0F, 2.0F, 2.0F);
+        p_114083_.scale(SCALE, SCALE, SCALE);
         p_114083_.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        p_114083_.mulPose(Axis.YP.rotationDegrees(180.0F));
         PoseStack.Pose pose = p_114083_.last();
         VertexConsumer vertexconsumer = p_114084_.getBuffer(RENDER_TYPE);
         vertex(vertexconsumer, pose, p_114085_, -1.0f, -1.0f + 0.7f, u1, 1, p_114080_.transparency);
@@ -52,7 +51,7 @@ public class VisageRenderer extends EntityRenderer<EntityVisage> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityVisage p_114482_) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull EntityVisage p_114482_) {
         return TEXTURE_LOCATION;
     }
 
