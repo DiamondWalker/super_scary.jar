@@ -15,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
+import java.util.Random;
+
 public class VisageRenderer extends EntityRenderer<EntityVisage> {
     private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "textures/entity/visage.png");
     private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
@@ -32,8 +34,8 @@ public class VisageRenderer extends EntityRenderer<EntityVisage> {
     }
 
     @Override
-    public void render(EntityVisage p_114080_, float p_114081_, float p_114082_, PoseStack p_114083_, MultiBufferSource p_114084_, int p_114085_) {
-        int frame = (p_114080_.tickCount / TICKS_PER_FRAME) % FRAMES;
+    public void render(EntityVisage entity, float p_114081_, float p_114082_, PoseStack p_114083_, MultiBufferSource p_114084_, int p_114085_) {
+        int frame = (entity.tickCount / TICKS_PER_FRAME) % FRAMES;
         float u1 = frame * (1.0f / FRAMES);
         float u2 = (frame + 1) * (1.0f / FRAMES);
 
@@ -42,12 +44,12 @@ public class VisageRenderer extends EntityRenderer<EntityVisage> {
         p_114083_.mulPose(this.entityRenderDispatcher.cameraOrientation());
         PoseStack.Pose pose = p_114083_.last();
         VertexConsumer vertexconsumer = p_114084_.getBuffer(RENDER_TYPE);
-        vertex(vertexconsumer, pose, p_114085_, -1.0f, -1.0f + 0.7f, u1, 1, p_114080_.transparency);
-        vertex(vertexconsumer, pose, p_114085_, 1.0f, -1.0f + 0.7f, u2, 1, p_114080_.transparency);
-        vertex(vertexconsumer, pose, p_114085_, 1.0f, 1.0f + 0.7f, u2, 0, p_114080_.transparency);
-        vertex(vertexconsumer, pose, p_114085_, -1.0f, 1.0f + 0.7f, u1, 0, p_114080_.transparency);
+        vertex(vertexconsumer, pose, p_114085_, -1.0f, -1.0f + 0.7f, u1, 1, 1.0f);
+        vertex(vertexconsumer, pose, p_114085_, 1.0f, -1.0f + 0.7f, u2, 1, 1.0f);
+        vertex(vertexconsumer, pose, p_114085_, 1.0f, 1.0f + 0.7f, u2, 0, 1.0f);
+        vertex(vertexconsumer, pose, p_114085_, -1.0f, 1.0f + 0.7f, u1, 0, 1.0f);
         p_114083_.popPose();
-        super.render(p_114080_, p_114081_, p_114082_, p_114083_, p_114084_, p_114085_);
+        super.render(entity, p_114081_, p_114082_, p_114083_, p_114084_, p_114085_);
     }
 
     @Override

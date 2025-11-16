@@ -22,6 +22,7 @@ public class TWAISEntities {
             )
             .sized(1.0f, 1.0f)
             .eyeHeight(0.5f)
+            .fireImmune()
             .build("visage")
     );
 
