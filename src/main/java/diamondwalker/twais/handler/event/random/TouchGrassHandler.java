@@ -18,7 +18,7 @@ import java.util.Collections;
 @EventBusSubscriber
 public class TouchGrassHandler {
     @SubscribeEvent
-    public static void handleServerTick(ServerTickEvent.Post event) {
+    private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
 

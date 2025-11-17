@@ -15,7 +15,7 @@ public class ShaderHandler {
     private static final PostProcessingShader COLOR_SHADER = new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "shaders/post/color.json"), EnumShaderLayer.GUI, true);
 
     @SubscribeEvent
-    public static void onOpenWorld(ClientPlayerNetworkEvent.LoggingIn event) {
+    private static void onOpenWorld(ClientPlayerNetworkEvent.LoggingIn event) {
         CREEPY_SHADER.activate();
     }
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 @EventBusSubscriber
 public class InventoryBugHandler {
     @SubscribeEvent
-    public static void handlePlayerTick(PlayerTickEvent.Post event) {
+    private static void handlePlayerTick(PlayerTickEvent.Post event) {
         if (!event.getEntity().isLocalPlayer()) {
             if (event.getEntity().tickCount % 8 == 0) {
                 Inventory inventory = event.getEntity().getInventory();
@@ -43,7 +43,7 @@ public class InventoryBugHandler {
     }
 
     @SubscribeEvent
-    public static void handleBlockDrop(BlockDropsEvent event) {
+    private static void handleBlockDrop(BlockDropsEvent event) {
         if (event.getState().is(Blocks.STONE) || event.getState().is(Blocks.DEEPSLATE)) {
             if (event.getBreaker() instanceof Player && event.getBreaker().getRandom().nextInt(125) == 0) {
                 Block.popResource(event.getLevel(), event.getPos(), new ItemStack(TWAISItems.INVENTORY_BUG.asItem()));
@@ -52,7 +52,7 @@ public class InventoryBugHandler {
     }
 
     @SubscribeEvent
-    public static void handleItemPickup(ItemEntityPickupEvent.Post event) {
+    private static void handleItemPickup(ItemEntityPickupEvent.Post event) {
         Item bugItem = TWAISItems.INVENTORY_BUG.asItem();
         if (!event.getPlayer().isLocalPlayer() && event.getOriginalStack().is(bugItem)) {
             if (event.getPlayer().getInventory().countItem(bugItem) <= 1) {

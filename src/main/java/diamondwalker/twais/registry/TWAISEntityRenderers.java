@@ -8,7 +8,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 @EventBusSubscriber
 public class TWAISEntityRenderers {
     @SubscribeEvent
-    public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
+    private static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(TWAISEntities.VISAGE.get(), VisageRenderer::new);
     }
 }

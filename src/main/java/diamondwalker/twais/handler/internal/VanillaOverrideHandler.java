@@ -12,7 +12,7 @@ public class VanillaOverrideHandler {
     private static boolean changed = false;
 
     @SubscribeEvent
-    public static void handleMenuOpen(ScreenEvent.Opening event) {
+    private static void handleMenuOpen(ScreenEvent.Opening event) {
         if (event.getNewScreen() instanceof TitleScreen title && !changed) {
             changed = true;
             event.setNewScreen(new NoticeScreen(title));
@@ -20,7 +20,7 @@ public class VanillaOverrideHandler {
     }
 
     @SubscribeEvent
-    public static void stopMusic(SelectMusicEvent event) {
+    private static void stopMusic(SelectMusicEvent event) {
         event.setMusic(null);
     }
 }

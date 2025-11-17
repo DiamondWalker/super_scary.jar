@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 @EventBusSubscriber
 public class JoinAndLeaveHandler {
     @SubscribeEvent
-    public static void handleServerTick(ServerTickEvent.Post event) {
+    private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
 

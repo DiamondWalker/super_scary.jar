@@ -33,7 +33,7 @@ public class MysteryPersonHandler {
     };
 
     @SubscribeEvent
-    public static void handleServerTick(ServerTickEvent.Post event) {
+    private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
 

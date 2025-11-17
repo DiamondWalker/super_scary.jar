@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 @EventBusSubscriber
 public class FriendHandler {
     @SubscribeEvent
-    public static void handleServerTick(ServerTickEvent.Post event) {
+    private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
         if (!data.friend.friendJoined && data.progression.getTimeInWorld() == 30_000L) {
@@ -31,7 +31,7 @@ public class FriendHandler {
     }
 
     @SubscribeEvent
-    public static void handlePlayerChat(ServerChatEvent event) {
+    private static void handlePlayerChat(ServerChatEvent event) {
         String message = event.getMessage().getString();
         MinecraftServer server = event.getPlayer().getServer();
         if (message.length() >= 6 && message.substring(0, 6).equalsIgnoreCase("friend") && WorldData.get(server).friend.friendJoined) {

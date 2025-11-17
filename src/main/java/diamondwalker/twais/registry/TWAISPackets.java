@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 @EventBusSubscriber
 public class TWAISPackets {
     @SubscribeEvent
-    public static void register(RegisterPayloadHandlersEvent event) {
+    private static void register(RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
         registrar.playToClient(StaticScreenPacket.TYPE, StaticScreenPacket.CODEC, StaticScreenPacket::handle);
         registrar.playToClient(ScreenColorShaderPacket.TYPE, ScreenColorShaderPacket.CODEC, ScreenColorShaderPacket::handle);

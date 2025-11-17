@@ -20,9 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @EventBusSubscriber
 public class CalculationHandler {
-
     @SubscribeEvent
-    public static void handleServerTick(ServerTickEvent.Post event) {
+    private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
 
@@ -90,7 +89,7 @@ public class CalculationHandler {
     }
 
     @SubscribeEvent
-    public static void handlePlayerChat(ServerChatEvent event) {
+    private static void handlePlayerChat(ServerChatEvent event) {
         WorldData data = WorldData.get(event.getPlayer().server);
         if (data.calculation.expectedAnswer != null && data.calculation.givenAnswer == null && data.scripts.hasLock("calculation")) {
             String message = event.getMessage().getString();

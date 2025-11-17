@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientResetHandler {
     @SubscribeEvent
-    public static void onCloseWorld(ClientPlayerNetworkEvent.LoggingOut event) {
+    private static void onCloseWorld(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientData.reset();
         ShaderManager.removeClientWorldShaders();
     }

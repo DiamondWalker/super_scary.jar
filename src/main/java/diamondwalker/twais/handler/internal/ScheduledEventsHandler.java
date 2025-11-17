@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 @EventBusSubscriber
 public class ScheduledEventsHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void handleServerTick(ServerTickEvent.Post event) {
+    private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
 

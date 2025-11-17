@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 @EventBusSubscriber
 public class LightningHandler {
     @SubscribeEvent
-    public static void handleServerTick(ServerTickEvent.Post event) {
+    private static void handleServerTick(ServerTickEvent.Post event) {
         if (!WorldData.get(event.getServer()).areEventsOnCooldown()) {
             for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
                 ServerLevel level = player.serverLevel();

@@ -29,7 +29,7 @@ public class CorruptedEntityStartPhaseHandler {
     private static int friendState = 0; // 0 = nothing, 1 = he'll tell you to shut up, 2 = he already told you to shut up
 
     @SubscribeEvent
-    public static void handleServerTick(ServerTickEvent.Post event) {
+    private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
         if (!data.progression.hasBeenAngered() && data.progression.getTimeInWorld() > 72_000L && !data.scripts.hasLock("corrupted_entity")) {
@@ -113,7 +113,7 @@ public class CorruptedEntityStartPhaseHandler {
     }
 
     @SubscribeEvent
-    public static void handlePlayerBlockBreak(BlockEvent.BreakEvent event) {
+    private static void handlePlayerBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getState().is(Blocks.COBBLESTONE) && event.getPlayer() instanceof ServerPlayer player) {
             WorldData data = WorldData.get(player.getServer());
             if (data.corruptedEntityBuilds.isBuildAt(event.getPos())) {
@@ -299,7 +299,7 @@ public class CorruptedEntityStartPhaseHandler {
     }
 
     @SubscribeEvent
-    public static void handlePlayerChat(ServerChatEvent event) {
+    private static void handlePlayerChat(ServerChatEvent event) {
         if (friendState == 1) {
             MinecraftServer server = event.getPlayer().getServer();
 
