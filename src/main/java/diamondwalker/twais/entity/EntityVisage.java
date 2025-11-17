@@ -1,12 +1,20 @@
 package diamondwalker.twais.entity;
 
+import diamondwalker.twais.handler.feature.VisageHandler;
 import diamondwalker.twais.network.ScreenFlashPacket;
 import diamondwalker.twais.util.EntityUtil;
+import diamondwalker.twais.util.ScriptBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
+import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +28,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class EntityVisage extends Entity {
     public static final EntityDataAccessor<Integer> CHASE_TICKS = SynchedEntityData.defineId(EntityVisage.class, EntityDataSerializers.INT);
@@ -72,6 +81,15 @@ public class EntityVisage extends Entity {
         Vec3 thisPos = this.position().add(0, this.getBbHeight() / 2, 0);
         setDeltaMovement(targetPos.subtract(thisPos).normalize().scale(speed));
         this.setPos(this.position().add(getDeltaMovement()));
+
+        if (!level().isClientSide() && this.getBoundingBox().intersects(player.getBoundingBox())) {
+            player.hurt(this.damageSources().generic(), 4);
+            if (player.isDeadOrDying()) {
+                // TODO: come up with something scarier that should happen here
+                //((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("No way back")));
+                VisageHandler.eraseWorld(getServer());
+            }
+        }
     }
 
     private void setChaseTicks(int chaseTicks) {
