@@ -23,7 +23,7 @@ public class HealthChangeHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(86_000) == 0) {
+            if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     if (!isInDanger(player)) {
                         player.setHealth(Math.max(1, player.getMaxHealth() - player.getHealth()));

@@ -35,7 +35,7 @@ public class CorruptedEntityStartPhaseHandler {
         if (!data.progression.hasBeenAngered() && data.progression.getTimeInWorld() > 72_000L && !data.scripts.hasLock("corrupted_entity")) {
             ServerLevel level = server.overworld();
 
-            if (level.getRandom().nextInt(40 * 60 * 20) == 0) { // roughly every 40 minutes
+            if (level.getRandom().nextInt(WorldData.COMMON_CHANCE) == 0) {
                 ArrayList<LevelChunk> possibleChunks = new ArrayList<>();
 
                 CHUNK_LOOP: for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {

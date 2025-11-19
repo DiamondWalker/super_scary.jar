@@ -1,9 +1,12 @@
 package diamondwalker.twais.handler.internal;
 
+import diamondwalker.twais.OverworldSpecialEffects;
 import diamondwalker.twais.gui.screen.NoticeScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.SelectMusicEvent;
 
@@ -17,6 +20,11 @@ public class VanillaOverrideHandler {
             changed = true;
             event.setNewScreen(new NoticeScreen(title));
         }
+    }
+
+    @SubscribeEvent
+    private static void overworldRendering(RegisterDimensionSpecialEffectsEvent event) {
+        event.register(BuiltinDimensionTypes.OVERWORLD_EFFECTS, new OverworldSpecialEffects());
     }
 
     @SubscribeEvent

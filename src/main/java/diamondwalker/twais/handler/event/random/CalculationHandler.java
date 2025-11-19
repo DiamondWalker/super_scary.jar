@@ -27,7 +27,7 @@ public class CalculationHandler {
 
         if (!data.areEventsOnCooldown() && !data.scripts.hasLock("calculation") && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(39_000) == 0) {
+            if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
                 data.calculation.questionCount++;
                 boolean impossible = data.calculation.questionCount >= 5;
 

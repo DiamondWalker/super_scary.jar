@@ -19,7 +19,7 @@ public class JoinAndLeaveHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(280_000) == 0) {
+            if (random.nextInt(WorldData.RARE_CHANCE) == 0) {
                 ScriptBuilder builder = new ScriptBuilder(server, "join-leave");
 
                 Component join = ChatUtil.getJoinMessage("");

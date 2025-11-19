@@ -39,7 +39,7 @@ public class MysteryPersonHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(30_000) == 0) {
+            if (random.nextInt(WorldData.COMMON_CHANCE) == 0) {
                 server.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(getName(random), getMessage(random)), false);
                 data.eventCooldown();
             }

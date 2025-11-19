@@ -1,18 +1,16 @@
 package diamondwalker.twais.handler.event.random;
 
 import diamondwalker.twais.data.server.WorldData;
-import diamondwalker.twais.registry.TWAISSounds;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.food.FoodData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 @EventBusSubscriber
-public class SnoreHandler {
+public class FireHandler {
     @SubscribeEvent
     private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
@@ -20,11 +18,13 @@ public class SnoreHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.EXTRA_RARE_CHANCE) == 0) {
+            if (random.nextInt(WorldData.COMMON_CHANCE) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                    player.connection.send(new ClientboundSoundPacket(TWAISSounds.SNORE, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 64.0F, 1.0F, random.nextLong()));
+                    if (!player.isOnFire() && player.isAlive()) {
+                        player.setRemainingFireTicks(20 + random.nextInt(40 + 1));
+                        data.eventCooldown();
+                    }
                 }
-                data.eventCooldown();
             }
         }
     }

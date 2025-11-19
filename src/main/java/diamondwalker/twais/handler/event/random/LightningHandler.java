@@ -24,7 +24,7 @@ public class LightningHandler {
                 ServerLevel level = player.serverLevel();
                 if (level.dimension() == Level.OVERWORLD) {
                     RandomSource random = player.getRandom();
-                    if (random.nextInt(50_000) == 0) {
+                    if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
                         if (!level.isThundering()) {
                             BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, player.blockPosition());
                             if (pos.getY() <= player.getBlockY()) {
