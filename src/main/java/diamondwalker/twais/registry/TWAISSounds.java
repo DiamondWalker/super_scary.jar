@@ -12,6 +12,10 @@ public class TWAISSounds {
 
     public static final Holder<SoundEvent> SNORE = SOUNDS.register("snore", SoundEvent::createVariableRangeEvent);
 
+    public static final Holder<SoundEvent> VISAGE_SPAWN = SOUNDS.register("visage_spawn", SoundEvent::createVariableRangeEvent);
+    public static final Holder<SoundEvent> VISAGE_CHASE = SOUNDS.register("visage_chase", SoundEvent::createVariableRangeEvent);
+    public static final Holder<SoundEvent> VISAGE_TELEPORT = SOUNDS.register("visage_teleport", SoundEvent::createVariableRangeEvent);
+
     public static void register(IEventBus bus) {
         SOUNDS.register(bus);
     }

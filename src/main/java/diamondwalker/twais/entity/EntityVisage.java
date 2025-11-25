@@ -1,7 +1,9 @@
 package diamondwalker.twais.entity;
 
 import diamondwalker.twais.handler.feature.VisageHandler;
-import diamondwalker.twais.network.ScreenFlashPacket;
+import diamondwalker.twais.network.VisageFlashPacket;
+import diamondwalker.twais.registry.TWAISDataAttachments;
+import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.EntityUtil;
 import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.client.Minecraft;
@@ -56,10 +58,10 @@ public class EntityVisage extends Entity {
 
             if (teleportCooldown > 0) {
                 teleportCooldown--;
-            } else if (tickCount % 5 == 0 && player instanceof ServerPlayer serverPlayer) {
+            } else if (tickCount % 4 == 0 && player instanceof ServerPlayer serverPlayer) {
                 if (EntityUtil.isPlayerLookingAt(serverPlayer, this)) {
                     teleportCounter++;
-                    PacketDistributor.sendToPlayer(serverPlayer, new ScreenFlashPacket(0.0f, 0.0f, 0.0f));
+                    PacketDistributor.sendToPlayer(serverPlayer, new VisageFlashPacket(false));
                     if (teleportCounter >= 4) {
                         // teleport
                         teleportCounter = 0;
@@ -83,12 +85,20 @@ public class EntityVisage extends Entity {
         this.setPos(this.position().add(getDeltaMovement()));
 
         if (!level().isClientSide() && this.getBoundingBox().intersects(player.getBoundingBox())) {
-            player.hurt(this.damageSources().generic(), 4);
-            if (player.isDeadOrDying()) {
-                // TODO: come up with something scarier that should happen here
-                //((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("No way back")));
-                VisageHandler.eraseWorld(getServer());
+            if (player.hurt(this.damageSources().generic(), 4)) {
+                player.getData(TWAISDataAttachments.PLAYER).visageHealDisable = true;
+
+                if (player.isDeadOrDying()) {
+                    // TODO: improve the name fetching and add a config option
+                    String name = System.getProperty("user.name").split(" ")[0];
+                    ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("Stop hiding behind that screen, " + name + ".")));
+                    VisageHandler.eraseWorld(getServer());
+                }
             }
+        }
+
+        if (!level().isClientSide() && tickCount % 15 == 0) { // TODO: maybe this should loop better and be on the client side
+            this.playSound(TWAISSounds.VISAGE_CHASE.value(), 2.0f, 1.0f);
         }
     }
 

@@ -1,9 +1,6 @@
 package diamondwalker.twais;
 
-import diamondwalker.twais.registry.TWAISBlocks;
-import diamondwalker.twais.registry.TWAISEntities;
-import diamondwalker.twais.registry.TWAISItems;
-import diamondwalker.twais.registry.TWAISSounds;
+import diamondwalker.twais.registry.*;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -36,6 +33,7 @@ public class TWAIS {
         TWAISItems.register(modEventBus);
         TWAISEntities.register(modEventBus);
         TWAISSounds.register(modEventBus);
+        TWAISDataAttachments.register(modEventBus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

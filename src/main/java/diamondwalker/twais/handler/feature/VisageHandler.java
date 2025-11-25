@@ -1,8 +1,11 @@
 package diamondwalker.twais.handler.feature;
 
 import diamondwalker.twais.TWAIS;
+import diamondwalker.twais.data.entity.player.PlayerData;
+import diamondwalker.twais.entity.EntityVisage;
 import diamondwalker.twais.network.ScreenColorShaderPacket;
-import diamondwalker.twais.network.ScreenFlashPacket;
+import diamondwalker.twais.network.VisageFlashPacket;
+import diamondwalker.twais.registry.TWAISDataAttachments;
 import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
@@ -20,6 +23,7 @@ import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.io.IOException;
@@ -30,9 +34,27 @@ public class VisageHandler {
 
     @SubscribeEvent
     private static void handlePlayerHeal(LivingHealEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            event.setCanceled(true);
-            PacketDistributor.sendToPlayer(player, new ScreenFlashPacket(1.0f, 0.0f, 0.0f)); // TODO: add a cooldown to this so it doesn't spam you
+        if (event.getEntity() instanceof ServerPlayer player && player.hasData(TWAISDataAttachments.PLAYER)) {
+            PlayerData data = player.getData(TWAISDataAttachments.PLAYER);
+            if (data.visageHealDisable) {
+                if (player.level().getEntitiesOfClass(EntityVisage.class, player.getBoundingBox().inflate(200)).isEmpty()) {
+                    data.visageHealDisable = false;
+                } else {
+                    event.setCanceled(true);
+                    if (data.healFlashCooldown <= 0) {
+                        PacketDistributor.sendToPlayer(player, new VisageFlashPacket(true));
+                        data.healFlashCooldown = 20;
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    private static void handleFlashCooldown(PlayerTickEvent.Post event) {
+        if (event.getEntity() instanceof ServerPlayer player && player.hasData(TWAISDataAttachments.PLAYER)) {
+            PlayerData data = player.getData(TWAISDataAttachments.PLAYER);
+            if (data.healFlashCooldown > 0) data.healFlashCooldown--;
         }
     }
 

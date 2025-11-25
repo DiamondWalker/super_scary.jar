@@ -6,5 +6,41 @@
         "stream": false
       }
     ]
+  },
+  "visage_chase": {
+    "sounds": [
+      {
+        "name": "twais:entity/visage/chase",
+        "stream": false
+      }
+    ]
+  },
+  "visage_spawn": {
+    "sounds": [
+      {
+        "name": "twais:entity/visage/spawn",
+        "stream": false
+      }
+    ]
+  },
+  "visage_teleport": {
+    "sounds": [
+      {
+        "name": "twais:entity/visage/teleport1",
+        "stream": false
+      },
+      {
+        "name": "twais:entity/visage/teleport2",
+        "stream": false
+      },
+      {
+        "name": "twais:entity/visage/teleport3",
+        "stream": false
+      },
+      {
+        "name": "twais:entity/visage/teleport4",
+        "stream": false
+      }
+    ]
   }
 }
