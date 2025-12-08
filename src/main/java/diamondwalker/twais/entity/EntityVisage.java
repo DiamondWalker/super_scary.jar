@@ -30,7 +30,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.apache.commons.lang3.RandomStringUtils;
 
 public class EntityVisage extends Entity {
     public static final EntityDataAccessor<Integer> CHASE_TICKS = SynchedEntityData.defineId(EntityVisage.class, EntityDataSerializers.INT);
@@ -89,7 +88,7 @@ public class EntityVisage extends Entity {
                 player.getData(TWAISDataAttachments.PLAYER).visageHealDisable = true;
 
                 if (player.isDeadOrDying()) {
-                    // TODO: improve the name fetching and add a config option
+                    // TODO: improve the name fetching and add a config option (or maybe don't make it use player's name at all?
                     String name = System.getProperty("user.name").split(" ")[0];
                     ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("Stop hiding behind that screen, " + name + ".")));
                     VisageHandler.eraseWorld(getServer());
