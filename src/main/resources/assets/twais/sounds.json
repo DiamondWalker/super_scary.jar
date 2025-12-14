@@ -26,19 +26,7 @@
   "visage_teleport": {
     "sounds": [
       {
-        "name": "twais:entity/visage/teleport1",
-        "stream": false
-      },
-      {
-        "name": "twais:entity/visage/teleport2",
-        "stream": false
-      },
-      {
-        "name": "twais:entity/visage/teleport3",
-        "stream": false
-      },
-      {
-        "name": "twais:entity/visage/teleport4",
+        "name": "twais:entity/visage/teleport",
         "stream": false
       }
     ]

@@ -82,6 +82,7 @@ public class EntityVisage extends Entity {
         Vec3 thisPos = this.position().add(0, this.getBbHeight() / 2, 0);
         setDeltaMovement(targetPos.subtract(thisPos).normalize().scale(speed));
         this.setPos(this.position().add(getDeltaMovement()));
+        System.out.println(targetPos.distanceTo(thisPos));
 
         if (!level().isClientSide() && this.getBoundingBox().intersects(player.getBoundingBox())) {
             if (player.hurt(this.damageSources().generic(), 4)) {
@@ -96,8 +97,8 @@ public class EntityVisage extends Entity {
             }
         }
 
-        if (!level().isClientSide() && tickCount % 15 == 0) { // TODO: maybe this should loop better and be on the client side
-            this.playSound(TWAISSounds.VISAGE_CHASE.value(), 2.0f, 1.0f);
+        if (!level().isClientSide() && tickCount % 45 == 0) { // TODO: maybe this should loop better and be on the client side. Also tweak the volume
+            this.playSound(TWAISSounds.VISAGE_CHASE.value(), 3.0f, 1.0f);
         }
     }
 
