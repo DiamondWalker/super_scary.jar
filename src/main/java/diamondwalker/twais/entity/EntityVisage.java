@@ -1,5 +1,6 @@
 package diamondwalker.twais.entity;
 
+import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.handler.feature.VisageHandler;
 import diamondwalker.twais.network.VisageFlashPacket;
 import diamondwalker.twais.registry.TWAISDataAttachments;
@@ -45,60 +46,70 @@ public class EntityVisage extends Entity {
     public void tick() {
         super.tick();
         Player player = level().getNearestPlayer(this, Double.MAX_VALUE);
-        if (player == null || !player.isAlive() /*|| level().getBrightness(LightLayer.SKY, player.blockPosition()) > 0*/) {
-            this.kill();
-            return;
+        if (!level().isClientSide()) {
+            if (player == null || !player.isAlive() || (EntityUtil.isOnSurface(player, false) && player.getY() > level().getSeaLevel())) {
+                if (player instanceof ServerPlayer sp) PacketDistributor.sendToPlayer(sp, new VisageFlashPacket(false));
+                this.kill();
+                return;
+            } else {
+                WorldData.get(getServer()).eventCooldown();
+            }
         }
 
         boolean isFree = this.level().noCollision(new AABB(EntityUtil.getEntityCenter(this), EntityUtil.getEntityCenter(this)));
 
         if (!level().isClientSide()) {
-            if (isFree) setChaseTicks(getChaseTicks() + 1);
+            if (isFree) {
+                setChaseTicks(getChaseTicks() + 1);
 
-            if (teleportCooldown > 0) {
-                teleportCooldown--;
-            } else if (tickCount % 4 == 0 && player instanceof ServerPlayer serverPlayer) {
-                if (EntityUtil.isPlayerLookingAt(serverPlayer, this)) {
-                    teleportCounter++;
-                    PacketDistributor.sendToPlayer(serverPlayer, new VisageFlashPacket(false));
-                    if (teleportCounter >= 4) {
-                        // teleport
-                        teleportCounter = 0;
-                        teleportCooldown = 100;
-                        this.entityData.set(CHASE_TICKS, 0);
+                if (teleportCooldown > 0) {
+                    teleportCooldown--;
+                } else if (tickCount % 4 == 0 && player instanceof ServerPlayer serverPlayer) {
+                    if (EntityUtil.isPlayerLookingAt(serverPlayer, this)) { // TODO: when I add the fog, make it so he won't teleport if he's in the fox
+                        teleportCounter++;
+                        PacketDistributor.sendToPlayer(serverPlayer, new VisageFlashPacket(false));
+                        if (teleportCounter >= 4) {
+                            for (int i = 0; i < 10; i++) {
+                                Vec3 pos = player.position();
+                                double angle = random.nextDouble() * Math.PI * 2;
+                                pos = pos.add(Math.cos(angle) * 30, player.getEyeHeight() - this.getBbHeight() / 2, Math.sin(angle) * 30);
+                                setPos(pos);
+
+                                if (!player.hasLineOfSight(this)) break;
+                            }
+
+                            teleportCounter = 0;
+                            teleportCooldown = 100;
+                            this.entityData.set(CHASE_TICKS, 0);
+                        }
+                    } else if (teleportCounter > 0) {
+                        teleportCounter--;
                     }
-                } else if (teleportCounter > 0) {
-                    teleportCounter--;
                 }
             }
         }
 
         float speed;
-        speed = 0.0025f * getChaseTicks();
-        if (!isFree) {
-            speed /= 2;
-        }
+        speed = 0.06f + 0.0012f * getChaseTicks();
+
         Vec3 targetPos = player.getEyePosition();
         Vec3 thisPos = this.position().add(0, this.getBbHeight() / 2, 0);
         setDeltaMovement(targetPos.subtract(thisPos).normalize().scale(speed));
         this.setPos(this.position().add(getDeltaMovement()));
-        System.out.println(targetPos.distanceTo(thisPos));
 
         if (!level().isClientSide() && this.getBoundingBox().intersects(player.getBoundingBox())) {
             if (player.hurt(this.damageSources().generic(), 4)) {
                 player.getData(TWAISDataAttachments.PLAYER).visageHealDisable = true;
 
                 if (player.isDeadOrDying()) {
-                    // TODO: improve the name fetching and add a config option (or maybe don't make it use player's name at all?
-                    String name = System.getProperty("user.name").split(" ")[0];
-                    ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("Stop hiding behind that screen, " + name + ".")));
+                    ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("You should start running.")));
                     VisageHandler.eraseWorld(getServer());
                 }
             }
         }
 
-        if (!level().isClientSide() && tickCount % 45 == 0) { // TODO: maybe this should loop better and be on the client side. Also tweak the volume
-            this.playSound(TWAISSounds.VISAGE_CHASE.value(), 3.0f, 1.0f);
+        if (!level().isClientSide() && tickCount % 45 == 0) { // TODO: maybe this should loop better and be on the client side
+            this.playSound(TWAISSounds.VISAGE_CHASE.value(), 2.0f, 1.0f);
         }
     }
 
