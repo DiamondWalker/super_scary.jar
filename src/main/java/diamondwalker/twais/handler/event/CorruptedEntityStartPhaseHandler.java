@@ -32,81 +32,79 @@ public class CorruptedEntityStartPhaseHandler {
     private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
-        if (!data.progression.hasBeenAngered() && data.progression.getTimeInWorld() > 72_000L && !data.scripts.hasLock("corrupted_entity")) {
+        long time = data.progression.getTimeInWorld();
+        if (!data.progression.hasBeenAngered() && time >= 72_000L && time % 24_000L == 0 && !data.scripts.hasLock("corrupted_entity")) {
             ServerLevel level = server.overworld();
+            ArrayList<LevelChunk> possibleChunks = new ArrayList<>();
 
-            if (level.getRandom().nextInt(WorldData.COMMON_CHANCE) == 0) {
-                ArrayList<LevelChunk> possibleChunks = new ArrayList<>();
+            CHUNK_LOOP: for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {
+                LevelChunk chunk = holder.getTickingChunk();
+                if (chunk == null) continue;
+                ChunkPos chunkPos = chunk.getPos();
 
-                CHUNK_LOOP: for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {
-                    LevelChunk chunk = holder.getTickingChunk();
-                    if (chunk == null) continue;
-                    ChunkPos chunkPos = chunk.getPos();
+                boolean closeEnough = false;
 
-                    boolean closeEnough = false;
+                for (ServerPlayer player : level.players()) {
+                    ChunkPos playerChunk = player.chunkPosition();
+                    int offsetX = chunkPos.x - playerChunk.x;
+                    int offsetZ = chunkPos.z - playerChunk.z;
 
-                    for (ServerPlayer player : level.players()) {
-                        ChunkPos playerChunk = player.chunkPosition();
-                        int offsetX = chunkPos.x - playerChunk.x;
-                        int offsetZ = chunkPos.z - playerChunk.z;
+                    if (Math.abs(offsetX) <= 5 && Math.abs(offsetZ) <= 5) {
+                        continue CHUNK_LOOP;
+                    }
 
-                        if (Math.abs(offsetX) <= 5 && Math.abs(offsetZ) <= 5) {
+                    Vec3 look = player.getLookAngle();
+                    if (new Vec2(offsetX, offsetZ).normalized().dot(new Vec2((float)look.x, (float)look.z).normalized()) > 0) {
+                        continue CHUNK_LOOP;
+                    }
+
+                    if (player.getRespawnPosition() != null && player.getRespawnDimension() == level.dimension()) {
+                        ChunkPos spawnChunk = level.getChunk(player.getRespawnPosition()).getPos();
+
+                        int spawnOffsetX = chunkPos.x - spawnChunk.x;
+                        int spawnOffsetZ = chunkPos.z - spawnChunk.z;
+
+                        if (Math.abs(spawnOffsetX) <= 5 && Math.abs(spawnOffsetZ) <= 5) {
                             continue CHUNK_LOOP;
-                        }
-
-                        Vec3 look = player.getLookAngle();
-                        if (new Vec2(offsetX, offsetZ).normalized().dot(new Vec2((float)look.x, (float)look.z).normalized()) > 0) {
-                            continue CHUNK_LOOP;
-                        }
-
-                        if (player.getRespawnPosition() != null && player.getRespawnDimension() == level.dimension()) {
-                            ChunkPos spawnChunk = level.getChunk(player.getRespawnPosition()).getPos();
-
-                            int spawnOffsetX = chunkPos.x - spawnChunk.x;
-                            int spawnOffsetZ = chunkPos.z - spawnChunk.z;
-
-                            if (Math.abs(spawnOffsetX) <= 5 && Math.abs(spawnOffsetZ) <= 5) {
-                                continue CHUNK_LOOP;
-                            }
-                        }
-
-                        if (Math.abs(offsetX) < 20 && Math.abs(offsetZ) < 20) {
-                            closeEnough = true;
                         }
                     }
 
-                    if (closeEnough) possibleChunks.add(chunk);
+                    if (Math.abs(offsetX) < 20 && Math.abs(offsetZ) < 20) {
+                        closeEnough = true;
+                    }
                 }
 
-                if (!possibleChunks.isEmpty()) {
-                    LevelChunk chosenChunk = possibleChunks.get(level.getRandom().nextInt(possibleChunks.size()));
-                    ChunkPos chosenPos = chosenChunk.getPos();
-                    int x = chosenPos.getMinBlockX() + level.random.nextInt(16);
-                    int z = chosenPos.getMinBlockZ() + level.random.nextInt(16);
-                    int y = Integer.MIN_VALUE;
+                if (closeEnough) possibleChunks.add(chunk);
+            }
 
-                    int minX = x - 12;
-                    int maxX = x + 12;
-                    int minZ = z - 12;
-                    int maxZ = z + 12;
+            if (!possibleChunks.isEmpty()) {
+                LevelChunk chosenChunk = possibleChunks.get(level.getRandom().nextInt(possibleChunks.size()));
+                ChunkPos chosenPos = chosenChunk.getPos();
+                int x = chosenPos.getMinBlockX() + level.random.nextInt(16);
+                int z = chosenPos.getMinBlockZ() + level.random.nextInt(16);
+                int y = Integer.MIN_VALUE;
 
+                int minX = x - 12;
+                int maxX = x + 12;
+                int minZ = z - 12;
+                int maxZ = z + 12;
+
+                for (int cx = minX; cx <= maxX; cx++) {
+                    for (int cz = minZ; cz <= maxZ; cz++) {
+                        y = Math.max(y, level.getHeight(Heightmap.Types.MOTION_BLOCKING, cx, cz));
+                    }
+                }
+
+                if (y < level.getMaxBuildHeight() - 15) {
                     for (int cx = minX; cx <= maxX; cx++) {
                         for (int cz = minZ; cz <= maxZ; cz++) {
-                            y = Math.max(y, level.getHeight(Heightmap.Types.MOTION_BLOCKING, cx, cz));
-                        }
-                    }
-
-                    if (y < level.getMaxBuildHeight() - 15) {
-                        for (int cx = minX; cx <= maxX; cx++) {
-                            for (int cz = minZ; cz <= maxZ; cz++) {
-                                for (int cy = 0; cy <= 12; cy++) {
-                                    level.setBlock(new BlockPos(cx, y + cy, cz), Blocks.COBBLESTONE.defaultBlockState(), 2);
-                                }
+                            for (int cy = 0; cy <= 12; cy++) {
+                                level.setBlock(new BlockPos(cx, y + cy, cz), Blocks.COBBLESTONE.defaultBlockState(), 2);
                             }
                         }
-
-                        WorldData.get(server).corruptedEntityBuilds.addBuild(new BlockPos(x, y, z));
                     }
+
+                    WorldData.get(server).corruptedEntityBuilds.addBuild(new BlockPos(x, y, z));
                 }
             }
         }

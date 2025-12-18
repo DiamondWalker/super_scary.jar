@@ -19,7 +19,8 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 public class LightningHandler {
     @SubscribeEvent
     private static void handleServerTick(ServerTickEvent.Post event) {
-        if (!WorldData.get(event.getServer()).areEventsOnCooldown()) {
+        WorldData data = WorldData.get(event.getServer());
+        if (data.progression.hasBeenAngered() && !data.areEventsOnCooldown()) {
             for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
                 ServerLevel level = player.serverLevel();
                 if (level.dimension() == Level.OVERWORLD) {
@@ -33,7 +34,7 @@ public class LightningHandler {
                                     lightningbolt.moveTo(Vec3.atBottomCenterOf(pos));
                                     lightningbolt.setVisualOnly(false);
                                     level.addFreshEntity(lightningbolt);
-                                    WorldData.get(event.getServer()).eventCooldown();
+                                    data.eventCooldown();
                                 }
                             }
                         } else {
