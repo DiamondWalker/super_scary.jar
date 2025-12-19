@@ -3,6 +3,8 @@ package diamondwalker.twais.data.client;
 public class ClientData {
     public boolean slience = false;
 
+    public boolean visageFog = false;
+
     public boolean darkWorld = false;
     public boolean wackyColors = false;
 

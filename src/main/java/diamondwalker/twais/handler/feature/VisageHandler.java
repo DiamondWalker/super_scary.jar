@@ -1,6 +1,7 @@
 package diamondwalker.twais.handler.feature;
 
 import diamondwalker.twais.TWAIS;
+import diamondwalker.twais.data.client.ClientData;
 import diamondwalker.twais.data.entity.player.PlayerData;
 import diamondwalker.twais.entity.EntityVisage;
 import diamondwalker.twais.network.ScreenColorShaderPacket;
@@ -58,8 +59,10 @@ public class VisageHandler {
         }
     }
 
-    /*@SubscribeEvent
+    @SubscribeEvent
     private static void handleFogColor(ViewportEvent.ComputeFogColor event) {
+        if (!ClientData.get().visageFog) return;
+
         event.setRed(0.0f);
         event.setGreen(0.0f);
         event.setBlue(0.0f);
@@ -67,10 +70,12 @@ public class VisageHandler {
 
     @SubscribeEvent
     private static void handleFogDistance(ViewportEvent.RenderFog event) {
+        if (!ClientData.get().visageFog) return;
+
         event.setNearPlaneDistance(5.0f);
         event.setFarPlaneDistance(7.0f);
         event.setCanceled(true);
-    }*/
+    }
 
     public static void eraseWorld(MinecraftServer server) {
         DELETE_WORLD = true;

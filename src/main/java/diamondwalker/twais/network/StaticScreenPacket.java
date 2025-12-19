@@ -2,6 +2,7 @@ package diamondwalker.twais.network;
 
 import diamondwalker.twais.data.client.ClientData;
 import diamondwalker.twais.data.client.ScreenFlashData;
+import diamondwalker.twais.data.client.StaticData;
 import diamondwalker.twais.util.shader.EnumShaderLayer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -24,6 +25,6 @@ public record StaticScreenPacket(int time) implements CustomPacketPayload {
     }
 
     public static void handle(final StaticScreenPacket packet, final IPayloadContext context) {
-        // TODO: handle
+        ClientData.get().staticData = new StaticData(1.0f, 1.0f, packet.time(), true);
     }
 }

@@ -2,7 +2,9 @@ package diamondwalker.twais.entity;
 
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.handler.feature.VisageHandler;
+import diamondwalker.twais.network.StaticScreenPacket;
 import diamondwalker.twais.network.VisageFlashPacket;
+import diamondwalker.twais.network.VisageFogPacket;
 import diamondwalker.twais.registry.TWAISDataAttachments;
 import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.EntityUtil;
@@ -55,6 +57,7 @@ public class EntityVisage extends Entity {
                 WorldData.get(getServer()).eventCooldown();
             }
         }
+        if (player == null) return;
 
         boolean isFree = this.level().noCollision(new AABB(EntityUtil.getEntityCenter(this), EntityUtil.getEntityCenter(this)));
 
@@ -69,18 +72,7 @@ public class EntityVisage extends Entity {
                         teleportCounter++;
                         PacketDistributor.sendToPlayer(serverPlayer, new VisageFlashPacket(false));
                         if (teleportCounter >= 4) {
-                            for (int i = 0; i < 10; i++) {
-                                Vec3 pos = player.position();
-                                double angle = random.nextDouble() * Math.PI * 2;
-                                pos = pos.add(Math.cos(angle) * 30, player.getEyeHeight() - this.getBbHeight() / 2, Math.sin(angle) * 30);
-                                setPos(pos);
-
-                                if (!player.hasLineOfSight(this)) break;
-                            }
-
-                            teleportCounter = 0;
-                            teleportCooldown = 100;
-                            this.entityData.set(CHASE_TICKS, 0);
+                            teleport(player);
                         }
                     } else if (teleportCounter > 0) {
                         teleportCounter--;
@@ -104,6 +96,9 @@ public class EntityVisage extends Entity {
                 if (player.isDeadOrDying()) {
                     ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("You should start running.")));
                     VisageHandler.eraseWorld(getServer());
+                } else {
+                    PacketDistributor.sendToPlayer((ServerPlayer)player, new StaticScreenPacket(15));
+                    this.teleport(player);
                 }
             }
         }
@@ -113,12 +108,39 @@ public class EntityVisage extends Entity {
         }
     }
 
+    private void teleport(Player player) {
+        for (int i = 0; i < 10; i++) {
+            Vec3 pos = player.position();
+            double angle = random.nextDouble() * Math.PI * 2;
+            pos = pos.add(Math.cos(angle) * 30, player.getEyeHeight() - this.getBbHeight() / 2, Math.sin(angle) * 30);
+            setPos(pos);
+
+            if (!player.hasLineOfSight(this)) break;
+        }
+
+        teleportCounter = 0;
+        teleportCooldown = 100;
+        this.entityData.set(CHASE_TICKS, 0);
+    }
+
     private void setChaseTicks(int chaseTicks) {
         this.entityData.set(CHASE_TICKS, chaseTicks);
     }
 
     private int getChaseTicks() {
         return this.entityData.get(CHASE_TICKS);
+    }
+
+    @Override
+    public void startSeenByPlayer(ServerPlayer serverPlayer) {
+        super.startSeenByPlayer(serverPlayer);
+        PacketDistributor.sendToPlayer(serverPlayer, new VisageFogPacket(true));
+    }
+
+    @Override
+    public void stopSeenByPlayer(ServerPlayer serverPlayer) {
+        super.stopSeenByPlayer(serverPlayer);
+        PacketDistributor.sendToPlayer(serverPlayer, new VisageFogPacket(false));
     }
 
     @Override
