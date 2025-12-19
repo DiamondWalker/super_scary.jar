@@ -10,7 +10,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class TWAISSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, TWAIS.MODID);
 
+    public static final Holder<SoundEvent> STATIC = SOUNDS.register("static", SoundEvent::createVariableRangeEvent);
+
     public static final Holder<SoundEvent> SNORE = SOUNDS.register("snore", SoundEvent::createVariableRangeEvent);
+    public static final Holder<SoundEvent> WORLD_DARKEN = SOUNDS.register("world_darken", SoundEvent::createVariableRangeEvent);
 
     public static final Holder<SoundEvent> VISAGE_SPAWN = SOUNDS.register("visage_spawn", SoundEvent::createVariableRangeEvent);
     public static final Holder<SoundEvent> VISAGE_CHASE = SOUNDS.register("visage_chase", SoundEvent::createVariableRangeEvent);

@@ -7,6 +7,22 @@
       }
     ]
   },
+  "world_darken": {
+    "sounds": [
+      {
+        "name": "twais:world_darken",
+        "stream": false
+      }
+    ]
+  },
+  "static": {
+    "sounds": [
+      {
+        "name": "twais:static",
+        "stream": false
+      }
+    ]
+  },
   "visage_chase": {
     "sounds": [
       {
