@@ -35,6 +35,9 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class EntityVisage extends Entity {
+    public static final float NEAR_FOG_DISTANCE = 5.0f;
+    public static final float FAR_FOG_DISTANCE = 7.0f;
+
     public static final EntityDataAccessor<Integer> CHASE_TICKS = SynchedEntityData.defineId(EntityVisage.class, EntityDataSerializers.INT);
 
     int teleportCounter = 0;

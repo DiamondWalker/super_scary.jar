@@ -4,6 +4,7 @@ public class ClientData {
     public boolean slience = false;
 
     public boolean visageFog = false;
+    public int visageFogAmount = 0;
 
     public boolean darkWorld = false;
     public boolean wackyColors = false;

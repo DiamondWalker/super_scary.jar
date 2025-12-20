@@ -22,8 +22,7 @@ public class StaticHandler {
     private static int staticTime = 0;
 
     @SubscribeEvent
-    private static void onOpenWorld(ClientTickEvent.Post event) {
-        // TODO: actually test this
+    private static void tickStatic(ClientTickEvent.Post event) {
         StaticData data = ClientData.get().staticData;
         if (data != null) {
             data.timeLeft--;

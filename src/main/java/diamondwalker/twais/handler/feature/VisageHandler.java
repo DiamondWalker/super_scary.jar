@@ -2,6 +2,7 @@ package diamondwalker.twais.handler.feature;
 
 import diamondwalker.twais.TWAIS;
 import diamondwalker.twais.data.client.ClientData;
+import diamondwalker.twais.data.client.StaticData;
 import diamondwalker.twais.data.entity.player.PlayerData;
 import diamondwalker.twais.entity.EntityVisage;
 import diamondwalker.twais.network.ScreenColorShaderPacket;
@@ -14,12 +15,14 @@ import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.ImmediateWindowHandler;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -32,6 +35,7 @@ import java.io.IOException;
 @EventBusSubscriber
 public class VisageHandler {
     private static boolean DELETE_WORLD = false;
+    private static final int FOG_FADE_TIME = 160;
 
     @SubscribeEvent
     private static void handlePlayerHeal(LivingHealEvent event) {
@@ -61,20 +65,52 @@ public class VisageHandler {
 
     @SubscribeEvent
     private static void handleFogColor(ViewportEvent.ComputeFogColor event) {
-        if (!ClientData.get().visageFog) return;
+        float fogAmount = getFogAmount(event.getPartialTick());
 
-        event.setRed(0.0f);
-        event.setGreen(0.0f);
-        event.setBlue(0.0f);
+        if (fogAmount > 0) {
+            event.setRed(Mth.lerp(fogAmount, event.getRed(), 0.0f));
+            event.setGreen(Mth.lerp(fogAmount, event.getGreen(), 0.0f));
+            event.setBlue(Mth.lerp(fogAmount, event.getBlue(), 0.0f));
+        }
     }
 
     @SubscribeEvent
     private static void handleFogDistance(ViewportEvent.RenderFog event) {
-        if (!ClientData.get().visageFog) return;
+        float fogAmount = getFogAmount(event.getPartialTick());
 
-        event.setNearPlaneDistance(5.0f);
-        event.setFarPlaneDistance(7.0f);
-        event.setCanceled(true);
+        if (fogAmount > 0) {
+            float n1 = EntityVisage.NEAR_FOG_DISTANCE;
+            float n2 = event.getNearPlaneDistance();
+            float f1 = EntityVisage.FAR_FOG_DISTANCE;
+            float f2 = event.getFarPlaneDistance();
+            event.setNearPlaneDistance(Mth.lerp(fogAmount, n2, n1));
+            event.setFarPlaneDistance(Mth.lerp(fogAmount, f2, f1));
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    private static void tickStatic(ClientTickEvent.Post event) {
+        ClientData data = ClientData.get();
+
+        if (data.visageFog) {
+            if (data.visageFogAmount < FOG_FADE_TIME) data.visageFogAmount++;
+        } else {
+            if (data.visageFogAmount > 0) data.visageFogAmount--;
+        }
+    }
+
+    private static float getFogAmount(double partialTicks) {
+        ClientData data = ClientData.get();
+
+        double fogAmount = data.visageFogAmount;
+        if (data.visageFog) {
+            fogAmount += partialTicks;
+        } else {
+            fogAmount -= partialTicks;
+        }
+
+        return (float)Mth.clamp(fogAmount / FOG_FADE_TIME, 0.0, 1.0);
     }
 
     public static void eraseWorld(MinecraftServer server) {
