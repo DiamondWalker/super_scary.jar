@@ -15,6 +15,22 @@
       }
     ]
   },
+  "party_start": {
+    "sounds": [
+      {
+        "name": "twais:party_horn",
+        "stream": false
+      }
+    ]
+  },
+  "party": {
+    "sounds": [
+      {
+        "name": "twais:music/party",
+        "stream": true
+      }
+    ]
+  },
   "static": {
     "sounds": [
       {

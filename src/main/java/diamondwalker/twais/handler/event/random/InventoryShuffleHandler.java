@@ -20,7 +20,7 @@ public class InventoryShuffleHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(100/*WorldData.UNCOMMON_CHANCE*/) == 0) {
+            if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     if (player.isAlive()) {
                         Collections.shuffle(player.getInventory().items);

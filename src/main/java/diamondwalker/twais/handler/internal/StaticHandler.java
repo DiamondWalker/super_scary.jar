@@ -24,13 +24,8 @@ public class StaticHandler {
     @SubscribeEvent
     private static void tickStatic(ClientTickEvent.Post event) {
         StaticData data = ClientData.get().staticData;
-        if (data != null) {
-            data.timeLeft--;
-            if (data.timeLeft <= 0) {
-                ClientData.get().staticData = null;
-            }
-        }
 
+        // sound
         if (data != null && data.shouldPlaySound()) {
             if (!isPlaying()) startPlaying();
             // reset it periodically so it's constant
@@ -40,6 +35,14 @@ public class StaticHandler {
             }
         } else {
             stopPlaying();
+        }
+
+        // tick
+        if (data != null) {
+            data.timeLeft--;
+            if (data.timeLeft <= 0) {
+                ClientData.get().staticData = null;
+            }
         }
     }
 

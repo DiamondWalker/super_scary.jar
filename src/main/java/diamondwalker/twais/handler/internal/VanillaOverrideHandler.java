@@ -1,7 +1,9 @@
 package diamondwalker.twais.handler.internal;
 
 import diamondwalker.twais.OverworldSpecialEffects;
+import diamondwalker.twais.data.client.ClientData;
 import diamondwalker.twais.gui.screen.NoticeScreen;
+import diamondwalker.twais.registry.TWAISMusic;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -29,6 +31,10 @@ public class VanillaOverrideHandler {
 
     @SubscribeEvent
     private static void stopMusic(SelectMusicEvent event) {
-        event.setMusic(null);
+        if (ClientData.get().wackyColors) {
+            event.overrideMusic(TWAISMusic.PARTY);
+            return;
+        }
+        event.overrideMusic(null);
     }
 }

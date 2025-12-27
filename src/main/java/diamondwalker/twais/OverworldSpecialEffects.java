@@ -10,7 +10,7 @@ import org.joml.Vector3f;
 import java.util.Random;
 
 public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEffects {
-    private final int WACKY_COLOR_TICKS = 2;
+    private static final int WACKY_COLOR_TICKS = 4;
 
     @Override
     public void adjustLightmapColors(ClientLevel level, float partialTicks, float skyDarken, float blockLightRedFlicker, float skyLight, int pixelX, int pixelY, Vector3f colors) {
@@ -23,7 +23,6 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
             Random nextTickRand = new Random((level.getGameTime() / WACKY_COLOR_TICKS + 1) * (pixelX + pixelY + 1));
 
             float lerp = ((partialTicks + level.getGameTime()) % WACKY_COLOR_TICKS) / WACKY_COLOR_TICKS;
-            System.out.println(level.getGameTime());
 
             Vector3f thisTickCol = new Vector3f(thisTickRand.nextFloat(), thisTickRand.nextFloat(), thisTickRand.nextFloat()).mul(thisTickRand.nextFloat());
             Vector3f nextTickCol = new Vector3f(nextTickRand.nextFloat(), nextTickRand.nextFloat(), nextTickRand.nextFloat()).mul(nextTickRand.nextFloat());

@@ -1,9 +1,6 @@
 package diamondwalker.twais.registry;
 
-import diamondwalker.twais.network.ScreenColorShaderPacket;
-import diamondwalker.twais.network.StaticScreenPacket;
-import diamondwalker.twais.network.VisageFlashPacket;
-import diamondwalker.twais.network.VisageFogPacket;
+import diamondwalker.twais.network.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -18,5 +15,7 @@ public class TWAISPackets {
         registrar.playToClient(ScreenColorShaderPacket.TYPE, ScreenColorShaderPacket.CODEC, ScreenColorShaderPacket::handle);
         registrar.playToClient(VisageFlashPacket.TYPE, VisageFlashPacket.CODEC, VisageFlashPacket::handle);
         registrar.playToClient(VisageFogPacket.TYPE, VisageFogPacket.CODEC, VisageFogPacket::handle);
+        registrar.playToClient(DarkWorldPacket.TYPE, DarkWorldPacket.CODEC, DarkWorldPacket::handle);
+        registrar.playToClient(PartyTimePacket.TYPE, PartyTimePacket.CODEC, PartyTimePacket::handle);
     }
 }

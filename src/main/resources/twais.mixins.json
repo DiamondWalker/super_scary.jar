@@ -10,5 +10,8 @@
   },
   "client": [
     "MixinGameRenderer"
+  ],
+  "mixins": [
+    "MixinSheep"
   ]
 }
