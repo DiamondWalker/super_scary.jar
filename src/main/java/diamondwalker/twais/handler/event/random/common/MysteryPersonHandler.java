@@ -1,4 +1,4 @@
-package diamondwalker.twais.handler.event.random;
+package diamondwalker.twais.handler.event.random.common;
 
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.util.ChatUtil;
@@ -28,8 +28,8 @@ public class MysteryPersonHandler {
             "Please.",
             "You're running out of time.",
             "Give up.",
-            "Do you feel safe?",
-            "You forgot to flush the last time you went. I have fished your turd out of the toilet and I can't wait to use it on you."
+            "Do you feel safe?"//,
+            //"You forgot to flush the last time you went. I have fished your turd out of the toilet and I can't wait to use it on you."
     };
 
     @SubscribeEvent

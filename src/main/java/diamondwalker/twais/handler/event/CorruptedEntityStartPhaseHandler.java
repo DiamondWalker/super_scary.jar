@@ -3,6 +3,7 @@ package diamondwalker.twais.handler.event;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.util.ChatUtil;
 import diamondwalker.twais.util.ScriptBuilder;
+import diamondwalker.twais.util.WorldUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -23,6 +24,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber
 public class CorruptedEntityStartPhaseHandler {
@@ -35,47 +37,8 @@ public class CorruptedEntityStartPhaseHandler {
         long time = data.progression.getTimeInWorld();
         if (!data.progression.hasBeenAngered() && time >= 72_000L && time % 24_000L == 0 && !data.scripts.hasLock("corrupted_entity")) {
             ServerLevel level = server.overworld();
-            ArrayList<LevelChunk> possibleChunks = new ArrayList<>();
-
-            CHUNK_LOOP: for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {
-                LevelChunk chunk = holder.getTickingChunk();
-                if (chunk == null) continue;
-                ChunkPos chunkPos = chunk.getPos();
-
-                boolean closeEnough = false;
-
-                for (ServerPlayer player : level.players()) {
-                    ChunkPos playerChunk = player.chunkPosition();
-                    int offsetX = chunkPos.x - playerChunk.x;
-                    int offsetZ = chunkPos.z - playerChunk.z;
-
-                    if (Math.abs(offsetX) <= 5 && Math.abs(offsetZ) <= 5) {
-                        continue CHUNK_LOOP;
-                    }
-
-                    Vec3 look = player.getLookAngle();
-                    if (new Vec2(offsetX, offsetZ).normalized().dot(new Vec2((float)look.x, (float)look.z).normalized()) > 0) {
-                        continue CHUNK_LOOP;
-                    }
-
-                    if (player.getRespawnPosition() != null && player.getRespawnDimension() == level.dimension()) {
-                        ChunkPos spawnChunk = level.getChunk(player.getRespawnPosition()).getPos();
-
-                        int spawnOffsetX = chunkPos.x - spawnChunk.x;
-                        int spawnOffsetZ = chunkPos.z - spawnChunk.z;
-
-                        if (Math.abs(spawnOffsetX) <= 5 && Math.abs(spawnOffsetZ) <= 5) {
-                            continue CHUNK_LOOP;
-                        }
-                    }
-
-                    if (Math.abs(offsetX) < 20 && Math.abs(offsetZ) < 20) {
-                        closeEnough = true;
-                    }
-                }
-
-                if (closeEnough) possibleChunks.add(chunk);
-            }
+            List<LevelChunk> possibleChunks = WorldUtil.getBuildableChunks(level);
+            if (possibleChunks.isEmpty()) return;
 
             if (!possibleChunks.isEmpty()) {
                 LevelChunk chosenChunk = possibleChunks.get(level.getRandom().nextInt(possibleChunks.size()));

@@ -1,18 +1,18 @@
-package diamondwalker.twais.handler.event.random;
+package diamondwalker.twais.handler.event.random.extrarare;
 
 import diamondwalker.twais.data.server.WorldData;
+import diamondwalker.twais.registry.TWAISSounds;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import java.util.Collections;
-
 @EventBusSubscriber
-public class InventoryShuffleHandler {
+public class SnoreHandler {
     @SubscribeEvent
     private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
@@ -20,13 +20,11 @@ public class InventoryShuffleHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
+            if (random.nextInt(WorldData.EXTRA_RARE_CHANCE) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                    if (player.isAlive()) {
-                        Collections.shuffle(player.getInventory().items);
-                        data.eventCooldown();
-                    }
+                    player.connection.send(new ClientboundSoundPacket(TWAISSounds.SNORE, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 64.0F, 1.0F, random.nextLong()));
                 }
+                data.eventCooldown();
             }
         }
     }

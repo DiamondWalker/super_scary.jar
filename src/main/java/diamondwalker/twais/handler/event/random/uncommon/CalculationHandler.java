@@ -1,4 +1,4 @@
-package diamondwalker.twais.handler.event.random;
+package diamondwalker.twais.handler.event.random.uncommon;
 
 import diamondwalker.twais.data.server.CalculationData;
 import diamondwalker.twais.data.server.WorldData;

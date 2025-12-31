@@ -1,4 +1,4 @@
-package diamondwalker.twais.handler.event.random;
+package diamondwalker.twais.handler.event.random.common;
 
 import diamondwalker.twais.data.server.WorldData;
 import net.minecraft.server.MinecraftServer;

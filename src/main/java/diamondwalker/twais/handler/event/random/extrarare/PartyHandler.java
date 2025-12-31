@@ -1,4 +1,4 @@
-package diamondwalker.twais.handler.event.random;
+package diamondwalker.twais.handler.event.random.extrarare;
 
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.network.PartyTimePacket;
