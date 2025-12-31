@@ -7,20 +7,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -28,7 +21,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import java.util.*;
 
 @EventBusSubscriber
-public class CorruptedBuildEvent {
+public class StructureSpawnHandler {
     @SubscribeEvent
     private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
@@ -54,7 +47,7 @@ public class CorruptedBuildEvent {
                             break;
                         }
                         case 2: {
-                            if (buildUnderConstruction(level, selectedChunk, random)) return;
+                            if (buildScaffold(level, selectedChunk, random)) return;
                             break;
                         }
                     }
@@ -197,7 +190,7 @@ public class CorruptedBuildEvent {
         return true;
     }
 
-    private static boolean buildUnderConstruction(ServerLevel level, LevelChunk chunk, RandomSource rand) {
+    private static boolean buildScaffold(ServerLevel level, LevelChunk chunk, RandomSource rand) {
         int startX = chunk.getPos().getMinBlockX() + rand.nextInt(6);
         int startZ = chunk.getPos().getMinBlockZ() + rand.nextInt(6);
 
