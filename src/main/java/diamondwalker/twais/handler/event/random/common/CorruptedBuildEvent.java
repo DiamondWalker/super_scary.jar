@@ -46,7 +46,7 @@ public class CorruptedBuildEvent {
                     LevelChunk selectedChunk = chunks.get(random.nextInt(chunks.size()));
                     switch (selection) {
                         case 0: {
-                            if (buildTower(level, selectedChunk, random)) return;
+                            if (buildMonolith(level, selectedChunk, random)) return;
                             break;
                         }
                         case 1: {
@@ -63,7 +63,7 @@ public class CorruptedBuildEvent {
         }
     }
 
-    private static boolean buildTower(ServerLevel level, LevelChunk chunk, RandomSource rand) {
+    private static boolean buildMonolith(ServerLevel level, LevelChunk chunk, RandomSource rand) {
         ArrayList<Vec3i> blocks = new ArrayList<>();
 
         // spheres
