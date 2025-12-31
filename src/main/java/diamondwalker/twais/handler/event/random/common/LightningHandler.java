@@ -1,4 +1,4 @@
-package diamondwalker.twais.handler.event.random.uncommon;
+package diamondwalker.twais.handler.event.random.common;
 
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.util.ScriptBuilder;
@@ -25,7 +25,7 @@ public class LightningHandler {
                 ServerLevel level = player.serverLevel();
                 if (level.dimension() == Level.OVERWORLD) {
                     RandomSource random = player.getRandom();
-                    if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
+                    if (random.nextInt(WorldData.COMMON_CHANCE) == 0) {
                         if (!level.isThundering()) {
                             BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, player.blockPosition());
                             if (pos.getY() <= player.getBlockY()) {
