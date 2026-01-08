@@ -1,4 +1,4 @@
-package diamondwalker.twais.entity;
+package diamondwalker.twais.entity.visage;
 
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.handler.feature.VisageHandler;
@@ -8,29 +8,18 @@ import diamondwalker.twais.network.VisageFogPacket;
 import diamondwalker.twais.registry.TWAISDataAttachments;
 import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.EntityUtil;
-import diamondwalker.twais.util.ScriptBuilder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.DeathScreen;
-import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
