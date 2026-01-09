@@ -27,47 +27,45 @@ public class EntityCorrupted extends Mob {
     public void aiStep() {
         super.aiStep();
 
-        Player player = level().getNearestPlayer(LOOK_CONDITION, this);
-        if (!level().isClientSide() && player != null && player.isAlive()) {
-            this.getLookControl().setLookAt(player.getX(), player.getEyeY(), player.getZ());
+        if (!level().isClientSide()) {
+            if (tickCount > 20 * 60 * 4) this.discard();
 
-            if (distanceTo(player) < 25 && hasLineOfSight(player)) {
-                double angle = Mth.atan2(player.getZ() - getZ(), player.getX() - getX()) - 90;
-                fillText(WorldUtil.placeSign(level(), blockPosition(), angle));
-                this.discard();
+            Player player = level().getNearestPlayer(LOOK_CONDITION, this);
+            if (player != null && player.isAlive()) {
+                this.getLookControl().setLookAt(player.getX(), player.getEyeY(), player.getZ());
+
+                if (distanceTo(player) < 25 && hasLineOfSight(player)) {
+                    double angle = Mth.atan2(player.getZ() - getZ(), player.getX() - getX()) - 90;
+                    fillText(WorldUtil.placeSign(level(), blockPosition(), angle));
+                    this.discard();
+                }
             }
         }
     }
 
     private void fillText(WorldUtil.SignWriter writer) {
         boolean bugUnlocked = WorldData.get(getServer()).progression.hasSeenBug();
-        switch (random.nextInt(bugUnlocked ? 7 : 6)) {
+        switch (random.nextInt(bugUnlocked ? 9 : 8)) {
             case 0: {
-                writer
-                        .setFrontLine(1, "ur mom");
-
+                writer.setFrontLine(1, "ur mom");
                 break;
             }
             case 1: {
-                writer
-                        .setFrontLine(1, "go away fatty");
-
+                writer.setFrontLine(1, "go away fatty");
                 break;
             }
             case 2: {
                 writer.setFrontLine(1, "sup");
-
                 break;
             }
             case 3: {
                 writer.setFrontLine(1, "gtfo");
-
                 break;
             }
             case 4: {
                 writer
-                        .setFrontLine(1, "you are cooked")
-                        .setFrontLine(2, "broski");
+                        .setFrontLine(0, "you are so")
+                        .setFrontLine(1, "cooked lmao");
                 break;
             }
             case 5: {
@@ -78,11 +76,22 @@ public class EntityCorrupted extends Mob {
             }
             case 6: {
                 writer
+                        .setFrontLine(0, "Stop stalking me")
+                        .setFrontLine(1, "you weirdo");
+                break;
+            }
+            case 7: {
+                writer
+                        .setFrontLine(1, "I know where")
+                        .setFrontLine(2, "you live");
+                break;
+            }
+            case 8: {
+                writer
                         .setFrontLine(0, "You are more")
-                        .setFrontLine(1, "annoying than")
-                        .setFrontLine(2, "a fucking")
+                        .setFrontLine(1, "annoying than a")
+                        .setFrontLine(2, "fucking")
                         .setFrontLine(3, "inventory bug");
-
                 break;
             }
         }
