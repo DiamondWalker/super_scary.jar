@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.common;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.util.ChatUtil;
 import net.minecraft.server.MinecraftServer;
@@ -39,7 +40,7 @@ public class MysteryPersonHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.COMMON_CHANCE) == 0) {
+            if (random.nextInt(Config.COMMON_EVENT_CHANCE.getAsInt()) == 0) {
                 server.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(getName(random), getMessage(random)), false);
                 data.eventCooldown();
             }

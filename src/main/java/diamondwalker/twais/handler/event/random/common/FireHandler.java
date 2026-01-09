@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.common;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,7 +19,7 @@ public class FireHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.COMMON_CHANCE) == 0) {
+            if (random.nextInt(Config.COMMON_EVENT_CHANCE.getAsInt()) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     if (!player.isOnFire() && player.isAlive()) {
                         player.setRemainingFireTicks(20 + random.nextInt(40 + 1));

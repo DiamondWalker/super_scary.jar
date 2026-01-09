@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.extrarare;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.network.PartyTimePacket;
 import diamondwalker.twais.network.StaticScreenPacket;
@@ -25,7 +26,7 @@ public class PartyHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.EXTRA_RARE_CHANCE) == 0) {
+            if (random.nextInt(Config.EXTRA_RARE_EVENT_CHANCE.getAsInt()) == 0) {
                 new ScriptBuilder(server)
                         .chatMessageForAll(Component.literal("PARTY TIME!!!!"))
                         .action((serv) -> {

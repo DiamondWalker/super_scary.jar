@@ -11,6 +11,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.SelectMusicEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 @EventBusSubscriber
 public class VanillaOverrideHandler {
@@ -36,5 +37,10 @@ public class VanillaOverrideHandler {
             return;
         }
         event.overrideMusic(null);
+    }
+
+    @SubscribeEvent
+    private static void disableNetherPortal(BlockEvent.PortalSpawnEvent event) {
+        event.setCanceled(true);
     }
 }

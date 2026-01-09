@@ -10,11 +10,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class WorldData extends SavedData {
-    // TODO: move these (when the new random event system is implemented)
-    public static final int COMMON_CHANCE = 40_000;
-    public static final int UNCOMMON_CHANCE = 80_000;
-    public static final int RARE_CHANCE = 160_000;
-    public static final int EXTRA_RARE_CHANCE = 400_000;
     /*
     When the new event system is done I'm thinking this could be the chances:
     Common - 69%

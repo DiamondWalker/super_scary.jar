@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.uncommon;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.CalculationData;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.registry.TWAISDamageTypes;
@@ -27,7 +28,7 @@ public class CalculationHandler {
 
         if (!data.areEventsOnCooldown() && !data.scripts.hasLock("calculation") && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
+            if (random.nextInt(Config.UNCOMMON_EVENT_CHANCE.getAsInt()) == 0) {
                 data.calculation.questionCount++;
                 boolean impossible = data.calculation.questionCount >= 5;
 

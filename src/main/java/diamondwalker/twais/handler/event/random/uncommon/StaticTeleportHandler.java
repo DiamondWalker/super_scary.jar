@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.uncommon;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.network.DarkWorldPacket;
 import diamondwalker.twais.network.StaticScreenPacket;
@@ -24,7 +25,7 @@ public class StaticTeleportHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
+            if (random.nextInt(Config.UNCOMMON_EVENT_CHANCE.getAsInt()) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     for (int i = 0; i < 20; i++) {
                         double x = player.getX() + random.nextDouble() * 40 - 20;

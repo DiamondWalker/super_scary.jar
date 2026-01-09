@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.rare;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.network.DarkWorldPacket;
 import diamondwalker.twais.network.VisageFlashPacket;
@@ -24,7 +25,7 @@ public class DarkWorldHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.RARE_CHANCE) == 0) {
+            if (random.nextInt(Config.RARE_EVENT_CHANCE.getAsInt()) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     new ScriptBuilder(server)
                             .action((serv) -> {

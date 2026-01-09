@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.rare;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.util.ChatUtil;
 import diamondwalker.twais.util.ScriptBuilder;
@@ -19,7 +20,7 @@ public class JoinAndLeaveHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.RARE_CHANCE) == 0) {
+            if (random.nextInt(Config.RARE_EVENT_CHANCE.getAsInt()) == 0) {
                 ScriptBuilder builder = new ScriptBuilder(server, "join-leave");
 
                 Component join = ChatUtil.getJoinMessage("");

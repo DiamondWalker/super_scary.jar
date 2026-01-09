@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.rare;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -24,7 +25,7 @@ public class TouchGrassHandler {
 
         if (data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.RARE_CHANCE) == 0) {
+            if (random.nextInt(Config.RARE_EVENT_CHANCE.getAsInt()) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     ItemStack stack = new ItemStack(Blocks.GRASS_BLOCK.asItem());
                     stack.set(DataComponents.LORE, new ItemLore(Collections.singletonList(Component.literal("You should go touch some"))));

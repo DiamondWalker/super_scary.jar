@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.uncommon;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +19,7 @@ public class DropFromSkyHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
+            if (random.nextInt(Config.UNCOMMON_EVENT_CHANCE.getAsInt()) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     if (player.isAlive() && !player.getAbilities().flying) {
                         new ScriptBuilder(server)

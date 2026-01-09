@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.event.random.uncommon;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.WorldData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,7 +21,7 @@ public class InventoryShuffleHandler {
 
         if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(WorldData.UNCOMMON_CHANCE) == 0) {
+            if (random.nextInt(Config.UNCOMMON_EVENT_CHANCE.getAsInt()) == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     if (player.isAlive()) {
                         Collections.shuffle(player.getInventory().items);
