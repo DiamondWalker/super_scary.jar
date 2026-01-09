@@ -11,8 +11,18 @@ public class ProgressionData extends PersistentWorldData {
     private long time = 0;
     private long timeAngered = -1;
 
+    private boolean bug = false;
+
     ProgressionData(WorldData data) {
         super(data);
+    }
+
+    public void bug() {
+        bug = true;
+    }
+
+    public boolean hasSeenBug() {
+        return bug;
     }
 
     public void incrementTime() {
@@ -51,11 +61,13 @@ public class ProgressionData extends PersistentWorldData {
     public void save(CompoundTag tag) {
         tag.putLong("time", time);
         tag.putLong("angered", timeAngered);
+        tag.putBoolean("bug", bug);
     }
 
     @Override
     public void load(CompoundTag tag) {
         time = tag.getLong("time");
         timeAngered = tag.getLong("angered");
+        bug = tag.getBoolean("bug");
     }
 }

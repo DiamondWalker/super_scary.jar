@@ -80,11 +80,12 @@ public class CorruptedEntityStartPhaseHandler {
             if (data.corruptedEntityBuilds.isBuildAt(event.getPos())) {
                 if (data.corruptedEntityBuilds.anger++ >= 7) {
                     if (data.friend.friendJoined && !data.friend.friendLeft) {
-                        if (!data.friend.friendDislikesYou) {
+                        /*if (!data.friend.friendDislikesYou) {
                             buildFriendLoveCutsceneSequence(player);
                         } else {
                             buildFriendDislikeCutsceneSequence(player);
-                        }
+                        }*/
+                        buildFriendDislikeCutsceneSequence(player);
                     } else {
                         buildNoFriendCutsceneSequence(player);
                     }
@@ -93,7 +94,7 @@ public class CorruptedEntityStartPhaseHandler {
         }
     }
 
-    private static void buildFriendLoveCutsceneSequence(ServerPlayer player) {
+    /*private static void buildFriendLoveCutsceneSequence(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         String name = player.getDisplayName().getString();
         String nameLowercase = name.toLowerCase();
@@ -142,7 +143,7 @@ public class CorruptedEntityStartPhaseHandler {
                 .action((serv) -> WorldData.get(serv).friend.friendLeft = true)
                 .action((serv) -> WorldData.get(serv).progression.startAnger(serv))
                 .startScript();
-    }
+    }*/
 
     private static void buildFriendDislikeCutsceneSequence(ServerPlayer player) {
         MinecraftServer server = player.getServer();

@@ -180,12 +180,9 @@ public class StructureSpawnHandler {
             case EAST -> 12;
         };
 
-        WorldUtil.placeSign(level, pos, dirval, new Component[] {
-                Component.empty(),
-                Component.literal("Hole"),
-                Component.empty(),
-                Component.empty()
-        });
+        WorldUtil.placeSign(level, pos, dirval)
+                .setFrontLine(1, "Hole")
+                .write();
 
         return true;
     }
@@ -288,12 +285,10 @@ public class StructureSpawnHandler {
             case EAST -> 12;
         };
 
-        WorldUtil.placeSign(level, pos, dirval, new Component[] {
-                Component.empty(),
-                Component.literal("Under"),
-                Component.literal("Construction"),
-                Component.empty()
-        });
+        WorldUtil.placeSign(level, pos, dirval)
+                .setFrontLine(1, "Under")
+                .setFrontLine(2, "Construction")
+                .write();
 
         return true;
     }

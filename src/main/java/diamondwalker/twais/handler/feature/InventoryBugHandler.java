@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.feature;
 
+import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.registry.TWAISItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,6 +38,8 @@ public class InventoryBugHandler {
                         int slot = emptySlots.get(event.getEntity().getRandom().nextInt(emptySlots.size()));
                         inventory.add(slot, new ItemStack(TWAISItems.INVENTORY_BUG.asItem()));
                     }
+
+                    WorldData.get(event.getEntity().getServer()).progression.bug();
                 }
             }
         }

@@ -5,12 +5,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
+import net.minecraft.world.level.block.state.properties.RotationSegment;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -66,22 +68,54 @@ public class WorldUtil {
         return possibleChunks;
     }
 
-    public static void placeSign(Level level, BlockPos pos, int rotation, Component[] lines) {
-        placeSign(level, pos, rotation, lines, new Component[] {Component.empty(), Component.empty(), Component.empty(), Component.empty()});
+    public static SignWriter placeSign(Level level, BlockPos pos, double angle) {
+        angle = Math.toDegrees(angle);
+        int rot = Integer.valueOf(RotationSegment.convertToSegment((float)angle));
+        return placeSign(level, pos, rot);
     }
 
-    public static void placeSign(Level level, BlockPos pos, int rotation, Component[] frontLines, Component[] backLines) {
-        if (frontLines.length != 4) throw new IllegalArgumentException("Sign must be given 4 lines, not " + frontLines.length + "!");
-        if (backLines.length != 4) throw new IllegalArgumentException("Sign must be given 4 lines, not " + backLines.length + "!");
-
+    public static SignWriter placeSign(Level level, BlockPos pos, int rotation) {
         level.setBlock(pos, Blocks.OAK_SIGN.defaultBlockState().setValue(StandingSignBlock.ROTATION, rotation % 16), 2);
+
         if (level.getBlockEntity(pos) instanceof SignBlockEntity sign) {
-            SignText frontText = new SignText();
-            SignText backText = new SignText();
-            for (int i = 0; i < 4; i++) {
-                frontText = frontText.setMessage(i, frontLines[i]);
-                backText = backText.setMessage(i, backLines[i]);
-            }
+            return new SignWriter(sign);
+        }
+
+        return null;
+    }
+
+    public static class SignWriter {
+        private final SignBlockEntity sign;
+        private SignText frontText;
+        private SignText backText;
+
+        private SignWriter(SignBlockEntity sign) {
+            this.sign = sign;
+            frontText = new SignText();
+            backText = new SignText();
+        }
+
+        public SignWriter setFrontLine(int i, String txt) {
+            frontText = frontText.setMessage(i, Component.literal(txt));
+            return this;
+        }
+
+        public SignWriter setBackLine(int i, String txt) {
+            backText = backText.setMessage(i, Component.literal(txt));
+            return this;
+        }
+
+        public SignWriter setFrontLine(int i, Component txt) {
+            frontText = frontText.setMessage(i, txt);
+            return this;
+        }
+
+        public SignWriter setBackLine(int i, Component txt) {
+            backText = backText.setMessage(i, txt);
+            return this;
+        }
+
+        public void write() {
             sign.setText(frontText, true);
             sign.setText(backText, false);
         }
