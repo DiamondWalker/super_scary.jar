@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 public class WorldUtil {
-    public static List<LevelChunk> getBuildableChunks(ServerLevel level) {
+    public static List<LevelChunk> getBuildableChunks(ServerLevel level, boolean spawnProtection) {
         ArrayList<LevelChunk> possibleChunks = new ArrayList<>();
 
         CHUNK_LOOP: for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {
@@ -46,7 +46,7 @@ public class WorldUtil {
                     continue CHUNK_LOOP;
                 }
 
-                if (player.getRespawnPosition() != null && player.getRespawnDimension() == level.dimension()) {
+                if (spawnProtection && player.getRespawnPosition() != null && player.getRespawnDimension() == level.dimension()) {
                     ChunkPos spawnChunk = level.getChunk(player.getRespawnPosition()).getPos();
 
                     int spawnOffsetX = chunkPos.x - spawnChunk.x;

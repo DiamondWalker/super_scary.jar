@@ -31,7 +31,7 @@ public class StructureSpawnHandler {
             RandomSource random = server.overworld().getRandom();
             if (random.nextInt(WorldData.COMMON_CHANCE) == 0) {
                 ServerLevel level = server.overworld();
-                List<LevelChunk> chunks = WorldUtil.getBuildableChunks(level);
+                List<LevelChunk> chunks = WorldUtil.getBuildableChunks(level, false);
                 if (chunks.isEmpty()) return;
 
                 int selection = random.nextInt(3); // 0 = """tower""", 1 = hole, 2 = under construction

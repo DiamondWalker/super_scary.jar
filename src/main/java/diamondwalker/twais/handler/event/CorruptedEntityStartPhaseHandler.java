@@ -37,7 +37,7 @@ public class CorruptedEntityStartPhaseHandler {
         long time = data.progression.getTimeInWorld();
         if (!data.progression.hasBeenAngered() && time >= 72_000L && time % 24_000L == 0 && !data.scripts.hasLock("corrupted_entity")) {
             ServerLevel level = server.overworld();
-            List<LevelChunk> possibleChunks = WorldUtil.getBuildableChunks(level);
+            List<LevelChunk> possibleChunks = WorldUtil.getBuildableChunks(level, true);
             if (possibleChunks.isEmpty()) return;
 
             if (!possibleChunks.isEmpty()) {
