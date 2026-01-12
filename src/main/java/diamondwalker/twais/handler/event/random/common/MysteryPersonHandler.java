@@ -14,7 +14,6 @@ public class MysteryPersonHandler {
     public static final String[] MESSAGES = new String[] {
             "I can see you.",
             "I can hear you.",
-            "I can smell you.",
             "I can feel your heart beating.",
             "Behind you.",
             "You did this to us.",
@@ -23,13 +22,15 @@ public class MysteryPersonHandler {
             "Why are you here?",
             "Look at me.",
             "It's all your fault.",
-            "I'm coming.",
             "You skin is so soft. I can't wait to see it rip.",
             "Help.",
             "Please.",
             "You're running out of time.",
             "Give up.",
-            "Do you feel safe?"//,
+            "Do you feel safe?",
+            "Can you see me?",
+            "I'm here.",
+            "It'll all be over soon."
             //"You forgot to flush the last time you went. I have fished your turd out of the toilet and I can't wait to use it on you."
     };
 

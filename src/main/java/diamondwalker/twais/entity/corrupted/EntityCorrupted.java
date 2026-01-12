@@ -1,10 +1,15 @@
 package diamondwalker.twais.entity.corrupted;
 
 import diamondwalker.twais.data.server.WorldData;
+import diamondwalker.twais.util.ChatUtil;
+import diamondwalker.twais.util.ScriptBuilder;
 import diamondwalker.twais.util.WorldUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -15,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
+import net.minecraft.world.phys.Vec3;
 
 public class EntityCorrupted extends Mob {
     private static final TargetingConditions LOOK_CONDITION = TargetingConditions.forNonCombat().ignoreLineOfSight();
@@ -22,6 +28,8 @@ public class EntityCorrupted extends Mob {
     public EntityCorrupted(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
     }
+
+    int delay = 0;
 
     @Override
     public void aiStep() {
@@ -32,9 +40,44 @@ public class EntityCorrupted extends Mob {
 
             Player player = level().getNearestPlayer(LOOK_CONDITION, this);
             if (player != null && player.isAlive()) {
+                if (delay > 0) {
+                    delay--;
+                    if (delay == 0) {
+                        setPos(player.position());
+                        this.setPos(player.position()); // teleport again to ensure you don't miss
+                        if (this.isWithinMeleeAttackRange(player) && this.getSensing().hasLineOfSight(player)) {
+                            if (this.doHurtTarget(player)) {
+                                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0));
+                                MinecraftServer server = getServer();
+                                if (server != null && !WorldData.get(server).scripts.hasLock("corrupted_entity")) {
+                                    new ScriptBuilder(getServer(), "corrupted_entity")
+                                            .rest(60)
+                                            .action((serv) -> {
+                                                if (!player.isAlive()) {
+                                                    serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "what a loser lmao"), false);
+                                                }
+                                            }).startScript();
+                                }
+                            }
+                        }
+
+                        discard();
+                    }
+
+                    return;
+                }
+
                 this.getLookControl().setLookAt(player.getX(), player.getEyeY(), player.getZ());
 
-                if (distanceTo(player) < 25 && hasLineOfSight(player)) {
+                if (distanceTo(player) < 25 && getSensing().hasLineOfSight(player)) {
+                    if (!player.getAbilities().invulnerable && random.nextInt(3) == 0) {
+                        delay = 7;
+                        Vec3 target = player.position();
+                        this.teleportTo(target.x, target.y, target.z);
+                        // TODO: sound
+                        return;
+                    }
+
                     double angle = Mth.atan2(player.getZ() - getZ(), player.getX() - getX()) - 90;
                     fillText(WorldUtil.placeSign(level(), blockPosition(), angle));
                     this.discard();
@@ -117,6 +160,7 @@ public class EntityCorrupted extends Mob {
     public static AttributeSupplier.Builder createAttributes() {
         return LivingEntity.createLivingAttributes()
                 //.add(Attributes.MAX_HEALTH, 20)
-                .add(Attributes.FOLLOW_RANGE, 20);
+                .add(Attributes.FOLLOW_RANGE, 20)
+                .add(Attributes.ATTACK_DAMAGE, 5);
     }
 }

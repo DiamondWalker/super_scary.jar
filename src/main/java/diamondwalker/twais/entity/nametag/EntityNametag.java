@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidType;
 
 public class EntityNametag extends Entity {
-    private final int time;
+    private int time;
 
     public EntityNametag(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -25,7 +25,10 @@ public class EntityNametag extends Entity {
     @Override
     public void tick() {
         super.tick();
-        if (!level().isClientSide() && tickCount > time) discard();
+        if (!level().isClientSide()) {
+            time--;
+            if (time <= 0) discard();
+        }
     }
 
     @Override
@@ -50,11 +53,11 @@ public class EntityNametag extends Entity {
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
-
+        if (compound.contains("TimeLeft")) time = compound.getInt("TimeLeft");
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
-
+        compound.putInt("TimeLeft", time);
     }
 }

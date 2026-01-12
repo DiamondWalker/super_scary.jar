@@ -1,8 +1,14 @@
 {
   "death.attack.calculation": "%1$s failed Math class",
   "item.twais.inventory_bug": "Inventory Bug",
+  "entity.twais.corrupted": "c0rrup1e3_en1i1y",
 
   "twais.configuration.title": "The Working-As-Intended Script Configs",
+  "twais.configuration.minEventInterval": "Minimum Event Interval",
+  "twais.configuration.commonEventChance": "Common Event Chance",
+  "twais.configuration.uncommonEventChance": "Uncommon Event Chance",
+  "twais.configuration.rareEventChance": "Rare Event Chance",
+  "twais.configuration.extraRareEventChance": "Extra-Rare Event Chance",
   "twais.configuration.section.twais.common.toml": "The Working-As-Intended Script Configs",
   "twais.configuration.section.twais.common.toml.title": "The Working-As-Intended Script Configs"
 }
