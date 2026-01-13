@@ -39,6 +39,14 @@
       }
     ]
   },
+  "corrupted_jumpscare": {
+    "sounds": [
+      {
+        "name": "twais:entity/corrupted/jumpscare",
+        "stream": false
+      }
+    ]
+  },
   "visage_chase": {
     "sounds": [
       {

@@ -22,9 +22,9 @@ public class CorruptedWatchingHandler {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
 
-        if (data.progression.hasBeenAngered() /*&& !data.areEventsOnCooldown()*/) { // since this is a more passive event I don't think it needs the cooldown check
+        if (data.progression.hasBeenAngered() && !data.areEventsOnCooldown()) { // since this is a more passive event I don't think it needs the cooldown check
             RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(/*Config.COMMON_EVENT_CHANCE.getAsInt()*/100) == 0) {
+            if (random.nextInt(Config.COMMON_EVENT_CHANCE.getAsInt()) == 0) {
                 ServerLevel level = server.overworld();
                 for (ServerPlayer player : level.players()) {
                     if (player.isAlive()) {

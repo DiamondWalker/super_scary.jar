@@ -1,6 +1,7 @@
 package diamondwalker.twais.entity.corrupted;
 
 import diamondwalker.twais.data.server.WorldData;
+import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.ChatUtil;
 import diamondwalker.twais.util.ScriptBuilder;
 import diamondwalker.twais.util.WorldUtil;
@@ -74,7 +75,7 @@ public class EntityCorrupted extends Mob {
                         delay = 7;
                         Vec3 target = player.position();
                         this.teleportTo(target.x, target.y, target.z);
-                        // TODO: sound
+                        this.playSound(TWAISSounds.CORRUPTED_JUMPSCARE.value());
                         return;
                     }
 

@@ -18,6 +18,7 @@ public class TWAISSounds {
     public static final Holder<SoundEvent> PARTY_START = SOUNDS.register("party_start", SoundEvent::createVariableRangeEvent);
     public static final Holder<SoundEvent> PARTY = SOUNDS.register("party", SoundEvent::createVariableRangeEvent);
 
+    public static final Holder<SoundEvent> CORRUPTED_JUMPSCARE = SOUNDS.register("corrupted_jumpscare", SoundEvent::createVariableRangeEvent);
 
     public static final Holder<SoundEvent> VISAGE_SPAWN = SOUNDS.register("visage_spawn", SoundEvent::createVariableRangeEvent);
     public static final Holder<SoundEvent> VISAGE_CHASE = SOUNDS.register("visage_chase", SoundEvent::createVariableRangeEvent);
