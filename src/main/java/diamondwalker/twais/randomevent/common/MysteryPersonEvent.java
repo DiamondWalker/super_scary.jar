@@ -1,16 +1,11 @@
-package diamondwalker.twais.handler.event.random.common;
+package diamondwalker.twais.randomevent.common;
 
-import diamondwalker.twais.Config;
-import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.util.ChatUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-@EventBusSubscriber
-public class MysteryPersonHandler {
+public class MysteryPersonEvent {
     public static final String[] MESSAGES = new String[] {
             "I can see you.",
             "I can hear you.",
@@ -34,18 +29,10 @@ public class MysteryPersonHandler {
             //"You forgot to flush the last time you went. I have fished your turd out of the toilet and I can't wait to use it on you."
     };
 
-    @SubscribeEvent
-    private static void handleServerTick(ServerTickEvent.Post event) {
-        MinecraftServer server = event.getServer();
-        WorldData data = WorldData.get(server);
-
-        if (!data.areEventsOnCooldown() && data.progression.hasBeenAngered()) {
-            RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(Config.COMMON_EVENT_CHANCE.getAsInt()) == 0) {
-                server.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(getName(random), getMessage(random)), false);
-                data.eventCooldown();
-            }
-        }
+    public static boolean execute(MinecraftServer server) {
+        RandomSource random = server.overworld().getRandom();
+        server.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(getName(random), getMessage(random)), false);
+        return true;
     }
 
     private static String getName(RandomSource random) {
