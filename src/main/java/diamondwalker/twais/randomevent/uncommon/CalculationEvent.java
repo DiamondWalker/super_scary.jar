@@ -1,6 +1,5 @@
-package diamondwalker.twais.handler.event.random.uncommon;
+package diamondwalker.twais.randomevent.uncommon;
 
-import diamondwalker.twais.Config;
 import diamondwalker.twais.data.server.CalculationData;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.registry.TWAISDamageTypes;
@@ -14,79 +13,74 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ServerChatEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@EventBusSubscriber
-public class CalculationHandler {
-    @SubscribeEvent
-    private static void handleServerTick(ServerTickEvent.Post event) {
-        MinecraftServer server = event.getServer();
+@EventBusSubscriber // TODO: this needs to be made part of the script system
+public class CalculationEvent {
+    public static boolean execute(MinecraftServer server) {
         WorldData data = WorldData.get(server);
 
-        if (!data.areEventsOnCooldown() && !data.scripts.hasLock("calculation") && data.progression.hasBeenAngered()) {
-            RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(Config.UNCOMMON_EVENT_CHANCE.getAsInt()) == 0) {
-                data.calculation.questionCount++;
-                boolean impossible = data.calculation.questionCount >= 5;
+        if (data.scripts.hasLock("calculation")) return false;
 
-                CalculationQuestion question;
-                if (impossible) {
-                    question = CalculationQuestion.generateImpossibleQuestion(random);
-                    data.calculation.questionCount = 0;
-                } else {
-                    question = CalculationQuestion.generateRegularQuestion(random);
-                }
-                AtomicBoolean blowUp = new AtomicBoolean(false);
+        RandomSource random = server.overworld().getRandom();
+        data.calculation.questionCount++;
+        boolean impossible = data.calculation.questionCount >= 5;
 
-                new ScriptBuilder(server, "calculation")
-                        .chatMessageForAll(ChatUtil.getJoinMessage(ChatUtil.CALCULATION_NAME))
-                        .rest(40)
-                        .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, question.question))
-                        .action((serv) -> {
-                            CalculationData calc = WorldData.get(serv).calculation;
-                            calc.expectedAnswer = question.answer;
-                            calc.givenAnswer = null;
-                        })
-                        .rest(impossible ? 200 : 60)
-                        .action((serv) -> {
-                            CalculationData calc = WorldData.get(serv).calculation;
-                            if (calc.givenAnswer == null) {
-                                blowUp.set(true);
-                                serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Time's up!"), false);
-                            } else if (!calc.givenAnswer.equals(calc.expectedAnswer)) {
-                                blowUp.set(true);
-                                serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Incorrect!"), false);
-                            } else {
-                                blowUp.set(false);
-                                serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Correct!"), false);
-                            }
-
-                            calc.givenAnswer = null;
-                            calc.expectedAnswer = null;
-                        })
-                        .rest(20)
-                        .action((serv) -> {
-                            if (blowUp.get()) {
-                                for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
-                                    for (int i = 0; i < 15; i++) {
-                                        Vec3 pos = player.position();
-                                        pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);
-                                        player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
-                                    }
-                                    player.hurt(TWAISDamageTypes.calculation(player), Float.MAX_VALUE);
-                                }
-                            }
-                        })
-                        .rest(40)
-                        .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.CALCULATION_NAME))
-                        .startScript();
-
-                data.eventCooldown();
-            }
+        CalculationQuestion question;
+        if (impossible) {
+            question = CalculationQuestion.generateImpossibleQuestion(random);
+            data.calculation.questionCount = 0;
+        } else {
+            question = CalculationQuestion.generateRegularQuestion(random);
         }
+        AtomicBoolean blowUp = new AtomicBoolean(false);
+
+        new ScriptBuilder(server, "calculation")
+                .chatMessageForAll(ChatUtil.getJoinMessage(ChatUtil.CALCULATION_NAME))
+                .rest(40)
+                .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, question.question))
+                .action((serv) -> {
+                    CalculationData calc = WorldData.get(serv).calculation;
+                    calc.expectedAnswer = question.answer;
+                    calc.givenAnswer = null;
+                })
+                .rest(impossible ? 200 : 60)
+                .action((serv) -> {
+                    CalculationData calc = WorldData.get(serv).calculation;
+                    if (calc.givenAnswer == null) {
+                        blowUp.set(true);
+                        serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Time's up!"), false);
+                    } else if (!calc.givenAnswer.equals(calc.expectedAnswer)) {
+                        blowUp.set(true);
+                        serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Incorrect!"), false);
+                    } else {
+                        blowUp.set(false);
+                        serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Correct!"), false);
+                    }
+
+                    calc.givenAnswer = null;
+                    calc.expectedAnswer = null;
+                })
+                .rest(20)
+                .action((serv) -> {
+                    if (blowUp.get()) {
+                        for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
+                            for (int i = 0; i < 15; i++) {
+                                Vec3 pos = player.position();
+                                pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);
+                                player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
+                            }
+                            player.hurt(TWAISDamageTypes.calculation(player), Float.MAX_VALUE);
+                        }
+                    }
+                })
+                .rest(40)
+                .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.CALCULATION_NAME))
+                .startScript();
+
+        return true;
     }
 
     @SubscribeEvent

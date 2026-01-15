@@ -22,11 +22,15 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Random;
+
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(TWAIS.MODID)
 public class TWAIS {
     public static final String MODID = "twais";
     public static final Logger LOGGER = LogUtils.getLogger();
+
+    public static final boolean DEV_MODE = true;
 
     public TWAIS(IEventBus modEventBus, ModContainer modContainer) {
         TWAISBlocks.register(modEventBus);
@@ -36,6 +40,13 @@ public class TWAIS {
         TWAISDataAttachments.register(modEventBus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
+        TWAISRandomEvents.registerRandomEvents();
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    }
+
+    public static void executeDebugCode(Runnable code) {
+        if (!DEV_MODE) throw new IllegalStateException("Attempted to execute debug code outside of dev mode!");
+
+        code.run();
     }
 }
