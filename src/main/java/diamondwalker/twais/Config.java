@@ -21,9 +21,20 @@ public class Config {
             .comment("Whether to log the dirt block on common setup")
             .define("logDirtBlock", true);*/
 
+    // TODO: maybe add a command to help people test the values for this?
+    public static final ModConfigSpec.DoubleValue RANDOM_INTERVAL_EXPONENT = BUILDER
+            .comment(
+                    "Controls the distribution between large and small values when picking a random time interval between events.",
+                    "Larger values lead to events being more frequent on average.")
+            .defineInRange("eventIntervalFunc", 3.88,  0, Double.MAX_VALUE);
+
     public static final ModConfigSpec.IntValue MIN_EVENT_INTERVAL = BUILDER
-            .comment("The minimum amount of time, in ticks, that must pass between random events")
-            .defineInRange("minEventInterval", 20 * 60, 0, Integer.MAX_VALUE);
+            .comment("The minimum amount of time, in ticks, that must pass between random events.")
+            .defineInRange("minEventInterval", 20 * 60,  0, Integer.MAX_VALUE); // 1 minute
+
+    public static final ModConfigSpec.IntValue MAX_EVENT_INTERVAL = BUILDER
+            .comment("The maximum amount of time, in ticks, that can pass between random events.")
+            .defineInRange("maxEventInterval", 20 * 60 * 60, 0, Integer.MAX_VALUE); // 1 hour
 
     /*public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
             .comment("What you want the introduction message to be for the magic number")

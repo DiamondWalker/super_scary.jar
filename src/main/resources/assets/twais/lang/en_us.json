@@ -4,6 +4,8 @@
   "entity.twais.corrupted": "c0rrup1e3_en1i1y",
 
   "twais.configuration.title": "The Working-As-Intended Script Configs",
+  "twais.configuration.eventIntervalFunc": "Event Interval Exponent",
+  "twais.configuration.maxEventInterval": "Maximum Event Interval",
   "twais.configuration.minEventInterval": "Minimum Event Interval",
   "twais.configuration.commonEventChance": "Common Event Chance",
   "twais.configuration.uncommonEventChance": "Uncommon Event Chance",

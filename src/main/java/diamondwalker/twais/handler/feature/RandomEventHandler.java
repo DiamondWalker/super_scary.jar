@@ -1,5 +1,6 @@
 package diamondwalker.twais.handler.feature;
 
+import diamondwalker.twais.Config;
 import diamondwalker.twais.TWAIS;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.randomevent.EnumEventRarity;
@@ -48,10 +49,9 @@ public class RandomEventHandler {
             }
 
             data.randomEvents.timeSinceLastEvent = 0;
-            // TODO: min interval, max interval, and exponent should be configurable
-            double f = Math.pow(random.nextDouble(), 3.88); // exponent here is 3.88
-            long maxInterval = 20 * 60 * 60; // one hour
-            long minInterval = 20 * 60 * 1; // one minute
+            double f = Math.pow(random.nextDouble(), Config.RANDOM_INTERVAL_EXPONENT.getAsDouble()); // exponent here is 3.88
+            long maxInterval = Config.MAX_EVENT_INTERVAL.getAsInt(); // one hour
+            long minInterval = Config.MIN_EVENT_INTERVAL.getAsInt(); // one minute
             long range = maxInterval - minInterval;
             data.randomEvents.timeForNextEvent = minInterval + Math.round(f * range);
 
