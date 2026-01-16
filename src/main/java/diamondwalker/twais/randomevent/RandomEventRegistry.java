@@ -5,6 +5,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,6 +17,10 @@ public class RandomEventRegistry {
 
     public static RegisteredEvent getEventFromKey(ResourceLocation location) {
         return REGISTRY.get(location);
+    }
+
+    public static Collection<RegisteredEvent> getAllRegisteredEvents() {
+        return REGISTRY.values();
     }
 
     public static RegisteredEvent getRandomEventFromRarity(EnumEventRarity rarity, RandomSource rand) {

@@ -19,38 +19,36 @@ public class LightningEvent {
             ServerLevel level = player.serverLevel();
             if (level.dimension() == Level.OVERWORLD) {
                 RandomSource random = player.getRandom();
-                if (random.nextInt(Config.COMMON_EVENT_CHANCE.getAsInt()) == 0) {
-                    if (!level.isThundering()) {
-                        BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, player.blockPosition());
-                        if (pos.getY() <= player.getBlockY()) {
-                            LightningBolt lightningbolt = EntityType.LIGHTNING_BOLT.create(player.level());
-                            if (lightningbolt != null) {
-                                lightningbolt.moveTo(Vec3.atBottomCenterOf(pos));
-                                lightningbolt.setVisualOnly(false);
-                                level.addFreshEntity(lightningbolt);
-                            }
+                if (!level.isThundering()) {
+                    BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, player.blockPosition());
+                    if (pos.getY() <= player.getBlockY()) {
+                        LightningBolt lightningbolt = EntityType.LIGHTNING_BOLT.create(player.level());
+                        if (lightningbolt != null) {
+                            lightningbolt.moveTo(Vec3.atBottomCenterOf(pos));
+                            lightningbolt.setVisualOnly(false);
+                            level.addFreshEntity(lightningbolt);
                         }
-                    } else {
-                        ScriptBuilder script = new ScriptBuilder(server);
-                        for (int i = 0; i < 30; i++) {
-                            script.action((serv) -> {
-                                while (random.nextInt(15) > 0) {
-                                    int x = player.getBlockX() - 80 + random.nextInt(161);
-                                    int z = player.getBlockZ() - 80 + random.nextInt(161);
-                                    int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
-
-                                    LightningBolt lightningbolt = EntityType.LIGHTNING_BOLT.create(player.level());
-                                    if (lightningbolt != null) {
-                                        lightningbolt.moveTo(Vec3.atBottomCenterOf(new BlockPos(x, y, z)));
-                                        lightningbolt.setVisualOnly(false);
-                                        level.addFreshEntity(lightningbolt);
-                                    }
-                                }
-                            });
-                            script.rest(1);
-                        }
-                        script.startScript();
                     }
+                } else {
+                    ScriptBuilder script = new ScriptBuilder(server);
+                    for (int i = 0; i < 30; i++) {
+                        script.action((serv) -> {
+                            while (random.nextInt(15) > 0) {
+                                int x = player.getBlockX() - 80 + random.nextInt(161);
+                                int z = player.getBlockZ() - 80 + random.nextInt(161);
+                                int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
+
+                                LightningBolt lightningbolt = EntityType.LIGHTNING_BOLT.create(player.level());
+                                if (lightningbolt != null) {
+                                    lightningbolt.moveTo(Vec3.atBottomCenterOf(new BlockPos(x, y, z)));
+                                    lightningbolt.setVisualOnly(false);
+                                    level.addFreshEntity(lightningbolt);
+                                }
+                            }
+                        });
+                        script.rest(1);
+                    }
+                    script.startScript();
                 }
             }
         }

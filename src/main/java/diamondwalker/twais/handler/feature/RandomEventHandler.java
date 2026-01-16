@@ -13,7 +13,6 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 @EventBusSubscriber
 public class RandomEventHandler {
-    // TODO: test events to make sure they're still working. Maybe add a command to force them for easier testing?
     @SubscribeEvent
     private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();

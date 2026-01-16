@@ -25,22 +25,6 @@ public class Config {
             .comment("The minimum amount of time, in ticks, that must pass between random events")
             .defineInRange("minEventInterval", 20 * 60, 0, Integer.MAX_VALUE);
 
-    public static final ModConfigSpec.IntValue COMMON_EVENT_CHANCE = BUILDER
-            .comment("The chance for a common event to occur each tick. Lower value = higher chance")
-            .defineInRange("commonEventChance", 30_000, 0, Integer.MAX_VALUE);
-
-    public static final ModConfigSpec.IntValue UNCOMMON_EVENT_CHANCE = BUILDER
-            .comment("The chance for an uncommon event to occur each tick. Lower value = higher chance")
-            .defineInRange("uncommonEventChance", 60_000, 0, Integer.MAX_VALUE);
-
-    public static final ModConfigSpec.IntValue RARE_EVENT_CHANCE = BUILDER
-            .comment("The chance for a rare event to occur each tick. Lower value = higher chance")
-            .defineInRange("rareEventChance", 120_000, 0, Integer.MAX_VALUE);
-
-    public static final ModConfigSpec.IntValue EXTRA_RARE_EVENT_CHANCE = BUILDER
-            .comment("The chance for an extra rare event to occur each tick. Lower value = higher chance")
-            .defineInRange("extraRareEventChance", 300_000, 0, Integer.MAX_VALUE);
-
     /*public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
             .comment("What you want the introduction message to be for the magic number")
             .define("magicNumberIntroduction", "The magic number is... ");
