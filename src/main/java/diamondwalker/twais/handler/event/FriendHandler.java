@@ -42,7 +42,7 @@ public class FriendHandler {
             WorldData data = WorldData.get(server);
             if (data.friend.friendLeft) {
                 sequence
-                        .chatMessageForAll(Component.literal(data.friend.friendDislikesYou ? "You don't have any friends." : "He can't help you now."))
+                        .chatMessageForAll(Component.literal("You don't have any friends."))//.chatMessageForAll(Component.literal(data.friend.friendDislikesYou ? "You don't have any friends." : "He can't help you now."))
                         .startScript();
                 return;
             }
@@ -71,7 +71,10 @@ public class FriendHandler {
                         .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "How the hell am I supposed to know?!"))
                         .rest(30)
                         .chatMessageForAll(ChatUtil.getLeaveMessage("Friend"))
-                        .action((serv) -> WorldData.get(serv).friend.friendLeft = true)
+                        .action((serv) -> {
+                            WorldData.get(serv).friend.friendLeft = true;
+                            WorldData.get(serv).friend.friendDislikesYou = true;
+                        })
                         .startScript();
             }
         }
