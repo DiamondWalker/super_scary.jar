@@ -60,7 +60,7 @@ public class TWAISEntities {
                             MobCategory.CREATURE
                     )
                     .sized(0.6F, 1.8F)
-                    .eyeHeight(0.18F + 0.09F)
+                    .eyeHeight(0.18F)
                     .clientTrackingRange(300)
                     .noSave()
                     .build("bizarro")

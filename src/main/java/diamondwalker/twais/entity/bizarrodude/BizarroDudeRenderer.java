@@ -7,32 +7,39 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.numbers.StyledFormat;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.scores.DisplaySlot;
+import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.ReadOnlyScoreInfo;
+import net.minecraft.world.scores.Scoreboard;
 import org.lwjgl.opengl.GL11;
 
-public class BizarroDudeRenderer extends HumanoidMobRenderer<EntityBizarroDude, BizarroDudeModel> {
-    protected final BizarroDudeModel wideModel;
-    protected final BizarroDudeModel slimModel;
+public class BizarroDudeRenderer extends HumanoidMobRenderer<EntityBizarroDude, PlayerModel<EntityBizarroDude>> {
+    protected final PlayerModel<EntityBizarroDude> wideModel;
+    protected final PlayerModel<EntityBizarroDude> slimModel;
+
     public BizarroDudeRenderer(EntityRendererProvider.Context context) {
-        super(context, new BizarroDudeModel(context.bakeLayer(ModelLayers.PLAYER), false), 0.5f); // FIXME: support for slim players
+        super(context, new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5f); // FIXME: support for slim players
         wideModel = this.model;
-        slimModel = new BizarroDudeModel(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
+        slimModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
     }
 
     @Override
     protected void scale(EntityBizarroDude livingEntity, PoseStack poseStack, float partialTickTime) {
         super.scale(livingEntity, poseStack, partialTickTime);
-        poseStack.scale(1, -1, 1);
-        poseStack.translate(0, livingEntity.getBbHeight() * 1.05f, 0);
+        poseStack.scale(0.9375F, 0.9375F, 0.9375F);
+        //poseStack.translate(0, livingEntity.getBbHeight() * 1.05f, 0);
     }
-
-
 
     @Override
     public ResourceLocation getTextureLocation(EntityBizarroDude entity) {
@@ -50,6 +57,11 @@ public class BizarroDudeRenderer extends HumanoidMobRenderer<EntityBizarroDude, 
         } else {
             this.model = wideModel;
         }
+
+        // trick the game into thinking this guy is named "Dinnerbone" so he renders upside down
+        Component name = entity.getCustomName();
+        entity.setCustomName(Component.literal("Dinnerbone"));
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+        entity.setCustomName(name);
     }
 }
