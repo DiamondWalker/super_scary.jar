@@ -24,6 +24,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class EntityVisage extends Entity {
+    public static final Component CATCHPHRASE = Component.literal("You should probably run now.");
+
     public static final float NEAR_FOG_DISTANCE = 5.0f;
     public static final float FAR_FOG_DISTANCE = 7.0f;
 
@@ -46,7 +48,9 @@ public class EntityVisage extends Entity {
                 this.kill();
                 return;
             } else {
-                //WorldData.get(getServer()).eventCooldown();
+                WorldData data = WorldData.get(getServer());
+                data.randomEvents.timeSinceLastEvent = 0;
+                data.visage.spawnTicks = 0; // make sure we aren't spawning a second visage lol
             }
         }
         if (player == null) return;
@@ -86,7 +90,7 @@ public class EntityVisage extends Entity {
                 player.getData(TWAISDataAttachments.PLAYER).visageHealDisable = true;
 
                 if (player.isDeadOrDying()) {
-                    ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("You should start running.")));
+                    ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(CATCHPHRASE));
                     VisageHandler.eraseWorld(getServer());
                 } else {
                     PacketDistributor.sendToPlayer((ServerPlayer)player, new StaticScreenPacket(15));

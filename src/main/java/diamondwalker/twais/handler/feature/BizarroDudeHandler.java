@@ -46,7 +46,7 @@ public class BizarroDudeHandler {
                 name = new StringBuilder(name).reverse().toString();
 
                 boolean bizarroOccurance = false;
-                if (data.bizarro.bizarroEncounters >= 3 && rand.nextInt(1) == 0) {
+                if (data.bizarro.bizarroEncounters >= 3 && rand.nextInt(8) == 0) {
                     Vec3 dir = player.getLookAngle();
                     dir = new Vec3(dir.x, 0, dir.z).normalize();
                     if (dir.lengthSqr() > 0) { // in case you're looking straight up. idk if it's possible but just to be safe

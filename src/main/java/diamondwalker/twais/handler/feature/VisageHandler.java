@@ -3,13 +3,26 @@ package diamondwalker.twais.handler.feature;
 import diamondwalker.twais.TWAIS;
 import diamondwalker.twais.data.client.ClientData;
 import diamondwalker.twais.data.entity.player.PlayerData;
+import diamondwalker.twais.data.server.WorldData;
+import diamondwalker.twais.entity.corrupted.EntityCorrupted;
 import diamondwalker.twais.entity.visage.EntityVisage;
 import diamondwalker.twais.network.VisageFlashPacket;
 import diamondwalker.twais.registry.TWAISDataAttachments;
+import diamondwalker.twais.registry.TWAISEntities;
+import diamondwalker.twais.registry.TWAISSounds;
+import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -80,13 +93,28 @@ public class VisageHandler {
     }
 
     @SubscribeEvent
-    private static void tickStatic(ClientTickEvent.Post event) {
+    private static void handleFogTick(ClientTickEvent.Post event) {
         ClientData data = ClientData.get();
 
         if (data.visageFog) {
             if (data.visageFogAmount < FOG_FADE_TIME) data.visageFogAmount++;
         } else {
             if (data.visageFogAmount > 0) data.visageFogAmount--;
+        }
+    }
+
+    @SubscribeEvent
+    private static void handleVisageSpawwnTick(PlayerTickEvent.Post event) {
+        Player player = event.getEntity();
+        Level level = player.level();
+        if (!level.isClientSide()) {
+            WorldData data = WorldData.get(player.getServer());
+            if (player.isAlive() && level.getBrightness(LightLayer.SKY, player.blockPosition()) <= 0) {
+                if (player.getY() < 0) data.visage.spawnTicks++;
+            } else {
+                data.visage.spawnTicks = 0;
+            }
+            TWAIS.executeDebugCode(() -> System.out.println("VISAGE: " + data.visage.spawnTicks));
         }
     }
 
@@ -101,6 +129,18 @@ public class VisageHandler {
         }
 
         return (float)Mth.clamp(fogAmount / FOG_FADE_TIME, 0.0, 1.0);
+    }
+
+    public static void spawnVisage(MinecraftServer server) {
+        new ScriptBuilder(server)
+                .action((serv) -> {
+                    for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
+                        player.connection.send(new ClientboundSoundPacket(TWAISSounds.VISAGE_SPAWN, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 0.6F, 1.0F, server.overworld().getRandom().nextLong()));
+                    }
+                })
+                .rest(20 * 10)
+                .popupMessageForAll(EntityVisage.CATCHPHRASE)
+                .startScript();
     }
 
     public static void eraseWorld(MinecraftServer server) {

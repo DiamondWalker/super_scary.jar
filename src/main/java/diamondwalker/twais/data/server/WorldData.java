@@ -23,6 +23,8 @@ public class WorldData extends SavedData {
 
     public final BizarroData bizarro = new BizarroData(this);
 
+    public final VisageData visage = new VisageData(this);
+
     private final ArrayList<PersistentWorldData> persistentData = new ArrayList<>();
 
     public WorldData() {

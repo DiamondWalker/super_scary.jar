@@ -6,6 +6,7 @@ import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.randomevent.EnumEventRarity;
 import diamondwalker.twais.randomevent.RandomEventRegistry;
 import diamondwalker.twais.randomevent.RegisteredEvent;
+import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,7 +24,26 @@ public class RandomEventHandler {
         if (!data.progression.hasBeenAngered()) return;
 
         if (data.randomEvents.timeSinceLastEvent >= data.randomEvents.timeForNextEvent) {
+            // let's start by resetting the timer
+            data.randomEvents.timeSinceLastEvent = 0;
+            double f = Math.pow(random.nextDouble(), Config.RANDOM_INTERVAL_EXPONENT.getAsDouble()); // exponent here is 3.88
+            long maxInterval = Config.MAX_EVENT_INTERVAL.getAsInt(); // one hour
+            long minInterval = Config.MIN_EVENT_INTERVAL.getAsInt(); // one minute
+            long range = maxInterval - minInterval;
+            data.randomEvents.timeForNextEvent = minInterval + Math.round(f * range);
+
             if (data.randomEvents.timeForNextEvent > 0) { // ensure this isn't the first time
+
+                // if visage spawn is ready, it might happen instead of the event
+                TWAIS.executeDebugCode(() -> {
+                    if (data.visage.spawnTicks >= 20 * 60 * 1 && random.nextBoolean()) { // after 23 minutes, the visage can spawn
+                        VisageHandler.spawnVisage(server);
+                        data.visage.spawnTicks = 0;
+                        return; // atm this doesn't do anything due to the debug wrapper, but keep it because once it's implemented it'll keep a random event from occurring on top of the visage spawn
+                    }
+                });
+
+                // random event
                 RegisteredEvent eventPick;
                 do {
                     /*
@@ -47,13 +67,6 @@ public class RandomEventHandler {
                     eventPick = RandomEventRegistry.getRandomEventFromRarity(type, random);
                 } while (!eventPick.function.apply(server));
             }
-
-            data.randomEvents.timeSinceLastEvent = 0;
-            double f = Math.pow(random.nextDouble(), Config.RANDOM_INTERVAL_EXPONENT.getAsDouble()); // exponent here is 3.88
-            long maxInterval = Config.MAX_EVENT_INTERVAL.getAsInt(); // one hour
-            long minInterval = Config.MIN_EVENT_INTERVAL.getAsInt(); // one minute
-            long range = maxInterval - minInterval;
-            data.randomEvents.timeForNextEvent = minInterval + Math.round(f * range);
 
         } else {
             data.randomEvents.timeSinceLastEvent++;
