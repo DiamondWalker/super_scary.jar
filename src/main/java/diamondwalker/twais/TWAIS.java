@@ -1,6 +1,7 @@
 package diamondwalker.twais;
 
 import diamondwalker.twais.registry.*;
+import net.neoforged.fml.loading.FMLLoader;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -16,7 +17,7 @@ public class TWAIS {
     public static final String MODID = "twais";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final boolean DEV_MODE = true;
+    public static final boolean DEV_MODE = !FMLLoader.isProduction();
 
     public TWAIS(IEventBus modEventBus, ModContainer modContainer) {
         TWAISBlocks.register(modEventBus);
@@ -28,6 +29,8 @@ public class TWAIS {
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         TWAISRandomEvents.registerRandomEvents();
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+        if (DEV_MODE) LOGGER.info("TWAIS is running in a dev environment. Debug/WIP features will be active.");
     }
 
     public static void executeDevCode(Runnable code) {
