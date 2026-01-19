@@ -1,60 +1,53 @@
-package diamondwalker.twais.handler.event.random.common;
+package diamondwalker.twais.randomevent.common;
 
-import diamondwalker.twais.Config;
-import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@EventBusSubscriber
-public class StructureSpawnHandler {
-    @SubscribeEvent
-    private static void handleServerTick(ServerTickEvent.Post event) {
-        MinecraftServer server = event.getServer();
-        WorldData data = WorldData.get(server);
+public class StructureSpawnEvent {
+    public static boolean execute(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        List<LevelChunk> chunks = WorldUtil.getBuildableChunks(level, false);
+        if (chunks.isEmpty()) return false;
 
-        if (data.progression.hasBeenAngered()) { // since this is a more passive event I don't think it needs the cooldown check
-            RandomSource random = server.overworld().getRandom();
-            if (random.nextInt(Config.COMMON_EVENT_CHANCE.getAsInt()) == 0) {
-                ServerLevel level = server.overworld();
-                List<LevelChunk> chunks = WorldUtil.getBuildableChunks(level, false);
-                if (chunks.isEmpty()) return;
-
-                int selection = random.nextInt(3); // 0 = """tower""", 1 = hole, 2 = under construction
-                for (int i = 0; i < 10; i++) {
-                    LevelChunk selectedChunk = chunks.get(random.nextInt(chunks.size()));
-                    switch (selection) {
-                        case 0: {
-                            if (buildMonolith(level, selectedChunk, random)) return;
-                            break;
-                        }
-                        case 1: {
-                            if (buildHole(level, selectedChunk, random)) return;
-                            break;
-                        }
-                        case 2: {
-                            if (buildScaffold(level, selectedChunk, random)) return;
-                            break;
-                        }
-                    }
+        RandomSource random = level.getRandom();
+        int selection = random.nextInt(3); // 0 = """tower""", 1 = hole, 2 = under construction
+        for (int i = 0; i < 10; i++) {
+            LevelChunk selectedChunk = chunks.get(random.nextInt(chunks.size()));
+            switch (selection) {
+                case 0: {
+                    if (buildMonolith(level, selectedChunk, random)) return true;
+                    break;
+                }
+                case 1: {
+                    if (buildHole(level, selectedChunk, random)) return true;
+                    break;
+                }
+                case 2: {
+                    if (buildScaffold(level, selectedChunk, random)) return true;
+                    break;
                 }
             }
         }
+
+        return false;
     }
 
     private static boolean buildMonolith(ServerLevel level, LevelChunk chunk, RandomSource rand) {
@@ -292,6 +285,10 @@ public class StructureSpawnHandler {
                 .write();
 
         return true;
+    }
+
+    private static boolean buildGrave(ServerLevel level, LevelChunk chunk, RandomSource random) {
+        return false;
     }
 
     private static boolean buildHeadOnPike(ServerLevel level, LevelChunk chunk) {

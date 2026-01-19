@@ -17,7 +17,6 @@ public class ScheduledEventsHandler {
         WorldData data = WorldData.get(server);
 
         data.progression.incrementTime();
-        data.decrementEventCooldown();
 
         for (Consumer<MinecraftServer> action : data.scripts.tickAndGetRemovedScripts()) {
             action.accept(server);

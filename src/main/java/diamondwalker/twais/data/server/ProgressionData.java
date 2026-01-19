@@ -40,7 +40,6 @@ public class ProgressionData extends PersistentWorldData {
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, 5));
         }
         server.overworld().globalLevelEvent(1023, BlockPos.ZERO, 0);
-        mainData.eventCooldown();
     }
 
     public boolean hasBeenAngered() {

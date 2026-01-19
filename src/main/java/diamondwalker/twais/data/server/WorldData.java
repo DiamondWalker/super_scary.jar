@@ -10,14 +10,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class WorldData extends SavedData {
-    /*
-    When the new event system is done I'm thinking this could be the chances:
-    Common - 69%
-    Uncommon - 25%
-    Rare - 5%
-    Extra Rare - 1%
-     */
-
     public final ScriptData scripts = new ScriptData();
     public final FriendData friend = new FriendData(this);
 
@@ -27,7 +19,9 @@ public class WorldData extends SavedData {
 
     public final ProgressionData progression = new ProgressionData(this);
 
-    private int eventCooldown = 0;
+    public final RandomEventData randomEvents = new RandomEventData(this);
+
+    public final BizarroData bizarro = new BizarroData(this);
 
     private final ArrayList<PersistentWorldData> persistentData = new ArrayList<>();
 
@@ -41,18 +35,6 @@ public class WorldData extends SavedData {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void eventCooldown() {
-        eventCooldown = Config.MIN_EVENT_INTERVAL.get();
-    }
-
-    public boolean areEventsOnCooldown() {
-        return eventCooldown > 0;
-    }
-
-    public void decrementEventCooldown() {
-        if (areEventsOnCooldown()) eventCooldown--;
     }
 
     @Override

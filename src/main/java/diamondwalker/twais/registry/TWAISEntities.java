@@ -1,6 +1,8 @@
 package diamondwalker.twais.registry;
 
 import diamondwalker.twais.TWAIS;
+import diamondwalker.twais.entity.bizarrodude.BizarroDudeRenderer;
+import diamondwalker.twais.entity.bizarrodude.EntityBizarroDude;
 import diamondwalker.twais.entity.corrupted.CorruptedRenderer;
 import diamondwalker.twais.entity.corrupted.EntityCorrupted;
 import diamondwalker.twais.entity.nametag.EntityNametag;
@@ -53,9 +55,21 @@ public class TWAISEntities {
             .build("corrupted")
     );
 
+    public static final Supplier<EntityType<EntityBizarroDude>> BIZZARO_DUDE = ENTITY_TYPES.register("bizarro", () -> EntityType.Builder.of(
+                            EntityBizarroDude::new,
+                            MobCategory.CREATURE
+                    )
+                    .sized(0.6F, 1.8F)
+                    .eyeHeight(0.18F)
+                    .clientTrackingRange(300)
+                    .noSave()
+                    .build("bizarro")
+    );
+
     @SubscribeEvent
     private static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(TWAISEntities.CORRUPTED.get(), EntityCorrupted.createAttributes().build());
+        event.put(TWAISEntities.BIZZARO_DUDE.get(), EntityBizarroDude.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -63,6 +77,7 @@ public class TWAISEntities {
         event.registerEntityRenderer(TWAISEntities.NAMETAG.get(), NametagRenderer::new);
         event.registerEntityRenderer(TWAISEntities.VISAGE.get(), VisageRenderer::new);
         event.registerEntityRenderer(TWAISEntities.CORRUPTED.get(), (cntx) -> new CorruptedRenderer(cntx, false));
+        event.registerEntityRenderer(TWAISEntities.BIZZARO_DUDE.get(), BizarroDudeRenderer::new);
     }
 
     public static void register(IEventBus bus) {

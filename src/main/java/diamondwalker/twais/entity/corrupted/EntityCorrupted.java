@@ -79,7 +79,7 @@ public class EntityCorrupted extends Mob {
                         return;
                     }
 
-                    double angle = Mth.atan2(player.getZ() - getZ(), player.getX() - getX()) - 90;
+                    double angle = Mth.atan2(player.getZ() - getZ(), player.getX() - getX()) - Math.PI / 2;
                     fillText(WorldUtil.placeSign(level(), blockPosition(), angle));
                     this.discard();
                 }

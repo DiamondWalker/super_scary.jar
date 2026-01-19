@@ -46,7 +46,7 @@ public class EntityVisage extends Entity {
                 this.kill();
                 return;
             } else {
-                WorldData.get(getServer()).eventCooldown();
+                //WorldData.get(getServer()).eventCooldown();
             }
         }
         if (player == null) return;
