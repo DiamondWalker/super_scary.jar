@@ -6,7 +6,6 @@ import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.randomevent.EnumEventRarity;
 import diamondwalker.twais.randomevent.RandomEventRegistry;
 import diamondwalker.twais.randomevent.RegisteredEvent;
-import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -35,7 +34,7 @@ public class RandomEventHandler {
             if (data.randomEvents.timeForNextEvent > 0) { // ensure this isn't the first time
 
                 // if visage spawn is ready, it might happen instead of the event
-                TWAIS.executeDebugCode(() -> {
+                TWAIS.executeDevCode(() -> {
                     if (data.visage.spawnTicks >= 20 * 60 * 1 && random.nextBoolean()) { // after 23 minutes, the visage can spawn
                         VisageHandler.spawnVisage(server);
                         data.visage.spawnTicks = 0;
@@ -72,6 +71,6 @@ public class RandomEventHandler {
             data.randomEvents.timeSinceLastEvent++;
         }
 
-        TWAIS.executeDebugCode(() -> System.out.println(data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent));
+        TWAIS.executeDevCode(() -> System.out.println("Time left for random event: " + (data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent)));
     }
 }

@@ -4,16 +4,12 @@ import diamondwalker.twais.TWAIS;
 import diamondwalker.twais.data.client.ClientData;
 import diamondwalker.twais.data.entity.player.PlayerData;
 import diamondwalker.twais.data.server.WorldData;
-import diamondwalker.twais.entity.corrupted.EntityCorrupted;
 import diamondwalker.twais.entity.visage.EntityVisage;
 import diamondwalker.twais.network.VisageFlashPacket;
 import diamondwalker.twais.registry.TWAISDataAttachments;
-import diamondwalker.twais.registry.TWAISEntities;
 import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +18,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -114,7 +109,7 @@ public class VisageHandler {
             } else {
                 data.visage.spawnTicks = 0;
             }
-            TWAIS.executeDebugCode(() -> System.out.println("VISAGE: " + data.visage.spawnTicks));
+            TWAIS.executeDevCode(() -> System.out.println("VISAGE: " + data.visage.spawnTicks));
         }
     }
 
