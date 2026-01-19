@@ -26,8 +26,12 @@ public class CorruptedWatchingEvent {
                     int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
                     if (y <= level.getSeaLevel()) continue;
                     BlockPos spawnPos = new BlockPos(x, y, z);
-                    EntityCorrupted entity = TWAISEntities.CORRUPTED.get().spawn(level, spawnPos, MobSpawnType.MOB_SUMMONED);
-                    return entity != null;
+                    EntityCorrupted entity = TWAISEntities.CORRUPTED.get().create(level);//spawn(level, spawnPos, MobSpawnType.MOB_SUMMONED);
+                    entity.setPos((double)spawnPos.getX() + 0.5, (double)(spawnPos.getY() + 1), (double)spawnPos.getZ() + 0.5);
+                    if (level.noCollision(entity)) {
+                        level.addFreshEntity(entity);
+                        return true;
+                    }
                 }
             }
         }

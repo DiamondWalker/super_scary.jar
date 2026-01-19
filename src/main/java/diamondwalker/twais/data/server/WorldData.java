@@ -21,6 +21,8 @@ public class WorldData extends SavedData {
 
     public final RandomEventData randomEvents = new RandomEventData(this);
 
+    public final BizarroData bizarro = new BizarroData(this);
+
     private final ArrayList<PersistentWorldData> persistentData = new ArrayList<>();
 
     public WorldData() {

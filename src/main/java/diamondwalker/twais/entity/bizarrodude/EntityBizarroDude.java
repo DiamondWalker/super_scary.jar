@@ -30,7 +30,7 @@ public class EntityBizarroDude extends Mob {
 
     public EntityBizarroDude(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
-        time = Integer.MAX_VALUE;
+        time = getRandom().nextInt(20 + 1) + 10;
     }
 
     @Override
@@ -38,7 +38,9 @@ public class EntityBizarroDude extends Mob {
         super.aiStep();
 
         if (!level().isClientSide()) {
-            if (tickCount > time) this.discard();
+            if (tickCount > time) {
+                leave();
+            }
 
             Player player = level().getNearestPlayer(LOOK_CONDITION, this);
             if (player != null && player.isAlive()) {
@@ -47,6 +49,11 @@ public class EntityBizarroDude extends Mob {
                 this.getLookControl().setLookAt(player.getX(), this.getEyeY() + offset, player.getZ());
             }
         }
+    }
+
+    private void leave() {
+        getServer().getPlayerList().broadcastSystemMessage(ChatUtil.getLeaveMessage(getDisplayName().getString()), false);
+        this.discard();
     }
 
     @Override
@@ -62,6 +69,7 @@ public class EntityBizarroDude extends Mob {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        if (!level().isClientSide()) leave();
         return false;
     }
 
