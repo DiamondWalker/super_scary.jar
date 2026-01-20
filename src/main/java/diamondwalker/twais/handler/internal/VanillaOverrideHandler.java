@@ -1,9 +1,12 @@
 package diamondwalker.twais.handler.internal;
 
+import ca.weblite.objc.Client;
 import diamondwalker.twais.OverworldSpecialEffects;
 import diamondwalker.twais.data.client.ClientData;
+import diamondwalker.twais.gui.screen.FakePauseScreen;
 import diamondwalker.twais.gui.screen.NoticeScreen;
 import diamondwalker.twais.registry.TWAISMusic;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,6 +25,19 @@ public class VanillaOverrideHandler {
         if (event.getNewScreen() instanceof TitleScreen title && !changed) {
             changed = true;
             //event.setNewScreen(new NoticeScreen(title));
+        }
+    }
+
+    @SubscribeEvent
+    private static void handleVisagePauseScreen(ScreenEvent.Opening event) {
+        if (ClientData.get().isVisageActive()) {
+            if (event.getNewScreen() instanceof PauseScreen originalPauseScreen) {
+                if (ClientData.get().canPause()) {
+                    event.setNewScreen(new FakePauseScreen(originalPauseScreen.showsPauseMenu()));
+                } else {
+                    event.setCanceled(true);
+                }
+            }
         }
     }
 

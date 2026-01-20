@@ -23,34 +23,20 @@ public class RandomEventHandler {
         if (!data.progression.hasBeenAngered()) return;
 
         if (data.randomEvents.timeSinceLastEvent >= data.randomEvents.timeForNextEvent) {
-            // let's start by resetting the timer
-            data.randomEvents.timeSinceLastEvent = 0;
-            double f = Math.pow(random.nextDouble(), Config.RANDOM_INTERVAL_EXPONENT.getAsDouble()); // exponent here is 3.88
-            long maxInterval = Config.MAX_EVENT_INTERVAL.getAsInt(); // one hour
-            long minInterval = Config.MIN_EVENT_INTERVAL.getAsInt(); // one minute
-            long range = maxInterval - minInterval;
-            data.randomEvents.timeForNextEvent = minInterval + Math.round(f * range);
-
-            if (data.randomEvents.timeForNextEvent > 0) { // ensure this isn't the first time
-
-                // if visage spawn is ready, it might happen instead of the event
-                TWAIS.executeDevCode(() -> {
-                    if (data.visage.spawnTicks >= 20 * 60 * 1 && random.nextBoolean()) { // after 23 minutes, the visage can spawn
-                        VisageHandler.spawnVisage(server);
-                        data.visage.spawnTicks = 0;
-                        return; // atm this doesn't do anything due to the debug wrapper, but keep it because once it's implemented it'll keep a random event from occurring on top of the visage spawn
-                    }
-                });
-
+            // if visage spawn is ready, it might happen instead of the event
+            if (TWAIS.DEV_MODE && data.visage.spawnTicks >= 20 * 60 * 23 && random.nextBoolean()) { // after 23 minutes, the visage can spawn
+                VisageHandler.spawnVisage(server);
+                data.visage.spawnTicks = 0;
+            } else {
                 // random event
                 RegisteredEvent eventPick;
                 do {
-                    /*
-                    Common - 69%
-                    Uncommon - 25%
-                    Rare - 5%
-                    Extra Rare - 1%
-                     */
+                /*
+                   Common - 69%
+                   Uncommon - 25%
+                   Rare - 5%
+                   Extra Rare - 1%
+                    */
                     float typeF = random.nextFloat();
                     EnumEventRarity type;
                     if (typeF < 0.01f) {
@@ -62,15 +48,24 @@ public class RandomEventHandler {
                     } else {
                         type = EnumEventRarity.COMMON;
                     }
-
                     eventPick = RandomEventRegistry.getRandomEventFromRarity(type, random);
                 } while (!eventPick.function.apply(server));
             }
 
+            refreshEventTime(data, random);
         } else {
             data.randomEvents.timeSinceLastEvent++;
         }
 
-        TWAIS.executeDevCode(() -> System.out.println("Time left for random event: " + (data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent)));
+        if (TWAIS.DEV_MODE) System.out.println("Time left for random event: " + (data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent));
+    }
+
+    public static void refreshEventTime(WorldData data, RandomSource random) {
+        data.randomEvents.timeSinceLastEvent = 0;
+        double f = Math.pow(random.nextDouble(), Config.RANDOM_INTERVAL_EXPONENT.getAsDouble()); // exponent here is 3.88
+        long maxInterval = Config.MAX_EVENT_INTERVAL.getAsInt(); // one hour
+        long minInterval = Config.MIN_EVENT_INTERVAL.getAsInt(); // one minute
+        long range = maxInterval - minInterval;
+        data.randomEvents.timeForNextEvent = minInterval + Math.round(f * range);
     }
 }

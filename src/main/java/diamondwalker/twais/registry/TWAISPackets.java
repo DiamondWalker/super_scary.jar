@@ -14,7 +14,7 @@ public class TWAISPackets {
         registrar.playToClient(StaticScreenPacket.TYPE, StaticScreenPacket.CODEC, StaticScreenPacket::handle);
         registrar.playToClient(ScreenColorShaderPacket.TYPE, ScreenColorShaderPacket.CODEC, ScreenColorShaderPacket::handle);
         registrar.playToClient(VisageFlashPacket.TYPE, VisageFlashPacket.CODEC, VisageFlashPacket::handle);
-        registrar.playToClient(VisageFogPacket.TYPE, VisageFogPacket.CODEC, VisageFogPacket::handle);
+        registrar.playToClient(VisageActivePacket.TYPE, VisageActivePacket.CODEC, VisageActivePacket::handle);
         registrar.playToClient(DarkWorldPacket.TYPE, DarkWorldPacket.CODEC, DarkWorldPacket::handle);
         registrar.playToClient(PartyTimePacket.TYPE, PartyTimePacket.CODEC, PartyTimePacket::handle);
     }

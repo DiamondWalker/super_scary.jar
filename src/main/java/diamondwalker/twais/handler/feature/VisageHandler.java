@@ -10,6 +10,7 @@ import diamondwalker.twais.registry.TWAISDataAttachments;
 import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -91,7 +92,7 @@ public class VisageHandler {
     private static void handleFogTick(ClientTickEvent.Post event) {
         ClientData data = ClientData.get();
 
-        if (data.visageFog) {
+        if (data.isVisageActive()) {
             if (data.visageFogAmount < FOG_FADE_TIME) data.visageFogAmount++;
         } else {
             if (data.visageFogAmount > 0) data.visageFogAmount--;
@@ -109,7 +110,7 @@ public class VisageHandler {
             } else {
                 data.visage.spawnTicks = 0;
             }
-            TWAIS.executeDevCode(() -> System.out.println("VISAGE: " + data.visage.spawnTicks));
+            if (TWAIS.DEV_MODE) System.out.println("VISAGE: " + data.visage.spawnTicks);
         }
     }
 
@@ -117,7 +118,7 @@ public class VisageHandler {
         ClientData data = ClientData.get();
 
         double fogAmount = data.visageFogAmount;
-        if (data.visageFog) {
+        if (data.isVisageActive()) {
             fogAmount += partialTicks;
         } else {
             fogAmount -= partialTicks;
@@ -134,7 +135,7 @@ public class VisageHandler {
                     }
                 })
                 .rest(20 * 10)
-                .popupMessageForAll(EntityVisage.CATCHPHRASE)
+                .popupMessageForAll(Component.literal("You should probably run now."))
                 .startScript();
     }
 

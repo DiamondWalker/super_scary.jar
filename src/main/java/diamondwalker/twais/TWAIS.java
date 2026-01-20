@@ -32,10 +32,4 @@ public class TWAIS {
 
         if (DEV_MODE) LOGGER.info("TWAIS is running in a dev environment. Debug/WIP features will be active.");
     }
-
-    public static void executeDevCode(Runnable code) {
-        if (DEV_MODE) {
-            code.run();
-        }
-    }
 }

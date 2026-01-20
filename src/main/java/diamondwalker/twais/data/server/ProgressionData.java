@@ -1,5 +1,6 @@
 package diamondwalker.twais.data.server;
 
+import diamondwalker.twais.handler.feature.RandomEventHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -40,6 +41,8 @@ public class ProgressionData extends PersistentWorldData {
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, 5));
         }
         server.overworld().globalLevelEvent(1023, BlockPos.ZERO, 0);
+
+        RandomEventHandler.refreshEventTime(mainData, server.overworld().getRandom());
     }
 
     public boolean hasBeenAngered() {

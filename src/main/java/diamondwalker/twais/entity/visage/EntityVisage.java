@@ -4,7 +4,7 @@ import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.handler.feature.VisageHandler;
 import diamondwalker.twais.network.StaticScreenPacket;
 import diamondwalker.twais.network.VisageFlashPacket;
-import diamondwalker.twais.network.VisageFogPacket;
+import diamondwalker.twais.network.VisageActivePacket;
 import diamondwalker.twais.registry.TWAISDataAttachments;
 import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.EntityUtil;
@@ -24,8 +24,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class EntityVisage extends Entity {
-    public static final Component CATCHPHRASE = Component.literal("You should probably run now.");
-
     public static final float NEAR_FOG_DISTANCE = 5.0f;
     public static final float FAR_FOG_DISTANCE = 7.0f;
 
@@ -43,8 +41,12 @@ public class EntityVisage extends Entity {
         super.tick();
         Player player = level().getNearestPlayer(this, Double.MAX_VALUE);
         if (!level().isClientSide()) {
-            if (player == null || !player.isAlive() || (EntityUtil.isOnSurface(player, false) && player.getY() > level().getSeaLevel())) {
+            if (player == null || !player.isAlive()) {
+                this.kill();
+                return;
+            } else if (EntityUtil.isOnSurface(player, false) && player.getY() > level().getSeaLevel()) {
                 if (player instanceof ServerPlayer sp) PacketDistributor.sendToPlayer(sp, new VisageFlashPacket(false));
+                WorldData.get(getServer()).visage.visageEncountered = true;
                 this.kill();
                 return;
             } else {
@@ -90,7 +92,7 @@ public class EntityVisage extends Entity {
                 player.getData(TWAISDataAttachments.PLAYER).visageHealDisable = true;
 
                 if (player.isDeadOrDying()) {
-                    ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(CATCHPHRASE));
+                    ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("You are not welcome here.")));
                     VisageHandler.eraseWorld(getServer());
                 } else {
                     PacketDistributor.sendToPlayer((ServerPlayer)player, new StaticScreenPacket(15));
@@ -130,13 +132,13 @@ public class EntityVisage extends Entity {
     @Override
     public void startSeenByPlayer(ServerPlayer serverPlayer) {
         super.startSeenByPlayer(serverPlayer);
-        PacketDistributor.sendToPlayer(serverPlayer, new VisageFogPacket(true));
+        PacketDistributor.sendToPlayer(serverPlayer, new VisageActivePacket(true));
     }
 
     @Override
     public void stopSeenByPlayer(ServerPlayer serverPlayer) {
         super.stopSeenByPlayer(serverPlayer);
-        PacketDistributor.sendToPlayer(serverPlayer, new VisageFogPacket(false));
+        PacketDistributor.sendToPlayer(serverPlayer, new VisageActivePacket(false));
     }
 
     @Override
