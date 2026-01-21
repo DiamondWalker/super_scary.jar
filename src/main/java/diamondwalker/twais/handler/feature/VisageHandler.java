@@ -7,6 +7,7 @@ import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.entity.visage.EntityVisage;
 import diamondwalker.twais.network.VisageFlashPacket;
 import diamondwalker.twais.registry.TWAISDataAttachments;
+import diamondwalker.twais.registry.TWAISEntities;
 import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.client.Minecraft;
@@ -16,10 +17,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.storage.LevelStorageSource;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -136,6 +139,26 @@ public class VisageHandler {
                 })
                 .rest(20 * 10)
                 .popupMessageForAll(Component.literal("You should probably run now."))
+                .action((serv) -> {
+                    for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
+                        if (player.isAlive()) {
+                            EntityVisage visage = TWAISEntities.VISAGE.get().create(player.level());
+
+                            RandomSource random = player.getRandom();
+                            for (int i = 0; i < 10; i++) {
+                                Vec3 pos = player.position();
+                                double angle = random.nextDouble() * Math.PI * 2;
+                                pos = pos.add(Math.cos(angle) * 30, player.getEyeHeight() - visage.getBbHeight() / 2, Math.sin(angle) * 30);
+                                visage.setPos(pos);
+
+                                if (!player.hasLineOfSight(visage)) {
+                                    player.level().addFreshEntity(visage);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                })
                 .startScript();
     }
 

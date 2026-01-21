@@ -106,7 +106,7 @@ public class EntityVisage extends Entity {
         }
     }
 
-    private void teleport(Player player) {
+    public void teleport(Player player) {
         for (int i = 0; i < 10; i++) {
             Vec3 pos = player.position();
             double angle = random.nextDouble() * Math.PI * 2;

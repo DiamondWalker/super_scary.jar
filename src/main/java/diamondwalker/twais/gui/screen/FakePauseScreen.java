@@ -101,6 +101,11 @@ public class FakePauseScreen extends PauseScreen {
         }
     }
 
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return false;
+    }
+
     private boolean removeCharacter() {
         String title = titleWidget.getMessage().getString();
         if (title.isEmpty()) return false;

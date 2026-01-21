@@ -24,7 +24,7 @@ public class RandomEventHandler {
 
         if (data.randomEvents.timeSinceLastEvent >= data.randomEvents.timeForNextEvent) {
             // if visage spawn is ready, it might happen instead of the event
-            if (TWAIS.DEV_MODE && data.visage.spawnTicks >= 20 * 60 * 23 && random.nextBoolean()) { // after 23 minutes, the visage can spawn
+            if (data.visage.spawnTicks >= 20 * 60 * 23 && random.nextBoolean()) { // after 23 minutes, the visage can spawn
                 VisageHandler.spawnVisage(server);
                 data.visage.spawnTicks = 0;
             } else {
