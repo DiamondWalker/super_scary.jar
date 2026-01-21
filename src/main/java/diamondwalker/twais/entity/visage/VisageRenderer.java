@@ -18,7 +18,7 @@ public class VisageRenderer extends EntityRenderer<EntityVisage> {
 
     private static final float SCALE = 1.0f;
     private static final int FRAMES = 4;
-    private static final int TICKS_PER_FRAME = 2;
+    private static final int TICKS_PER_FRAME = 3;
 
     public VisageRenderer(EntityRendererProvider.Context p_173962_) {
         super(p_173962_);
