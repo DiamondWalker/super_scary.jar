@@ -3,6 +3,7 @@ package diamondwalker.twais.entity.visage;
 import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.handler.feature.VisageHandler;
 import diamondwalker.twais.network.StaticScreenPacket;
+import diamondwalker.twais.network.VisageDisconnectPacket;
 import diamondwalker.twais.network.VisageFlashPacket;
 import diamondwalker.twais.network.VisageActivePacket;
 import diamondwalker.twais.registry.TWAISDataAttachments;
@@ -92,7 +93,8 @@ public class EntityVisage extends Entity {
                 player.getData(TWAISDataAttachments.PLAYER).visageHealDisable = true;
 
                 if (player.isDeadOrDying()) {
-                    ((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("You are not welcome here.")));
+                    //((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("You are not welcome here.")));
+                    PacketDistributor.sendToPlayer((ServerPlayer) player, new VisageDisconnectPacket("You should probably run now."));
                     VisageHandler.eraseWorld(getServer());
                 } else {
                     PacketDistributor.sendToPlayer((ServerPlayer)player, new StaticScreenPacket(15));

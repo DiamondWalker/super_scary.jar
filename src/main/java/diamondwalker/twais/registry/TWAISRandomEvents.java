@@ -21,6 +21,7 @@ public class TWAISRandomEvents {
     public static RegisteredEvent LIGHTNING;
     public static RegisteredEvent MYSTERY_PERSON;
     public static RegisteredEvent STRUCTURE_SPAWN;
+    public static RegisteredEvent SOUND_OF_DEATH;
 
     public static RegisteredEvent CALCULATION;
     public static RegisteredEvent DROP_FROM_SKY;
@@ -48,6 +49,8 @@ public class TWAISRandomEvents {
         LIGHTNING = register(COMMON, "lightning", LightningEvent::execute);
         MYSTERY_PERSON = register(COMMON, "mystery_person", MysteryPersonEvent::execute);
         STRUCTURE_SPAWN = register(COMMON, "structure_spawn", StructureSpawnEvent::execute);
+        SOUND_OF_DEATH = register(COMMON, "sound_of_death", SoundOfDeathEvent::execute);
+
         CALCULATION = register(UNCOMMON, "calculation", CalculationEvent::execute);
         DROP_FROM_SKY = register(UNCOMMON, "drop_from_sky", DropFromSkyEvent::execute);
         HEALTH_CHANGE = register(UNCOMMON, "health_change", HealthChangeEvent::execute);
@@ -55,9 +58,11 @@ public class TWAISRandomEvents {
         ITEM_DROP = register(UNCOMMON, "item_drop", ItemDropEvent::execute);
         STATIC_TELEPORT = register(UNCOMMON, "static_teleport", StaticTeleportEvent::execute);
         TOSSED_AROUND = register(UNCOMMON, "tossed_around", TossedAroundEvent::execute);
+
         DARK_WORLD = register(RARE, "dark_world", TossedAroundEvent::execute);
         JOIN_AND_LEAVE = register(RARE, "join_and_leave", JoinAndLeaveEvent::execute);
         TOUCH_GRASS = register(RARE, "touch_grass", TouchGrassEvent::execute);
+
         PARTY = register(EXTRA_RARE, "party", PartyEvent::execute);
         SNORE = register(EXTRA_RARE, "snore", SnoreEvent::execute);
     }

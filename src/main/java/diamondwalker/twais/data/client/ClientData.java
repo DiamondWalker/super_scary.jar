@@ -1,5 +1,7 @@
 package diamondwalker.twais.data.client;
 
+import net.minecraft.client.Minecraft;
+
 public class ClientData {
     public boolean slience = false;
 
@@ -15,9 +17,20 @@ public class ClientData {
 
     public ScreenFlashData flash = null;
 
+    private boolean silence = false;
+
     public void setVisageActive(boolean active) {
         isVisageActive = active;
         if (!isVisageActive) pauseBlocked = false;
+    }
+
+    public void setSilenced(boolean active) {
+        this.silence = active;
+        if (silence) Minecraft.getInstance().getSoundManager().stop();
+    }
+
+    public boolean isSilenced() {
+        return silence;
     }
 
     public boolean isVisageActive() {

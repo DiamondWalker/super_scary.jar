@@ -70,5 +70,13 @@
         "stream": false
       }
     ]
+  },
+  "visage_scare": {
+    "sounds": [
+      {
+        "name": "twais:entity/visage/scare",
+        "stream": false
+      }
+    ]
   }
 }

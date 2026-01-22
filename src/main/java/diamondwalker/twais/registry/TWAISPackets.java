@@ -17,5 +17,7 @@ public class TWAISPackets {
         registrar.playToClient(VisageActivePacket.TYPE, VisageActivePacket.CODEC, VisageActivePacket::handle);
         registrar.playToClient(DarkWorldPacket.TYPE, DarkWorldPacket.CODEC, DarkWorldPacket::handle);
         registrar.playToClient(PartyTimePacket.TYPE, PartyTimePacket.CODEC, PartyTimePacket::handle);
+        registrar.playToClient(SilencePacket.TYPE, SilencePacket.CODEC, SilencePacket::handle);
+        registrar.playToClient(VisageDisconnectPacket.TYPE, VisageDisconnectPacket.CODEC, VisageDisconnectPacket::handle);
     }
 }

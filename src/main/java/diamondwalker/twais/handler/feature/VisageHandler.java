@@ -11,6 +11,8 @@ import diamondwalker.twais.registry.TWAISEntities;
 import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.ScriptBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
@@ -38,6 +40,10 @@ import java.io.IOException;
 public class VisageHandler {
     private static boolean DELETE_WORLD = false;
     private static final int FOG_FADE_TIME = 160;
+
+    private static boolean scareHappening = false;
+    private static boolean readyToClose = false;
+    private static SoundInstance scareSound;
 
     @SubscribeEvent
     private static void handlePlayerHeal(LivingHealEvent event) {
@@ -103,11 +109,14 @@ public class VisageHandler {
     }
 
     @SubscribeEvent
-    private static void handleVisageSpawwnTick(PlayerTickEvent.Post event) {
+    private static void handleVisageSpawnTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
         Level level = player.level();
         if (!level.isClientSide()) {
             WorldData data = WorldData.get(player.getServer());
+
+            if (!data.progression.hasBeenAngered()) return;
+
             if (player.isAlive() && level.getBrightness(LightLayer.SKY, player.blockPosition()) <= 0) {
                 if (player.getY() < 0) data.visage.spawnTicks++;
             } else {
@@ -177,5 +186,25 @@ public class VisageHandler {
                 TWAIS.LOGGER.warn("Visage level delete failed.", ioexception);
             }
         }
+    }
+
+    @SubscribeEvent
+    private static void handleScareTick(ClientTickEvent.Pre event) {
+        if (scareHappening) {
+            if (readyToClose && scareSound != null) { // the sound has started
+                if (!Minecraft.getInstance().getSoundManager().isActive(scareSound)) Minecraft.getInstance().stop(); // the sound is over, close the game
+            } else {
+                if (scareSound != null && Minecraft.getInstance().getSoundManager().isActive(scareSound)) { // the sound is playing, so we're ready
+                    readyToClose = true;
+                } else { // the sound hasn't started
+                    scareSound = SimpleSoundInstance.forUI(TWAISSounds.VISAGE_SCARE.value(), 1.0f, 15.0f); // TODO: make this louder i think
+                    Minecraft.getInstance().getSoundManager().play(scareSound);
+                }
+            }
+        }
+    }
+
+    public static void doMenuScare() {
+        scareHappening = true;
     }
 }
