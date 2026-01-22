@@ -2,6 +2,7 @@ package diamondwalker.twais.gui.screen;
 
 import diamondwalker.twais.TWAIS;
 import diamondwalker.twais.data.client.ClientData;
+import diamondwalker.twais.registry.TWAISSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
@@ -9,6 +10,7 @@ import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 
 import java.util.Collections;
@@ -65,6 +67,7 @@ public class FakePauseScreen extends PauseScreen {
         if (titleWidget != null) {
             if (ticks <= 0) {
                 if (close) {
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(TWAISSounds.VISAGE_TELEPORT.value(), 1.0f, 1.0f));
                     this.minecraft.setScreen(null);
                     this.minecraft.mouseHandler.grabMouse();
                     ClientData.get().blockPause();
