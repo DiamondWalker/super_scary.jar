@@ -42,6 +42,8 @@ public class ProgressionData extends PersistentWorldData {
         }
         server.overworld().globalLevelEvent(1023, BlockPos.ZERO, 0);
 
+        mainData.corruptedEntityBuilds.flush();
+
         RandomEventHandler.refreshEventTime(mainData, server.overworld().getRandom());
     }
 

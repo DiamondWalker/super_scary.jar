@@ -43,17 +43,19 @@ public class CorruptedEntityBuildData extends PersistentWorldData {
 
     @Override
     public void save(CompoundTag tag) {
-        int count = builds != null ? builds.size() : 0;
+        if (builds != null) {
+            int count = builds.size();
 
-        ListTag listTag = new ListTag();
-        for (int i = 0; i < count; i++) {
-            BlockPos pos = builds.get(i);
-            listTag.add(IntTag.valueOf(pos.getX()));
-            listTag.add(IntTag.valueOf(pos.getY()));
-            listTag.add(IntTag.valueOf(pos.getZ()));
+            ListTag listTag = new ListTag();
+            for (int i = 0; i < count; i++) {
+                BlockPos pos = builds.get(i);
+                listTag.add(IntTag.valueOf(pos.getX()));
+                listTag.add(IntTag.valueOf(pos.getY()));
+                listTag.add(IntTag.valueOf(pos.getZ()));
+            }
+
+            tag.put("builds", listTag);
         }
-
-        tag.put("builds", listTag);
     }
 
     @Override

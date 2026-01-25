@@ -175,7 +175,8 @@ public class StructureSpawnEvent {
         };
 
         WorldUtil.placeSign(level, pos, dirval)
-                .setFrontLine(1, "Hole")
+                .setFrontLine(0, "Mole")
+                .setFrontLine(1, "Infestation")
                 .write();
 
         return true;
