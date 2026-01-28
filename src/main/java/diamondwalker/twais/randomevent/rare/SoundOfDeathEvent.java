@@ -1,4 +1,4 @@
-package diamondwalker.twais.randomevent.common;
+package diamondwalker.twais.randomevent.rare;
 
 import diamondwalker.twais.network.SilencePacket;
 import diamondwalker.twais.util.ScriptBuilder;
