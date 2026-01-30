@@ -6,7 +6,9 @@ import diamondwalker.twais.data.server.WorldData;
 import diamondwalker.twais.randomevent.EnumEventRarity;
 import diamondwalker.twais.randomevent.RandomEventRegistry;
 import diamondwalker.twais.randomevent.RegisteredEvent;
+import diamondwalker.twais.util.MathUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,6 +23,18 @@ public class RandomEventHandler {
         WorldData data = WorldData.get(server);
 
         if (!data.progression.hasBeenAngered()) return;
+
+        if (
+                Config.MAX_EVENT_INTERVAL.getAsInt() != data.randomEvents.prevMax ||
+                Config.MIN_EVENT_INTERVAL.getAsInt() != data.randomEvents.prevMin ||
+                Config.MED_EVENT_INTERVAL.getAsInt() != data.randomEvents.prevMed
+        ) {
+            TWAIS.LOGGER.info("Detected changes in event interval config. Next event time will be recalculated.");
+            data.randomEvents.prevMax = Config.MAX_EVENT_INTERVAL.getAsInt();
+            data.randomEvents.prevMin = Config.MIN_EVENT_INTERVAL.getAsInt();
+            data.randomEvents.prevMed = Config.MED_EVENT_INTERVAL.getAsInt();
+            refreshEventTime(data, random, false);
+        }
 
         if (data.randomEvents.timeSinceLastEvent >= data.randomEvents.timeForNextEvent) {
             // if visage spawn is ready, it might happen instead of the event
@@ -61,11 +75,41 @@ public class RandomEventHandler {
     }
 
     public static void refreshEventTime(WorldData data, RandomSource random) {
-        data.randomEvents.timeSinceLastEvent = 0;
-        double f = Math.pow(random.nextDouble(), Config.RANDOM_INTERVAL_EXPONENT.getAsDouble()); // exponent here is 3.88
-        long maxInterval = Config.MAX_EVENT_INTERVAL.getAsInt(); // one hour
-        long minInterval = Config.MIN_EVENT_INTERVAL.getAsInt(); // one minute
-        long range = maxInterval - minInterval;
-        data.randomEvents.timeForNextEvent = minInterval + Math.round(f * range);
+        refreshEventTime(data, random, true);
+    }
+
+    public static void refreshEventTime(WorldData data, RandomSource random, boolean resetTimer) {
+        if (resetTimer) data.randomEvents.timeSinceLastEvent = 0;
+
+        data.randomEvents.timeForNextEvent = randomTimeFunction(random.nextDouble());
+    }
+
+    public static int randomTimeFunction(double input) {
+        // retrieve the config values for convenience
+        int max = Config.MAX_EVENT_INTERVAL.getAsInt();
+        int min = Config.MIN_EVENT_INTERVAL.getAsInt();
+        int median = Config.MED_EVENT_INTERVAL.getAsInt();
+
+        // make sure user hasn't done something stupid
+        if (max < min) max = min;
+        median = Mth.clamp(median, min, max);
+        if (min == max) return min;
+
+        // We will create a function in the form a + bx^n
+        // This function takes a random value x in the range [0, 1] and produces an output in the specified range [min, max]
+        // Furthermore, an input of x = 0.5 should return the median value
+        // a = min
+        // b = max - min (the distance between our maximum and minimum values)
+        int range = max - min;
+        // Now our desired [min, max] range will be satisfied as long as 0 <= x^n <= 1
+        // Luckily, functions in the form x^n always have a range [0, 1] when bounded to 0 <= x <= 1 (which ours is)
+        // That means all we need to do now is ensure a + b * 0.5^n = median
+        // We first solve for 0.5^n
+        double medianFraction = (double)(median - min) / range; // 0.5^n = (median - a) / b. This is also the fraction of our range that falls under the median
+        // now we solve for the exponent n using a logarithm base 0.5
+        double exponent = MathUtil.logBase(medianFraction, 0.5);
+
+        // we have our values for a, b, and n. We now run the original function with a random x
+        return (int)Math.round(min + Math.pow(input, exponent) * range);
     }
 }

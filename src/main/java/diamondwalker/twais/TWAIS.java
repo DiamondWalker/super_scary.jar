@@ -1,6 +1,9 @@
 package diamondwalker.twais;
 
+import diamondwalker.twais.handler.feature.RandomEventHandler;
 import diamondwalker.twais.registry.*;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.neoforged.fml.loading.FMLLoader;
 import org.slf4j.Logger;
 
@@ -10,6 +13,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
+
+import java.util.Arrays;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(TWAIS.MODID)

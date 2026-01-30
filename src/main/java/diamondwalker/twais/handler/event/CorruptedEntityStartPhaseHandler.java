@@ -1,16 +1,20 @@
 package diamondwalker.twais.handler.event;
 
 import diamondwalker.twais.data.server.WorldData;
+import diamondwalker.twais.registry.TWAISSounds;
 import diamondwalker.twais.util.ChatUtil;
 import diamondwalker.twais.util.ScriptBuilder;
 import diamondwalker.twais.util.WorldUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -35,7 +39,7 @@ public class CorruptedEntityStartPhaseHandler {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
         long time = data.progression.getTimeInWorld();
-        if (!data.progression.hasBeenAngered() && time >= 72_000L && time % 24_000L == 0 && !data.scripts.hasLock("corrupted_entity")) {
+        if (!data.progression.hasBeenAngered() && (time - 18_000L) % 24_000L == 0 && !data.scripts.hasLock("corrupted_entity")) {
             ServerLevel level = server.overworld();
             List<LevelChunk> possibleChunks = WorldUtil.getBuildableChunks(level, true);
             if (possibleChunks.isEmpty()) return;
@@ -68,6 +72,9 @@ public class CorruptedEntityStartPhaseHandler {
                     }
 
                     WorldData.get(server).corruptedEntityBuilds.addBuild(new BlockPos(x, y, z));
+                    for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                        player.connection.send(new ClientboundSoundPacket(SoundEvents.AMBIENT_CAVE, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 64.0F, 1.0F, server.overworld().getRandom().nextLong()));
+                    }
                 }
             }
         }

@@ -67,12 +67,12 @@ public class CalculationEvent {
                 .action((serv) -> {
                     if (blowUp.get()) {
                         for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
+                            player.hurt(TWAISDamageTypes.calculation(player), Float.MAX_VALUE);
                             for (int i = 0; i < 15; i++) {
                                 Vec3 pos = player.position();
                                 pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);
                                 player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
                             }
-                            player.hurt(TWAISDamageTypes.calculation(player), Float.MAX_VALUE);
                         }
                     }
                 })

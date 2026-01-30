@@ -1,15 +1,5 @@
 package diamondwalker.twais;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
@@ -21,20 +11,17 @@ public class Config {
             .comment("Whether to log the dirt block on common setup")
             .define("logDirtBlock", true);*/
 
-    // TODO: maybe add a command to help people test the values for this?
-    public static final ModConfigSpec.DoubleValue RANDOM_INTERVAL_EXPONENT = BUILDER
-            .comment(
-                    "Controls the distribution between large and small values when picking a random time interval between events.",
-                    "Larger values lead to events being more frequent on average.")
-            .defineInRange("eventIntervalFunc", 3.88,  0, Double.MAX_VALUE);
+    public static final ModConfigSpec.IntValue MAX_EVENT_INTERVAL = BUILDER
+            .comment("The maximum time, in ticks, that will pass between random events.")
+            .defineInRange("maxEventInterval", 20 * 60 * 20, 0, Integer.MAX_VALUE); // 20 minutes
+
+    public static final ModConfigSpec.IntValue MED_EVENT_INTERVAL = BUILDER
+            .comment("The number of ticks between random events will be under this value approximately 50% of the time.")
+            .defineInRange("medEventInterval", 20 * 60 * 5,  0, Integer.MAX_VALUE); // 5 minutes
 
     public static final ModConfigSpec.IntValue MIN_EVENT_INTERVAL = BUILDER
-            .comment("The minimum amount of time, in ticks, that must pass between random events.")
-            .defineInRange("minEventInterval", 20 * 60,  0, Integer.MAX_VALUE); // 1 minute
-
-    public static final ModConfigSpec.IntValue MAX_EVENT_INTERVAL = BUILDER
-            .comment("The maximum amount of time, in ticks, that can pass between random events.")
-            .defineInRange("maxEventInterval", 20 * 60 * 60, 0, Integer.MAX_VALUE); // 1 hour
+            .comment("The minimum time, in ticks, that will pass between random events.")
+            .defineInRange("minEventInterval", 20 * 90,  0, Integer.MAX_VALUE); // 1.5 minutes
 
     /*public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
             .comment("What you want the introduction message to be for the magic number")

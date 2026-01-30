@@ -5,16 +5,21 @@ import diamondwalker.twais.OverworldSpecialEffects;
 import diamondwalker.twais.data.client.ClientData;
 import diamondwalker.twais.gui.screen.FakePauseScreen;
 import diamondwalker.twais.gui.screen.NoticeScreen;
+import diamondwalker.twais.handler.feature.RandomEventHandler;
 import diamondwalker.twais.registry.TWAISMusic;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.SelectMusicEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+
+import java.util.Arrays;
 
 @EventBusSubscriber
 public class VanillaOverrideHandler {
