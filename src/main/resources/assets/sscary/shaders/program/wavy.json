@@ -5,7 +5,7 @@
     "dstrgb": "1-srcalpha"
   },
   "vertex": "minecraft:blit",
-  "fragment": "twais:wavy",
+  "fragment": "sscary:wavy",
   "attributes": [ "Position" ],
   "samplers": [
     { "name": "DiffuseSampler" }

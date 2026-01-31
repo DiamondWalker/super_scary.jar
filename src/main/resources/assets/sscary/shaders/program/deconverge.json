@@ -5,7 +5,7 @@
         "dstrgb": "zero"
     },
     "vertex": "sobel",
-    "fragment": "twais:deconverge",
+    "fragment": "sscary:deconverge",
     "attributes": [ "Position" ],
     "samplers": [
         { "name": "DiffuseSampler" }

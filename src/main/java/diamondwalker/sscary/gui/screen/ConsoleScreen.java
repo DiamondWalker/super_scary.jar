@@ -52,8 +52,7 @@ public class ConsoleScreen extends Screen {
         guiGraphics.pose().scale(scale, scale, scale);
 
         List<String> linesToDraw = new ArrayList<>(messages.stream().map(Component::getString).toList());
-        String input = typing.toString();
-        if (indicatorTicks % 14 < 7) input = input + '_';
+        String input = typing.toString() + (indicatorTicks % 14 < 7 ?'_' : ' ');
         linesToDraw.add(input);
 
         List<String> wrappedLines = new ArrayList<>();
@@ -80,9 +79,11 @@ public class ConsoleScreen extends Screen {
             }
         }
 
-        int y = 10;
-        for (String message : wrappedLines) {
-            guiGraphics.drawString(Minecraft.getInstance().font, message, leftMargin, y, FastColor.ARGB32.color(255, 255, 255, 255), false);
+        int maxLines = Math.round((float)typingAreaHeight / lineSpacing);
+
+        int y = 0;
+        for (int i = Math.max(0, wrappedLines.size() - maxLines); i < wrappedLines.size(); i++) {
+            guiGraphics.drawString(Minecraft.getInstance().font, wrappedLines.get(i), 0, y, FastColor.ARGB32.color(255, 255, 255, 255), false);
             y += lineSpacing;
         }
 

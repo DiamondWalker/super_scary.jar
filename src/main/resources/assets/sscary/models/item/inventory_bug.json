@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "twais:item/inventory_bug"
+    "layer0": "sscary:item/inventory_bug"
   }
 }

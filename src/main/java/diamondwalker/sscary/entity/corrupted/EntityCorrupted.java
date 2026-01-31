@@ -84,7 +84,7 @@ public class EntityCorrupted extends Mob {
 
     private void fillText(WorldUtil.SignWriter writer) {
         boolean bugUnlocked = WorldData.get(getServer()).progression.hasSeenBug();
-        switch (random.nextInt(bugUnlocked ? 9 : 8)) {
+        switch (random.nextInt(bugUnlocked ? 10 : 9)) {
             case 0: {
                 writer.setFrontLine(1, "ur mom");
                 break;
@@ -126,6 +126,11 @@ public class EntityCorrupted extends Mob {
                 break;
             }
             case 8: {
+                writer
+                        .setFrontLine(1, "i sharted");
+                break;
+            }
+            case 9: {
                 writer
                         .setFrontLine(0, "You are more")
                         .setFrontLine(1, "annoying than a")

@@ -2,7 +2,7 @@
   "snore": {
     "sounds": [
       {
-        "name": "twais:snore",
+        "name": "sscary:snore",
         "stream": false
       }
     ]
@@ -10,7 +10,7 @@
   "world_darken": {
     "sounds": [
       {
-        "name": "twais:world_darken",
+        "name": "sscary:world_darken",
         "stream": false
       }
     ]
@@ -18,7 +18,7 @@
   "party_start": {
     "sounds": [
       {
-        "name": "twais:party_horn",
+        "name": "sscary:party_horn",
         "stream": false
       }
     ]
@@ -26,7 +26,7 @@
   "party": {
     "sounds": [
       {
-        "name": "twais:music/party",
+        "name": "sscary:music/party",
         "stream": true
       }
     ]
@@ -34,7 +34,7 @@
   "static": {
     "sounds": [
       {
-        "name": "twais:static",
+        "name": "sscary:static",
         "stream": false
       }
     ]
@@ -42,7 +42,7 @@
   "corrupted_jumpscare": {
     "sounds": [
       {
-        "name": "twais:entity/corrupted/jumpscare",
+        "name": "sscary:entity/corrupted/jumpscare",
         "stream": false
       }
     ]
@@ -50,7 +50,7 @@
   "visage_chase": {
     "sounds": [
       {
-        "name": "twais:entity/visage/chase",
+        "name": "sscary:entity/visage/chase",
         "stream": false
       }
     ]
@@ -58,7 +58,7 @@
   "visage_spawn": {
     "sounds": [
       {
-        "name": "twais:entity/visage/spawn",
+        "name": "sscary:entity/visage/spawn",
         "stream": false
       }
     ]
@@ -66,7 +66,7 @@
   "visage_teleport": {
     "sounds": [
       {
-        "name": "twais:entity/visage/teleport",
+        "name": "sscary:entity/visage/teleport",
         "stream": false
       }
     ]
@@ -74,7 +74,7 @@
   "visage_scare": {
     "sounds": [
       {
-        "name": "twais:entity/visage/scare",
+        "name": "sscary:entity/visage/scare",
         "stream": false
       }
     ]

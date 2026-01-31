@@ -15,7 +15,7 @@
             ]
         },
         {
-            "name": "twais:deconverge",
+            "name": "sscary:deconverge",
             "intarget": "swap",
             "outtarget": "minecraft:main",
             "uniforms": [
