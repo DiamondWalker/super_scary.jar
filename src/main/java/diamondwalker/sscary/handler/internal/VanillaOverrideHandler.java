@@ -23,7 +23,7 @@ public class VanillaOverrideHandler {
     private static void handleMenuOpen(ScreenEvent.Opening event) {
         if (event.getNewScreen() instanceof TitleScreen title && !changed) {
             changed = true;
-            //event.setNewScreen(new ConsoleScreen(title));
+            event.setNewScreen(new ConsoleScreen(title));
         }
     }
 
