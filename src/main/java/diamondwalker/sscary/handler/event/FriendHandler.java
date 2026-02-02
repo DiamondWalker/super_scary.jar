@@ -16,7 +16,7 @@ public class FriendHandler {
     private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
-        if (!data.friend.friendJoined && data.progression.getTimeInWorld() == 9_600L) {
+        if (!data.friend.friendJoined && data.progression.getTimeInWorld() == 9_600L && !data.progression.hasBeenAngered()) {
             new ScriptBuilder(server, "friend")
                     .action((serv) -> WorldData.get(serv).friend.friendJoined = true)
                     .chatMessageForAll(ChatUtil.getJoinMessage("Friend"))

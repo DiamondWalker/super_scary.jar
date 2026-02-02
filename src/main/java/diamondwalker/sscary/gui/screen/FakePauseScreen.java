@@ -1,6 +1,7 @@
 package diamondwalker.sscary.gui.screen;
 
 import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.data.PermanentSaveData;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.registry.TWAISSounds;
 import net.minecraft.client.Minecraft;
@@ -30,7 +31,7 @@ public class FakePauseScreen extends PauseScreen {
             messageP1.add(character);
         }
 
-        for (char character : Component.literal(Minecraft.getInstance().player.getName().getString() + ".").getString().toCharArray()) {
+        for (char character : Component.literal(PermanentSaveData.getOrCreateInstance().getUsername() + ".").getString().toCharArray()) {
             messageP2.add(character);
         }
     }

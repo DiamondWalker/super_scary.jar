@@ -1,5 +1,6 @@
 package diamondwalker.sscary.handler.event;
 
+import diamondwalker.sscary.data.PermanentSaveData;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;
@@ -33,6 +34,39 @@ public class CorruptedEntityStartPhaseHandler {
         MinecraftServer server = event.getServer();
         WorldData data = WorldData.get(server);
         long time = data.progression.getTimeInWorld();
+        PermanentSaveData persistentData = PermanentSaveData.getOrCreateInstance();
+
+        if (persistentData.getCorruptedAngered()) {
+            if (!data.progression.hasBeenAngered() && !data.scripts.hasLock("corrupted_entity")) {
+                ScriptBuilder builder = new ScriptBuilder(server, "corrupted_entity")
+                        .rest(1800)
+                        .chatMessageForAll(ChatUtil.getJoinMessage(ChatUtil.CORRUPTED_ENTITY_NAME));
+                if (persistentData.getCorruptedRemembered()) {
+                    builder
+                            .rest(90)
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "still here bro").withStyle(ChatFormatting.DARK_RED))
+                            .action((serv) -> WorldData.get(serv).progression.startAnger(serv))
+                            .startScript();
+                } else {
+                    builder
+                            .rest(150)
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "dude"))
+                            .rest(90)
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "did you really think id forget what you did just cuz you ran off to another world?"))
+                            .rest(125)
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "what a pussy lmfao").withStyle(ChatFormatting.DARK_RED))
+                            .action((serv) -> {
+                                WorldData.get(serv).progression.startAnger(serv);
+                                PermanentSaveData permData = PermanentSaveData.getOrCreateInstance();
+                                permData.setCorruptedRemembered(true);
+                                permData.saveChanges();
+                            })
+                            .startScript();
+                }
+            }
+            return;
+        }
+
         if (!data.progression.hasBeenAngered() && (time - 18_000L) % 24_000L == 0 && !data.scripts.hasLock("corrupted_entity")) {
             ServerLevel level = server.overworld();
             List<LevelChunk> possibleChunks = WorldUtil.getBuildableChunks(level, true);
@@ -78,6 +112,12 @@ public class CorruptedEntityStartPhaseHandler {
     private static void handlePlayerBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getState().is(Blocks.COBBLESTONE) && event.getPlayer() instanceof ServerPlayer player) {
             WorldData data = WorldData.get(player.getServer());
+
+            if (PermanentSaveData.getOrCreateInstance().getCorruptedAngered()) {
+                data.corruptedEntityBuilds.flush();
+                return;
+            }
+
             if (data.corruptedEntityBuilds.isBuildAt(event.getPos())) {
                 if (data.corruptedEntityBuilds.anger++ >= 7) {
                     if (data.friend.friendJoined && !data.friend.friendLeft) {
@@ -212,7 +252,12 @@ public class CorruptedEntityStartPhaseHandler {
                 .rest(50)
                 .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "i'm gonna have some fun with you.").withStyle(ChatFormatting.DARK_RED))
                 .action((serv) -> WorldData.get(serv).friend.friendLeft = true)
-                .action((serv) -> WorldData.get(serv).progression.startAnger(serv))
+                .action((serv) -> {
+                    WorldData.get(serv).progression.startAnger(serv);
+                    PermanentSaveData data = PermanentSaveData.getOrCreateInstance();
+                    data.setCorruptedAngered(true);
+                    data.saveChanges();
+                })
                 .startScript();
     }
 
@@ -257,7 +302,12 @@ public class CorruptedEntityStartPhaseHandler {
                 .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "But theyre gonna mess you up real bad for what you just did."))
                 .rest(50)
                 .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "y'all better sleep with one eye open.").withStyle(ChatFormatting.DARK_RED))
-                .action((serv) -> WorldData.get(serv).progression.startAnger(serv))
+                .action((serv) -> {
+                    WorldData.get(serv).progression.startAnger(serv);
+                    PermanentSaveData data = PermanentSaveData.getOrCreateInstance();
+                    data.setCorruptedAngered(true);
+                    data.saveChanges();
+                })
                 .startScript();
     }
 

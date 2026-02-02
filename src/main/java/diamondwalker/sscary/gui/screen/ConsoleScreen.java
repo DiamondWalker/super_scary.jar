@@ -1,6 +1,7 @@
 package diamondwalker.sscary.gui.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import diamondwalker.sscary.data.PermanentSaveData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -153,7 +154,9 @@ public class ConsoleScreen extends Screen {
                 break;
             }
             case NEW_USERNAME -> {
-                // TODO: set new name
+                PermanentSaveData data = PermanentSaveData.getOrCreateInstance();
+                data.setUsername(msg);
+                data.saveChanges();
                 queryUsername();
                 break;
             }
@@ -169,6 +172,8 @@ public class ConsoleScreen extends Screen {
                         messages.add(Component.empty());
                         messages.add(Component.literal("Do you understand the risks?")); // TODO: final query
                     });
+                } else {
+                    // TODO: invalid executable
                 }
                 break;
             }
@@ -176,7 +181,7 @@ public class ConsoleScreen extends Screen {
     }
 
     private void queryUsername() {
-        messages.add(Component.literal("Logged in as: " + System.getProperty("user.name")));
+        messages.add(Component.literal("Logged in as: " + PermanentSaveData.getOrCreateInstance().getUsername()));
         messages.add(Component.empty());
         messages.add(Component.literal("Would you like to change your username? (yes/no)"));
         state = State.CHANGE_USERNAME;

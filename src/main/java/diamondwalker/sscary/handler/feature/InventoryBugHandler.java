@@ -49,9 +49,7 @@ public class InventoryBugHandler {
     private static void handleBlockDrop(BlockDropsEvent event) {
         if (event.getState().is(Blocks.STONE) || event.getState().is(Blocks.DEEPSLATE)) {
             if (event.getBreaker() instanceof Player && event.getBreaker().getRandom().nextInt(125) == 0) {
-                if (WorldData.get(event.getLevel().getServer()).progression.hasBeenAngered()) {
-                    Block.popResource(event.getLevel(), event.getPos(), new ItemStack(TWAISItems.INVENTORY_BUG.asItem()));
-                }
+                Block.popResource(event.getLevel(), event.getPos(), new ItemStack(TWAISItems.INVENTORY_BUG.asItem()));
             }
         }
     }
