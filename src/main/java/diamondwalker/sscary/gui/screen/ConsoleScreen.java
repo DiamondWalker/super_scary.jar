@@ -15,7 +15,6 @@ import net.minecraft.util.Mth;
 import java.util.*;
 
 public class ConsoleScreen extends Screen {
-    // TODO: thorough testing once it's done
     private final TitleScreen menu;
 
     private List<Component> messages = new ArrayList<>();
@@ -147,6 +146,7 @@ public class ConsoleScreen extends Screen {
             case CHANGE_USERNAME -> {
                 if (msg.equalsIgnoreCase("yes")) {
                     state = State.NEW_USERNAME;
+                    messages.add(Component.empty());
                     messages.add(Component.literal("Type your new username:"));
                 } else if (msg.equalsIgnoreCase("no")) {
                     scanExecutables();
@@ -170,10 +170,44 @@ public class ConsoleScreen extends Screen {
                         messages.add(Component.literal("§41684 anomalous code traces detected. Extremely high probability of paranormal activity."));
                         messages.add(Component.literal("Remember: this virtual machine will protect you from attacks on your system or physical reality, but program files related to 'minecraft.jar' (e.g. game save files) will still be vulnerable to corruption or deletion."));
                         messages.add(Component.empty());
-                        messages.add(Component.literal("Do you understand the risks?")); // TODO: final query
+                        messages.add(Component.literal("Do you understand the risks? (yes/no)"));
+                        state = State.DISCLAIMER;
                     });
                 } else {
-                    // TODO: invalid executable
+                    state = State.BLOCKED;
+                    queueEvent(11, () -> {
+                        messages.add(Component.literal("Could not find executable '" + msg + "'. Please select a valid executable."));
+                        state = State.CHOOSE_EXECUTABLE;
+                    });
+                }
+                break;
+            }
+            case DISCLAIMER -> {
+                if (msg.equalsIgnoreCase("yes")) {
+                    state = State.BLOCKED;
+                    queueEvent(33, () -> {
+                        messages.add(Component.empty());
+                        messages.add(Component.literal("Launching executable 'minecraft.jar'..."));
+                    });
+                    queueEvent(110, () -> messages.clear());
+                    queueEvent(160, () -> Minecraft.getInstance().setScreen(menu));
+                } else if (msg.equalsIgnoreCase("no")) {
+                    state = State.BLOCKED;
+                    queueEvent(40, () -> {
+                        messages.add(Component.empty());
+                        messages.add(Component.literal("WARNING: Phantom OS has detected that the user is suffering a severe aneurysm and is therefore unable to read a simple disclaimer message."));
+                    });
+                    queueEvent(114, () -> messages.add(Component.literal("It is strongly advised you contact emergency services immediately before you become braindead.")));
+                    queueEvent(170, () -> {
+                        messages.add(Component.empty());
+                        messages.add(Component.literal("(more so than you are now)"));
+                    });
+                    queueEvent(183, () -> messages.set(messages.size() - 1, Component.literal("The program will now be terminated.")));
+                    queueEvent(225, () -> {
+                        messages.add(Component.empty());
+                        messages.add(Component.literal("Goodbye."));
+                    });
+                    queueEvent(275, () -> System.exit(0));
                 }
                 break;
             }
@@ -236,6 +270,7 @@ public class ConsoleScreen extends Screen {
         BLOCKED,
         CHANGE_USERNAME,
         NEW_USERNAME,
-        CHOOSE_EXECUTABLE
+        CHOOSE_EXECUTABLE,
+        DISCLAIMER
     }
 }
