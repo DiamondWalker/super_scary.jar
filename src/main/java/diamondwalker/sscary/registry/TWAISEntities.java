@@ -7,8 +7,12 @@ import diamondwalker.sscary.entity.corrupted.CorruptedRenderer;
 import diamondwalker.sscary.entity.corrupted.EntityCorrupted;
 import diamondwalker.sscary.entity.nametag.EntityNametag;
 import diamondwalker.sscary.entity.nametag.NametagRenderer;
+import diamondwalker.sscary.entity.taker.EntityTaker;
+import diamondwalker.sscary.entity.taker.ModelTaker;
+import diamondwalker.sscary.entity.taker.TakerRenderer;
 import diamondwalker.sscary.entity.visage.EntityVisage;
 import diamondwalker.sscary.entity.visage.VisageRenderer;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -55,6 +59,13 @@ public class TWAISEntities {
             .build("corrupted")
     );
 
+    public static final Supplier<EntityType<EntityTaker>> TAKER =  ENTITY_TYPES.register("taker", () -> EntityType.Builder.of(
+            EntityTaker::new,
+            MobCategory.CREATURE
+            )
+            .build("taker")
+    );
+
     public static final Supplier<EntityType<EntityBizarroDude>> BIZZARO_DUDE = ENTITY_TYPES.register("bizarro", () -> EntityType.Builder.of(
                             EntityBizarroDude::new,
                             MobCategory.CREATURE
@@ -70,6 +81,7 @@ public class TWAISEntities {
     private static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(TWAISEntities.CORRUPTED.get(), EntityCorrupted.createAttributes().build());
         event.put(TWAISEntities.BIZZARO_DUDE.get(), EntityBizarroDude.createAttributes().build());
+        event.put(TWAISEntities.TAKER.get(), EntityTaker.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -78,6 +90,12 @@ public class TWAISEntities {
         event.registerEntityRenderer(TWAISEntities.VISAGE.get(), VisageRenderer::new);
         event.registerEntityRenderer(TWAISEntities.CORRUPTED.get(), (cntx) -> new CorruptedRenderer(cntx, false));
         event.registerEntityRenderer(TWAISEntities.BIZZARO_DUDE.get(), BizarroDudeRenderer::new);
+        event.registerEntityRenderer(TWAISEntities.TAKER.get(), TakerRenderer::new);
+    }
+
+    @SubscribeEvent
+    private static void registerEntityRenders(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ModelTaker.LAYER_LOCATION, ModelTaker::createBodyLayer);
     }
 
     public static void register(IEventBus bus) {
