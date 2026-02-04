@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.taker;
+package diamondwalker.sscary.entity.friedsteve;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -8,23 +8,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 
-public class EntityTaker extends Mob {
-    public EntityTaker(EntityType<? extends Mob> entityType, Level level) {
+public class EntityFriedSteve extends Mob {
+    public EntityFriedSteve(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        return false;
-    }
-
-    @Override
-    public boolean shouldRenderAtSqrDistance(double distance) {
-        return true;
-    }
-
-    @Override
-    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return false;
     }
 

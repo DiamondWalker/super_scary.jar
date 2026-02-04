@@ -5,6 +5,8 @@ import diamondwalker.sscary.entity.bizarrodude.BizarroDudeRenderer;
 import diamondwalker.sscary.entity.bizarrodude.EntityBizarroDude;
 import diamondwalker.sscary.entity.corrupted.CorruptedRenderer;
 import diamondwalker.sscary.entity.corrupted.EntityCorrupted;
+import diamondwalker.sscary.entity.friedsteve.EntityFriedSteve;
+import diamondwalker.sscary.entity.friedsteve.FriedSteveRenderer;
 import diamondwalker.sscary.entity.nametag.EntityNametag;
 import diamondwalker.sscary.entity.nametag.NametagRenderer;
 import diamondwalker.sscary.entity.taker.EntityTaker;
@@ -59,6 +61,15 @@ public class TWAISEntities {
             .build("corrupted")
     );
 
+    public static final Supplier<EntityType<EntityFriedSteve>> FRIED_STEVE = ENTITY_TYPES.register("fried_steve", () -> EntityType.Builder.of(
+            EntityFriedSteve::new,
+            MobCategory.CREATURE
+            )
+            .sized(0.6f, 1.8f)
+            .eyeHeight(1.62f)
+            .build("fried_steve")
+    );
+
     public static final Supplier<EntityType<EntityTaker>> TAKER =  ENTITY_TYPES.register("taker", () -> EntityType.Builder.of(
             EntityTaker::new,
             MobCategory.CREATURE
@@ -82,6 +93,7 @@ public class TWAISEntities {
         event.put(TWAISEntities.CORRUPTED.get(), EntityCorrupted.createAttributes().build());
         event.put(TWAISEntities.BIZZARO_DUDE.get(), EntityBizarroDude.createAttributes().build());
         event.put(TWAISEntities.TAKER.get(), EntityTaker.createAttributes().build());
+        event.put(TWAISEntities.FRIED_STEVE.get(), EntityFriedSteve.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -91,6 +103,7 @@ public class TWAISEntities {
         event.registerEntityRenderer(TWAISEntities.CORRUPTED.get(), (cntx) -> new CorruptedRenderer(cntx, false));
         event.registerEntityRenderer(TWAISEntities.BIZZARO_DUDE.get(), BizarroDudeRenderer::new);
         event.registerEntityRenderer(TWAISEntities.TAKER.get(), TakerRenderer::new);
+        event.registerEntityRenderer(TWAISEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
     }
 
     @SubscribeEvent
