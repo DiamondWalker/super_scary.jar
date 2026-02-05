@@ -3,6 +3,7 @@ package diamondwalker.sscary.registry;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import diamondwalker.sscary.command.AngerCommand;
+import diamondwalker.sscary.command.PurgatoryTeleportCommand;
 import diamondwalker.sscary.command.RandomEventCommand;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,7 +19,8 @@ public class SScaryCommands {
     private static void registerCommands(RegisterCommandsEvent event) {
         registerAll(event.getDispatcher(), event.getBuildContext(),
                 AngerCommand::build,
-                RandomEventCommand::build);
+                RandomEventCommand::build,
+                PurgatoryTeleportCommand::build);
     }
 
     @SafeVarargs

@@ -1,0 +1,11 @@
+{
+  "type": "sscary:purgatory",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "sscary:purgatory"
+    },
+    "settings": "minecraft:overworld"
+  }
+}
