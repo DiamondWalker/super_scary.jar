@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import java.util.function.Function;
 
 @EventBusSubscriber
-public class TWAISCommands {
+public class SScaryCommands {
     @SubscribeEvent
     private static void registerCommands(RegisterCommandsEvent event) {
         registerAll(event.getDispatcher(), event.getBuildContext(),

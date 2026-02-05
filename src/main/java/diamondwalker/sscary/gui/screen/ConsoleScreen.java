@@ -200,7 +200,7 @@ public class ConsoleScreen extends Screen {
                     queueEvent(114, () -> messages.add(Component.literal("It is strongly advised you contact emergency services immediately before you become braindead.")));
                     queueEvent(170, () -> {
                         messages.add(Component.empty());
-                        messages.add(Component.literal("(more so than you are now)"));
+                        messages.add(Component.literal("(more than you already were)"));
                     });
                     queueEvent(183, () -> messages.set(messages.size() - 1, Component.literal("The program will now be terminated.")));
                     queueEvent(225, () -> {

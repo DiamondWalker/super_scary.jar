@@ -5,8 +5,7 @@ package diamondwalker.sscary.entity.taker;// Made with Blockbench 5.0.7
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import diamondwalker.sscary.TWAIS;
-import diamondwalker.sscary.entity.taker.EntityTaker;
+import diamondwalker.sscary.SScary;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -16,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ModelTaker extends EntityModel<EntityTaker> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "modeltaker"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "modeltaker"), "main");
 
 	private final ModelPart body;
 	private final ModelPart head;

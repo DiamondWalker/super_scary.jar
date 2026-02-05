@@ -1,7 +1,7 @@
 package diamondwalker.sscary.randomevent.common;
 
 import diamondwalker.sscary.entity.corrupted.EntityCorrupted;
-import diamondwalker.sscary.registry.TWAISEntities;
+import diamondwalker.sscary.registry.SScaryEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +25,7 @@ public class CorruptedWatchingEvent {
                     int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
                     if (y <= level.getSeaLevel()) continue;
                     BlockPos spawnPos = new BlockPos(x, y, z);
-                    EntityCorrupted entity = TWAISEntities.CORRUPTED.get().create(level);//spawn(level, spawnPos, MobSpawnType.MOB_SUMMONED);
+                    EntityCorrupted entity = SScaryEntities.CORRUPTED.get().create(level);//spawn(level, spawnPos, MobSpawnType.MOB_SUMMONED);
                     entity.setPos((double)spawnPos.getX() + 0.5, (double)(spawnPos.getY() + 1), (double)spawnPos.getZ() + 0.5);
                     if (level.noCollision(entity)) {
                         level.addFreshEntity(entity);

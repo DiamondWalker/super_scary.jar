@@ -1,6 +1,6 @@
 package diamondwalker.sscary.registry;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.item.InventoryBugItem;
 import diamondwalker.sscary.item.PepperSprayItem;
 import net.minecraft.world.item.Item;
@@ -8,8 +8,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public class TWAISItems {
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TWAIS.MODID);
+public class SScaryItems {
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(SScary.MODID);
 
     public static final DeferredItem<Item> INVENTORY_BUG = ITEMS.registerItem("inventory_bug", InventoryBugItem::new, new Item.Properties().stacksTo(1));
 

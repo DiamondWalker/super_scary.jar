@@ -35,6 +35,8 @@ public class FriendHandler {
         String message = event.getMessage().getString();
         MinecraftServer server = event.getPlayer().getServer();
         if (message.length() >= 6 && message.substring(0, 6).equalsIgnoreCase("friend") && WorldData.get(server).friend.friendJoined) {
+            boolean properlyCapitalized = message.startsWith("Friend");
+
             ScriptBuilder sequence = new ScriptBuilder(event.getPlayer().getServer(), "friend");
 
             sequence.rest(70);
@@ -59,6 +61,11 @@ public class FriendHandler {
             } else if (!message.endsWith("?")) {
                 sequence
                         .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Is that supposed to be a question? Then where is the §oquestion§r mark?"))
+                        .action((serv) -> WorldData.get(serv).friend.friendDislikesYou = true)
+                        .startScript();
+            } else if (!properlyCapitalized) {
+                sequence
+                        .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "\"Friend\". Uppercase \"F\", lowercase \"r\", \"i\", \"e\", \"n\", and \"d\". You should have learned this in elementary school."))
                         .action((serv) -> WorldData.get(serv).friend.friendDislikesYou = true)
                         .startScript();
             } else if (!message.startsWith(",")) {

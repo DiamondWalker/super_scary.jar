@@ -1,6 +1,6 @@
 package diamondwalker.sscary.network;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.handler.internal.ShaderHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ScreenColorShaderPacket(float red, float green, float blue) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<ScreenColorShaderPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "screen_color_shader"));
+    public static final CustomPacketPayload.Type<ScreenColorShaderPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "screen_color_shader"));
 
     public static final StreamCodec<ByteBuf, ScreenColorShaderPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT, ScreenColorShaderPacket::red,

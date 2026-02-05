@@ -3,7 +3,7 @@ package diamondwalker.sscary.util.shader;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.systems.RenderSystem;
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PostChain;
 
@@ -27,9 +27,9 @@ public class ShaderManager {
                 throw new IllegalStateException("Shader " + shader.location + " was already in the effect map in spite of being marked inactive. Something must be wrong!");
             }
         } catch (IOException ioexception) {
-            TWAIS.LOGGER.warn("Failed to load shader: {}", shader.location, ioexception);
+            SScary.LOGGER.warn("Failed to load shader: {}", shader.location, ioexception);
         } catch (JsonSyntaxException jsonsyntaxexception) {
-            TWAIS.LOGGER.warn("Failed to parse shader: {}", shader.location, jsonsyntaxexception);
+            SScary.LOGGER.warn("Failed to parse shader: {}", shader.location, jsonsyntaxexception);
         }
     }
 
@@ -58,13 +58,13 @@ public class ShaderManager {
                 }
             });
             if (!uniformSet.get()) {
-                TWAIS.LOGGER.warn("Shader " + shader.location + " does not contain uniform " + uniformName);
+                SScary.LOGGER.warn("Shader " + shader.location + " does not contain uniform " + uniformName);
             }
 
             return;
         }
 
-        TWAIS.LOGGER.warn("Could not set uniform " + uniformName + " because shader " + shader.location + " was not active");
+        SScary.LOGGER.warn("Could not set uniform " + uniformName + " because shader " + shader.location + " was not active");
     }
 
     public static void removeClientWorldShaders() {

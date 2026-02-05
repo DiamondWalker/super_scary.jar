@@ -4,7 +4,7 @@ import diamondwalker.sscary.OverworldSpecialEffects;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.gui.screen.ConsoleScreen;
 import diamondwalker.sscary.gui.screen.FakePauseScreen;
-import diamondwalker.sscary.registry.TWAISMusic;
+import diamondwalker.sscary.registry.SScaryMusic;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
@@ -48,7 +48,7 @@ public class VanillaOverrideHandler {
     @SubscribeEvent
     private static void stopMusic(SelectMusicEvent event) {
         if (ClientData.get().wackyColors) {
-            event.overrideMusic(TWAISMusic.PARTY);
+            event.overrideMusic(SScaryMusic.PARTY);
             return;
         }
         event.overrideMusic(null);

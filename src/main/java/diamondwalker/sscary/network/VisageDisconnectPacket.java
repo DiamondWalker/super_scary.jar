@@ -1,6 +1,6 @@
 package diamondwalker.sscary.network;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.handler.feature.VisageHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record VisageDisconnectPacket(String msg) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<VisageDisconnectPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "visage_disconnect"));
+    public static final CustomPacketPayload.Type<VisageDisconnectPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "visage_disconnect"));
 
     public static final StreamCodec<ByteBuf, VisageDisconnectPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, VisageDisconnectPacket::msg,

@@ -1,6 +1,6 @@
 package diamondwalker.sscary.network;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.StaticData;
 import io.netty.buffer.ByteBuf;
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record StaticScreenPacket(int time) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<StaticScreenPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "static_screen"));
+    public static final CustomPacketPayload.Type<StaticScreenPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "static_screen"));
 
     public static final StreamCodec<ByteBuf, StaticScreenPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, StaticScreenPacket::time,

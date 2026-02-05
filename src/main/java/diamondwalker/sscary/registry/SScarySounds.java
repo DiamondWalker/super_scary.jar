@@ -1,14 +1,14 @@
 package diamondwalker.sscary.registry;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public class TWAISSounds {
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, TWAIS.MODID);
+public class SScarySounds {
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, SScary.MODID);
 
     public static final Holder<SoundEvent> STATIC = SOUNDS.register("static", SoundEvent::createVariableRangeEvent);
 

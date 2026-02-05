@@ -6,8 +6,8 @@ import diamondwalker.sscary.network.StaticScreenPacket;
 import diamondwalker.sscary.network.VisageDisconnectPacket;
 import diamondwalker.sscary.network.VisageFlashPacket;
 import diamondwalker.sscary.network.VisageActivePacket;
-import diamondwalker.sscary.registry.TWAISDataAttachments;
-import diamondwalker.sscary.registry.TWAISSounds;
+import diamondwalker.sscary.registry.SScaryDataAttachments;
+import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.util.EntityUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -88,7 +88,7 @@ public class EntityVisage extends Entity {
 
         if (!level().isClientSide() && this.getBoundingBox().intersects(player.getBoundingBox())) {
             if (player.hurt(this.damageSources().generic(), 4)) {
-                player.getData(TWAISDataAttachments.PLAYER).visageHealDisable = true;
+                player.getData(SScaryDataAttachments.PLAYER).visageHealDisable = true;
 
                 if (player.isDeadOrDying()) {
                     //((ServerPlayer)player).connection.send(new ClientboundDisconnectPacket(Component.literal("You are not welcome here.")));
@@ -102,7 +102,7 @@ public class EntityVisage extends Entity {
         }
 
         if (!level().isClientSide() && tickCount % 45 == 0) { // TODO: maybe this should loop better and be on the client side
-            this.playSound(TWAISSounds.VISAGE_CHASE.value(), 2.0f, 1.0f);
+            this.playSound(SScarySounds.VISAGE_CHASE.value(), 2.0f, 1.0f);
         }
     }
 

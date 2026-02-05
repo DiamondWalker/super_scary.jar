@@ -2,7 +2,7 @@ package diamondwalker.sscary.handler.feature;
 
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.entity.bizarrodude.EntityBizarroDude;
-import diamondwalker.sscary.registry.TWAISEntities;
+import diamondwalker.sscary.registry.SScaryEntities;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;
 import diamondwalker.sscary.util.WorldUtil;
@@ -48,7 +48,7 @@ public class BizarroDudeHandler {
                         BlockPos spawnPos = WorldUtil.toBlockPos(spawn);
                         Level level = player.level();
                         if (level.getBlockState(spawnPos.below()).isSolid()) {
-                            EntityBizarroDude entity = TWAISEntities.BIZZARO_DUDE.get().create(level);//.spawn((ServerLevel)player.level(), spawnPos, MobSpawnType.MOB_SUMMONED);
+                            EntityBizarroDude entity = SScaryEntities.BIZZARO_DUDE.get().create(level);//.spawn((ServerLevel)player.level(), spawnPos, MobSpawnType.MOB_SUMMONED);
                             entity.moveTo(spawn);
 
                             if (level.noCollision(entity) && player.hasLineOfSight(entity)) {

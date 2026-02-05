@@ -1,7 +1,7 @@
 package diamondwalker.sscary.entity.corrupted;
 
 import diamondwalker.sscary.data.server.WorldData;
-import diamondwalker.sscary.registry.TWAISSounds;
+import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;
 import diamondwalker.sscary.util.WorldUtil;
@@ -70,7 +70,7 @@ public class EntityCorrupted extends Mob {
                         delay = 7;
                         Vec3 target = player.position();
                         this.teleportTo(target.x, target.y, target.z);
-                        this.playSound(TWAISSounds.CORRUPTED_JUMPSCARE.value());
+                        this.playSound(SScarySounds.CORRUPTED_JUMPSCARE.value());
                         return;
                     }
 

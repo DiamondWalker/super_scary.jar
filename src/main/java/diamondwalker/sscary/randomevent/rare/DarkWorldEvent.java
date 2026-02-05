@@ -1,7 +1,7 @@
 package diamondwalker.sscary.randomevent.rare;
 
 import diamondwalker.sscary.network.DarkWorldPacket;
-import diamondwalker.sscary.registry.TWAISSounds;
+import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +18,7 @@ public class DarkWorldEvent {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             new ScriptBuilder(server)
                     .action((serv) -> {
-                        player.connection.send(new ClientboundSoundPacket(TWAISSounds.WORLD_DARKEN, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 1.0F, 0.6F, random.nextLong()));
+                        player.connection.send(new ClientboundSoundPacket(SScarySounds.WORLD_DARKEN, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 1.0F, 0.6F, random.nextLong()));
                         PacketDistributor.sendToPlayer(player, new DarkWorldPacket(true));
                     })
                     .rest(20 * (5 + random.nextInt(15)))

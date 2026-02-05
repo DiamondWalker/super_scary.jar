@@ -1,6 +1,6 @@
 package diamondwalker.sscary.handler.internal;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.util.shader.EnumShaderLayer;
 import diamondwalker.sscary.util.shader.PostProcessingShader;
 import net.minecraft.resources.ResourceLocation;
@@ -11,8 +11,8 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ShaderHandler {
-    private static final PostProcessingShader CREEPY_SHADER = new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "shaders/post/scary.json"), EnumShaderLayer.NO_GUI, true);
-    private static final PostProcessingShader COLOR_SHADER = new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "shaders/post/color.json"), EnumShaderLayer.GUI, true);
+    private static final PostProcessingShader CREEPY_SHADER = new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "shaders/post/scary.json"), EnumShaderLayer.NO_GUI, true);
+    private static final PostProcessingShader COLOR_SHADER = new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "shaders/post/color.json"), EnumShaderLayer.GUI, true);
 
     @SubscribeEvent
     private static void onOpenWorld(ClientPlayerNetworkEvent.LoggingIn event) {

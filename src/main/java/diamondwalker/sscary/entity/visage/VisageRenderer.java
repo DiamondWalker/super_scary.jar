@@ -2,7 +2,7 @@ package diamondwalker.sscary.entity.visage;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class VisageRenderer extends EntityRenderer<EntityVisage> {
-    private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "textures/entity/visage.png");
+    private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/entity/visage.png");
     private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
 
     private static final float SCALE = 1.0f;

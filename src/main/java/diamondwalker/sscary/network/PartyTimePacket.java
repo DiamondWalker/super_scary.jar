@@ -1,6 +1,6 @@
 package diamondwalker.sscary.network;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record PartyTimePacket(boolean enable) implements CustomPacketPayload {
-    public static final Type<PartyTimePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "party_time"));
+    public static final Type<PartyTimePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "party_time"));
 
     public static final StreamCodec<ByteBuf, PartyTimePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, PartyTimePacket::enable,

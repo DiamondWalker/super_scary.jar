@@ -1,7 +1,7 @@
 package diamondwalker.sscary.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.StaticData;
 import net.minecraft.client.DeltaTracker;
@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Random;
 
 public class StaticOverlay implements LayeredDraw.Layer {
-    private static final ResourceLocation STATIC_TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "textures/gui/static.png");
+    private static final ResourceLocation STATIC_TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/gui/static.png");
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {

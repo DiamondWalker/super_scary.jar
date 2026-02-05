@@ -1,9 +1,9 @@
 package diamondwalker.sscary.network;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ScreenFlashData;
-import diamondwalker.sscary.registry.TWAISSounds;
+import diamondwalker.sscary.registry.SScarySounds;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record VisageFlashPacket(boolean isRed) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<VisageFlashPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, "visage_flash"));
+    public static final CustomPacketPayload.Type<VisageFlashPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "visage_flash"));
 
     public static final StreamCodec<ByteBuf, VisageFlashPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, VisageFlashPacket::isRed,
@@ -33,6 +33,6 @@ public record VisageFlashPacket(boolean isRed) implements CustomPacketPayload {
             ClientData.get().flash = new ScreenFlashData(0.0f, 0.0f, 0.0f, System.nanoTime());
         }
 
-        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(TWAISSounds.VISAGE_TELEPORT.value(), 1.0f, 1.0f));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(SScarySounds.VISAGE_TELEPORT.value(), 1.0f, 1.0f));
     }
 }

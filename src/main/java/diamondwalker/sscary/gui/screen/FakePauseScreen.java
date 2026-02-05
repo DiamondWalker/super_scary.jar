@@ -1,9 +1,9 @@
 package diamondwalker.sscary.gui.screen;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.PermanentSaveData;
 import diamondwalker.sscary.data.client.ClientData;
-import diamondwalker.sscary.registry.TWAISSounds;
+import diamondwalker.sscary.registry.SScarySounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
@@ -53,7 +53,7 @@ public class FakePauseScreen extends PauseScreen {
                 }
             }
         } else {
-            TWAIS.LOGGER.warn("Visage's custom pause screen could not find the screen title widget to implement custom behavior. Vanilla behavior will be mimicked!");
+            SScary.LOGGER.warn("Visage's custom pause screen could not find the screen title widget to implement custom behavior. Vanilla behavior will be mimicked!");
         }
     }
 
@@ -64,7 +64,7 @@ public class FakePauseScreen extends PauseScreen {
         if (titleWidget != null) {
             if (ticks <= 0) {
                 if (close) {
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(TWAISSounds.VISAGE_TELEPORT.value(), 1.0f, 1.0f));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SScarySounds.VISAGE_TELEPORT.value(), 1.0f, 1.0f));
                     this.minecraft.setScreen(null);
                     this.minecraft.mouseHandler.grabMouse();
                     ClientData.get().blockPause();

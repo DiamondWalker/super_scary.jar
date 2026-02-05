@@ -2,7 +2,7 @@ package diamondwalker.sscary.handler.internal;
 
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.StaticData;
-import diamondwalker.sscary.registry.TWAISSounds;
+import diamondwalker.sscary.registry.SScarySounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.neoforged.api.distmarker.Dist;
@@ -45,7 +45,7 @@ public class StaticHandler {
     }
 
     private static void startPlaying() {
-        if (sound == null) sound = SimpleSoundInstance.forUI(TWAISSounds.STATIC.value(), 1.0f, 1.0f);
+        if (sound == null) sound = SimpleSoundInstance.forUI(SScarySounds.STATIC.value(), 1.0f, 1.0f);
         Minecraft.getInstance().getSoundManager().play(sound);
     }
 

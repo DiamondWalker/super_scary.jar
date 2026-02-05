@@ -1,14 +1,14 @@
 package diamondwalker.sscary.handler.feature;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.entity.player.PlayerData;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.entity.visage.EntityVisage;
 import diamondwalker.sscary.network.VisageFlashPacket;
-import diamondwalker.sscary.registry.TWAISDataAttachments;
-import diamondwalker.sscary.registry.TWAISEntities;
-import diamondwalker.sscary.registry.TWAISSounds;
+import diamondwalker.sscary.registry.SScaryDataAttachments;
+import diamondwalker.sscary.registry.SScaryEntities;
+import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -47,8 +47,8 @@ public class VisageHandler {
 
     @SubscribeEvent
     private static void handlePlayerHeal(LivingHealEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player && player.hasData(TWAISDataAttachments.PLAYER)) {
-            PlayerData data = player.getData(TWAISDataAttachments.PLAYER);
+        if (event.getEntity() instanceof ServerPlayer player && player.hasData(SScaryDataAttachments.PLAYER)) {
+            PlayerData data = player.getData(SScaryDataAttachments.PLAYER);
             if (data.visageHealDisable) {
                 if (player.level().getEntitiesOfClass(EntityVisage.class, player.getBoundingBox().inflate(200)).isEmpty()) {
                     data.visageHealDisable = false;
@@ -65,8 +65,8 @@ public class VisageHandler {
 
     @SubscribeEvent
     private static void handleFlashCooldown(PlayerTickEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer player && player.hasData(TWAISDataAttachments.PLAYER)) {
-            PlayerData data = player.getData(TWAISDataAttachments.PLAYER);
+        if (event.getEntity() instanceof ServerPlayer player && player.hasData(SScaryDataAttachments.PLAYER)) {
+            PlayerData data = player.getData(SScaryDataAttachments.PLAYER);
             if (data.healFlashCooldown > 0) data.healFlashCooldown--;
         }
     }
@@ -122,7 +122,7 @@ public class VisageHandler {
             } else {
                 data.visage.spawnTicks = 0;
             }
-            if (TWAIS.DEV_MODE) System.out.println("VISAGE: " + data.visage.spawnTicks);
+            if (SScary.DEV_MODE) System.out.println("VISAGE: " + data.visage.spawnTicks);
         }
     }
 
@@ -143,7 +143,7 @@ public class VisageHandler {
         new ScriptBuilder(server)
                 .action((serv) -> {
                     for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
-                        player.connection.send(new ClientboundSoundPacket(TWAISSounds.VISAGE_SPAWN, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 0.6F, 1.0F, server.overworld().getRandom().nextLong()));
+                        player.connection.send(new ClientboundSoundPacket(SScarySounds.VISAGE_SPAWN, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 0.6F, 1.0F, server.overworld().getRandom().nextLong()));
                     }
                 })
                 .rest(20 * 10)
@@ -151,7 +151,7 @@ public class VisageHandler {
                 .action((serv) -> {
                     for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
                         if (player.isAlive()) {
-                            EntityVisage visage = TWAISEntities.VISAGE.get().create(player.level());
+                            EntityVisage visage = SScaryEntities.VISAGE.get().create(player.level());
 
                             RandomSource random = player.getRandom();
                             for (int i = 0; i < 10; i++) {
@@ -183,7 +183,7 @@ public class VisageHandler {
             try (LevelStorageSource.LevelStorageAccess levelstoragesource$levelstorageaccess = Minecraft.getInstance().getLevelSource().createAccess(event.getServer().storageSource.getLevelId())) {
                 levelstoragesource$levelstorageaccess.deleteLevel();
             } catch (IOException ioexception) {
-                TWAIS.LOGGER.warn("Visage level delete failed.", ioexception);
+                SScary.LOGGER.warn("Visage level delete failed.", ioexception);
             }
         }
     }
@@ -197,7 +197,7 @@ public class VisageHandler {
                 if (scareSound != null && Minecraft.getInstance().getSoundManager().isActive(scareSound)) { // the sound is playing, so we're ready
                     readyToClose = true;
                 } else { // the sound hasn't started
-                    scareSound = SimpleSoundInstance.forUI(TWAISSounds.VISAGE_SCARE.value(), 1.0f, 15.0f); // TODO: make this louder i think
+                    scareSound = SimpleSoundInstance.forUI(SScarySounds.VISAGE_SCARE.value(), 1.0f, 15.0f); // TODO: make this louder i think
                     Minecraft.getInstance().getSoundManager().play(scareSound);
                 }
             }

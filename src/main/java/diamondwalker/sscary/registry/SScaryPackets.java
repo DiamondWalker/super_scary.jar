@@ -7,7 +7,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 @EventBusSubscriber
-public class TWAISPackets {
+public class SScaryPackets {
     @SubscribeEvent
     private static void register(RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");

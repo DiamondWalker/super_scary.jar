@@ -1,6 +1,6 @@
 package diamondwalker.sscary.registry;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.randomevent.EnumEventRarity;
 import diamondwalker.sscary.randomevent.RegisteredEvent;
 import diamondwalker.sscary.randomevent.common.*;
@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 import static diamondwalker.sscary.randomevent.EnumEventRarity.*;
 
-public class TWAISRandomEvents {
+public class SScaryRandomEvents {
     public static RegisteredEvent CORRUPTED_WATCHING;
     public static RegisteredEvent FIRE;
     public static RegisteredEvent INVALID_TEXT;
@@ -39,7 +39,7 @@ public class TWAISRandomEvents {
     public static RegisteredEvent SNORE;
 
     private static RegisteredEvent register(EnumEventRarity rarity, String location, Function<MinecraftServer, Boolean> func) {
-        return new RegisteredEvent(rarity, ResourceLocation.fromNamespaceAndPath(TWAIS.MODID, location), func);
+        return new RegisteredEvent(rarity, ResourceLocation.fromNamespaceAndPath(SScary.MODID, location), func);
     }
 
     public static void registerRandomEvents() {

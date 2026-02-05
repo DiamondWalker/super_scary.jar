@@ -1,7 +1,7 @@
 package diamondwalker.sscary.randomevent.common;
 
 import diamondwalker.sscary.entity.nametag.EntityNametag;
-import diamondwalker.sscary.registry.TWAISEntities;
+import diamondwalker.sscary.registry.SScaryEntities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -26,7 +26,7 @@ public class InvalidTextEvent {
                         Vec3 offsetVector = new Vec3(xOffset, yOffset, zOffset);
                         if (offsetVector.length() > 40) {
                             Vec3 pos = player.getEyePosition().add(offsetVector);
-                            EntityNametag nametag = TWAISEntities.NAMETAG.get().create(level);
+                            EntityNametag nametag = SScaryEntities.NAMETAG.get().create(level);
                             nametag.setPos(pos);
                             nametag.setCustomName(Component.literal("Invalid"));
                             level.addFreshEntity(nametag);

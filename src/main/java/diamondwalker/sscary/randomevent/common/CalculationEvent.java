@@ -2,7 +2,7 @@ package diamondwalker.sscary.randomevent.common;
 
 import diamondwalker.sscary.data.server.CalculationData;
 import diamondwalker.sscary.data.server.WorldData;
-import diamondwalker.sscary.registry.TWAISDamageTypes;
+import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.server.MinecraftServer;
@@ -67,7 +67,7 @@ public class CalculationEvent {
                 .action((serv) -> {
                     if (blowUp.get()) {
                         for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
-                            player.hurt(TWAISDamageTypes.calculation(player), Float.MAX_VALUE);
+                            player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
                             for (int i = 0; i < 15; i++) {
                                 Vec3 pos = player.position();
                                 pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);

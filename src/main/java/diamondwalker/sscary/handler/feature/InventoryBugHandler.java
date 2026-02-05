@@ -1,7 +1,7 @@
 package diamondwalker.sscary.handler.feature;
 
 import diamondwalker.sscary.data.server.WorldData;
-import diamondwalker.sscary.registry.TWAISItems;
+import diamondwalker.sscary.registry.SScaryItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +25,7 @@ public class InventoryBugHandler {
             if (event.getEntity().tickCount % 8 == 0) {
                 Inventory inventory = event.getEntity().getInventory();
 
-                if (inventory.countItem(TWAISItems.INVENTORY_BUG.asItem()) > 0) {
+                if (inventory.countItem(SScaryItems.INVENTORY_BUG.asItem()) > 0) {
                     ArrayList<Integer> emptySlots = new ArrayList<>();
 
                     for (int i = 0; i < inventory.items.size(); i++) {
@@ -36,7 +36,7 @@ public class InventoryBugHandler {
 
                     if (!emptySlots.isEmpty()) {
                         int slot = emptySlots.get(event.getEntity().getRandom().nextInt(emptySlots.size()));
-                        inventory.add(slot, new ItemStack(TWAISItems.INVENTORY_BUG.asItem()));
+                        inventory.add(slot, new ItemStack(SScaryItems.INVENTORY_BUG.asItem()));
                     }
 
                     WorldData.get(event.getEntity().getServer()).progression.bug();
@@ -49,14 +49,14 @@ public class InventoryBugHandler {
     private static void handleBlockDrop(BlockDropsEvent event) {
         if (event.getState().is(Blocks.STONE) || event.getState().is(Blocks.DEEPSLATE)) {
             if (event.getBreaker() instanceof Player && event.getBreaker().getRandom().nextInt(125) == 0) {
-                Block.popResource(event.getLevel(), event.getPos(), new ItemStack(TWAISItems.INVENTORY_BUG.asItem()));
+                Block.popResource(event.getLevel(), event.getPos(), new ItemStack(SScaryItems.INVENTORY_BUG.asItem()));
             }
         }
     }
 
     @SubscribeEvent
     private static void handleItemPickup(ItemEntityPickupEvent.Post event) {
-        Item bugItem = TWAISItems.INVENTORY_BUG.asItem();
+        Item bugItem = SScaryItems.INVENTORY_BUG.asItem();
         if (!event.getPlayer().isLocalPlayer() && event.getOriginalStack().is(bugItem)) {
             if (event.getPlayer().getInventory().countItem(bugItem) <= 1) {
                 event.getPlayer().sendSystemMessage(Component.literal("Your inventory has been infected by an Inventory Bug!"));

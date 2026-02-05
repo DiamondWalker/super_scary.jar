@@ -1,6 +1,6 @@
 package diamondwalker.sscary.registry;
 
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.entity.bizarrodude.BizarroDudeRenderer;
 import diamondwalker.sscary.entity.bizarrodude.EntityBizarroDude;
 import diamondwalker.sscary.entity.corrupted.CorruptedRenderer;
@@ -14,7 +14,6 @@ import diamondwalker.sscary.entity.taker.ModelTaker;
 import diamondwalker.sscary.entity.taker.TakerRenderer;
 import diamondwalker.sscary.entity.visage.EntityVisage;
 import diamondwalker.sscary.entity.visage.VisageRenderer;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -28,8 +27,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 @EventBusSubscriber
-public class TWAISEntities {
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, TWAIS.MODID);
+public class SScaryEntities {
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, SScary.MODID);
 
     public static final Supplier<EntityType<EntityNametag>> NAMETAG = ENTITY_TYPES.register("name_tag", () -> EntityType.Builder.of(
             EntityNametag::new,
@@ -90,20 +89,20 @@ public class TWAISEntities {
 
     @SubscribeEvent
     private static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(TWAISEntities.CORRUPTED.get(), EntityCorrupted.createAttributes().build());
-        event.put(TWAISEntities.BIZZARO_DUDE.get(), EntityBizarroDude.createAttributes().build());
-        event.put(TWAISEntities.TAKER.get(), EntityTaker.createAttributes().build());
-        event.put(TWAISEntities.FRIED_STEVE.get(), EntityFriedSteve.createAttributes().build());
+        event.put(SScaryEntities.CORRUPTED.get(), EntityCorrupted.createAttributes().build());
+        event.put(SScaryEntities.BIZZARO_DUDE.get(), EntityBizarroDude.createAttributes().build());
+        event.put(SScaryEntities.TAKER.get(), EntityTaker.createAttributes().build());
+        event.put(SScaryEntities.FRIED_STEVE.get(), EntityFriedSteve.createAttributes().build());
     }
 
     @SubscribeEvent
     private static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(TWAISEntities.NAMETAG.get(), NametagRenderer::new);
-        event.registerEntityRenderer(TWAISEntities.VISAGE.get(), VisageRenderer::new);
-        event.registerEntityRenderer(TWAISEntities.CORRUPTED.get(), (cntx) -> new CorruptedRenderer(cntx, false));
-        event.registerEntityRenderer(TWAISEntities.BIZZARO_DUDE.get(), BizarroDudeRenderer::new);
-        event.registerEntityRenderer(TWAISEntities.TAKER.get(), TakerRenderer::new);
-        event.registerEntityRenderer(TWAISEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.NAMETAG.get(), NametagRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.VISAGE.get(), VisageRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.CORRUPTED.get(), (cntx) -> new CorruptedRenderer(cntx, false));
+        event.registerEntityRenderer(SScaryEntities.BIZZARO_DUDE.get(), BizarroDudeRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.TAKER.get(), TakerRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
     }
 
     @SubscribeEvent

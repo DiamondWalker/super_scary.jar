@@ -1,7 +1,7 @@
 package diamondwalker.sscary.handler.feature;
 
 import diamondwalker.sscary.Config;
-import diamondwalker.sscary.TWAIS;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.randomevent.EnumEventRarity;
 import diamondwalker.sscary.randomevent.RandomEventRegistry;
@@ -29,7 +29,7 @@ public class RandomEventHandler {
                 Config.MIN_EVENT_INTERVAL.getAsInt() != data.randomEvents.prevMin ||
                 Config.MED_EVENT_INTERVAL.getAsInt() != data.randomEvents.prevMed
         ) {
-            TWAIS.LOGGER.info("Detected changes in event interval config. Next event time will be recalculated.");
+            SScary.LOGGER.info("Detected changes in event interval config. Next event time will be recalculated.");
             data.randomEvents.prevMax = Config.MAX_EVENT_INTERVAL.getAsInt();
             data.randomEvents.prevMin = Config.MIN_EVENT_INTERVAL.getAsInt();
             data.randomEvents.prevMed = Config.MED_EVENT_INTERVAL.getAsInt();
@@ -71,7 +71,7 @@ public class RandomEventHandler {
             data.randomEvents.timeSinceLastEvent++;
         }
 
-        if (TWAIS.DEV_MODE) System.out.println("Time left for random event: " + (data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent));
+        if (SScary.DEV_MODE) System.out.println("Time left for random event: " + (data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent));
     }
 
     public static void refreshEventTime(WorldData data, RandomSource random) {

@@ -6,10 +6,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-@Mod(value = TWAIS.MODID, dist = Dist.CLIENT)
+@Mod(value = SScary.MODID, dist = Dist.CLIENT)
 //@EventBusSubscriber(modid = TWAIS.MODID, value = Dist.CLIENT)
-public class TWAISClient {
-    public TWAISClient(ModContainer container) {
+public class SScaryClient {
+    public SScaryClient(ModContainer container) {
         // Allows NeoForge to create a config screen for this mod's configs.
         // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
         // Do not forget to add translations for your config options to the en_us.json file.
