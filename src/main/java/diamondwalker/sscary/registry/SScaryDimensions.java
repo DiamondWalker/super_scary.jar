@@ -47,7 +47,7 @@ public class SScaryDimensions {
                 256, // logicalHeight
                 BlockTags.INFINIBURN_OVERWORLD, // infiniburn
                 PURGATORY_EFFECTS, // effectsLocation
-                0.1f, // ambientLight
+                0.2f, // ambientLight
                 new DimensionType.MonsterSettings(false, false, ConstantInt.of(0), 0)));
     }
 
