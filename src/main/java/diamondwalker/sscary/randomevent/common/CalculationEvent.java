@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@EventBusSubscriber // TODO: this needs to be made part of the script system
+@EventBusSubscriber
 public class CalculationEvent {
     public static boolean execute(MinecraftServer server) {
         WorldData data = WorldData.get(server);

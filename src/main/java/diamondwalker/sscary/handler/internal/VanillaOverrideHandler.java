@@ -5,8 +5,11 @@ import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.gui.screen.ConsoleScreen;
 import diamondwalker.sscary.gui.screen.FakePauseScreen;
 import diamondwalker.sscary.registry.SScaryMusic;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -56,6 +59,10 @@ public class VanillaOverrideHandler {
 
     @SubscribeEvent
     private static void disableNetherPortal(BlockEvent.PortalSpawnEvent event) {
+        MinecraftServer server = event.getLevel().getServer();
+        server.getPlayerList().broadcastSystemMessage(Component.literal("super_scary.jar disables the Nether since the mod currently has issues when the player is outside the Overworld.").withStyle(ChatFormatting.DARK_RED), false);
+        server.getPlayerList().broadcastSystemMessage(Component.literal("I'll enable it again in a future update, once I've fixed the bugs.").withStyle(ChatFormatting.DARK_RED), false);
+        server.getPlayerList().broadcastSystemMessage(Component.literal("I'm sorry for the inconvenience. Please keep in mind this is an alpha version!").withStyle(ChatFormatting.DARK_RED), false);
         event.setCanceled(true);
     }
 }

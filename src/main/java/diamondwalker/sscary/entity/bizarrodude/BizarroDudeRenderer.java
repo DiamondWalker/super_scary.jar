@@ -18,7 +18,7 @@ public class BizarroDudeRenderer extends HumanoidMobRenderer<EntityBizarroDude, 
     protected final PlayerModel<EntityBizarroDude> slimModel;
 
     public BizarroDudeRenderer(EntityRendererProvider.Context context) {
-        super(context, new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5f); // FIXME: support for slim players
+        super(context, new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5f);
         wideModel = this.model;
         slimModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
     }
