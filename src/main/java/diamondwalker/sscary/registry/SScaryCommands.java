@@ -20,7 +20,8 @@ public class SScaryCommands {
         registerAll(event.getDispatcher(), event.getBuildContext(),
                 AngerCommand::build,
                 RandomEventCommand::build,
-                PurgatoryTeleportCommand::build);
+                PurgatoryTeleportCommand::build
+        );
     }
 
     @SafeVarargs

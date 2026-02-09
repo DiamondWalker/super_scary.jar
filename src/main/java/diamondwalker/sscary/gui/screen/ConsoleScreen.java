@@ -207,7 +207,7 @@ public class ConsoleScreen extends Screen {
                         messages.add(Component.empty());
                         messages.add(Component.literal("Goodbye."));
                     });
-                    queueEvent(275, () -> System.exit(0));
+                    queueEvent(275, () -> Minecraft.getInstance().stop());
                 }
                 break;
             }
