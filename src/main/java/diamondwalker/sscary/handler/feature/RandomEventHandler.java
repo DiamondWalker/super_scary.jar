@@ -10,6 +10,8 @@ import diamondwalker.sscary.util.MathUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -19,6 +21,9 @@ public class RandomEventHandler {
     @SubscribeEvent
     private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
+
+        if (server.getPlayerList().getPlayers().stream().noneMatch((player) -> player.level().dimension() == Level.OVERWORLD)) return;
+
         RandomSource random = server.overworld().getRandom();
         WorldData data = WorldData.get(server);
 

@@ -117,7 +117,7 @@ public class VisageHandler {
 
             if (!data.progression.hasBeenAngered()) return;
 
-            if (player.isAlive() && level.getBrightness(LightLayer.SKY, player.blockPosition()) <= 0) {
+            if (player.isAlive() && level.dimension() == Level.OVERWORLD && level.getBrightness(LightLayer.SKY, player.blockPosition()) <= 0) {
                 if (player.getY() < 0) data.visage.spawnTicks++;
             } else {
                 data.visage.spawnTicks = 0;

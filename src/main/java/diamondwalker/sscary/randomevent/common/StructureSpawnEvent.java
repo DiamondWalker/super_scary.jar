@@ -27,19 +27,15 @@ public class StructureSpawnEvent {
         if (chunks.isEmpty()) return false;
 
         RandomSource random = level.getRandom();
-        int selection = random.nextInt(3); // 0 = """tower""", 1 = hole, 2 = under construction
+        int selection = random.nextInt(2); // 0 = """tower""", 1 = hole, 2 = under construction
         for (int i = 0; i < 10; i++) {
             LevelChunk selectedChunk = chunks.get(random.nextInt(chunks.size()));
             switch (selection) {
                 case 0: {
-                    if (buildMonolith(level, selectedChunk, random)) return true;
-                    break;
-                }
-                case 1: {
                     if (buildHole(level, selectedChunk, random)) return true;
                     break;
                 }
-                case 2: {
+                case 1: {
                     if (buildScaffold(level, selectedChunk, random)) return true;
                     break;
                 }

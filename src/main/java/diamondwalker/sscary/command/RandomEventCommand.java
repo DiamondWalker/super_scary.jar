@@ -12,6 +12,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class RandomEventCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> build(CommandBuildContext context) {
@@ -27,6 +28,11 @@ public class RandomEventCommand {
     }
 
     protected static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        if (context.getSource().getLevel().dimension() != Level.OVERWORLD) {
+            context.getSource().sendFailure(Component.literal("Random events do not currently function outside of the Overworld."));
+            return 0;
+        }
+
         ResourceLocation key = ResourceLocationArgument.getId(context, "type");
 
         RegisteredEvent event = RandomEventRegistry.getEventFromKey(key);

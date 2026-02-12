@@ -14,7 +14,6 @@ public class AnnoyingMultiplayerMessageHandler {
 
     @SubscribeEvent
     private static void handleServerTick(ServerTickEvent.Post event) {
-        if (SScary.DEV_MODE) System.out.println(timer);
         if (timer > 0) {
             timer--;
         } else {

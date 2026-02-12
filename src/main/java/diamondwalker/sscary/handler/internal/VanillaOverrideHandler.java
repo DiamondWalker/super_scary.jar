@@ -56,13 +56,4 @@ public class VanillaOverrideHandler {
         }
         event.overrideMusic(null);
     }
-
-    @SubscribeEvent
-    private static void disableNetherPortal(BlockEvent.PortalSpawnEvent event) {
-        MinecraftServer server = event.getLevel().getServer();
-        server.getPlayerList().broadcastSystemMessage(Component.literal("super_scary.jar disables the Nether since the mod currently has issues when the player is outside the Overworld.").withStyle(ChatFormatting.DARK_RED), false);
-        server.getPlayerList().broadcastSystemMessage(Component.literal("I'll enable it again in a future update, once I've fixed the bugs.").withStyle(ChatFormatting.DARK_RED), false);
-        server.getPlayerList().broadcastSystemMessage(Component.literal("I'm sorry for the inconvenience. Please keep in mind this is an alpha version!").withStyle(ChatFormatting.DARK_RED), false);
-        event.setCanceled(true);
-    }
 }
