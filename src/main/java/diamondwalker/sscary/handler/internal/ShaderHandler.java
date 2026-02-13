@@ -1,5 +1,6 @@
 package diamondwalker.sscary.handler.internal;
 
+import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.util.shader.EnumShaderLayer;
 import diamondwalker.sscary.util.shader.PostProcessingShader;
@@ -16,7 +17,7 @@ public class ShaderHandler {
 
     @SubscribeEvent
     private static void onOpenWorld(ClientPlayerNetworkEvent.LoggingIn event) {
-        CREEPY_SHADER.activate();
+        if (Config.DISPLAY_AMBIENT_SCREEN_EFFECT.get()) CREEPY_SHADER.activate();
     }
 
     public static void setColorShader(float r, float g, float b) {

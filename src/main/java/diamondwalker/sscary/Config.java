@@ -7,9 +7,14 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    /*public static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
-            .comment("Whether to log the dirt block on common setup")
-            .define("logDirtBlock", true);*/
+    public static final ModConfigSpec.BooleanValue DISPLAY_AMBIENT_SCREEN_EFFECT = BUILDER
+            .comment("Whether super_scary.jar's ambient screen effects should be displayed")
+            .worldRestart()
+            .define("displayAmbientScreenEffect", true);
+
+    public static final ModConfigSpec.BooleanValue ALLOW_VANILLA_MUSIC = BUILDER
+            .comment("If false, vanilla music will be permanently muted")
+            .define("allowVanillaMusic", false);
 
     public static final ModConfigSpec.IntValue MAX_EVENT_INTERVAL = BUILDER
             .comment("The maximum time, in ticks, that will pass between random events.")

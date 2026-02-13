@@ -1,6 +1,7 @@
 package diamondwalker.sscary.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.StaticData;
@@ -27,6 +28,8 @@ public class StaticOverlay implements LayeredDraw.Layer {
             yScale = data.yScale();
             alpha = data.alpha();
             interval = data.interval();
+        } else {
+            if (!Config.DISPLAY_AMBIENT_SCREEN_EFFECT.get()) return;
         }
 
         long seed = System.nanoTime() / interval;

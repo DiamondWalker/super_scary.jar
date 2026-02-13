@@ -1,11 +1,13 @@
 package diamondwalker.sscary.handler.internal;
 
+import diamondwalker.sscary.Config;
 import diamondwalker.sscary.OverworldSpecialEffects;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.gui.screen.ConsoleScreen;
 import diamondwalker.sscary.gui.screen.FakePauseScreen;
 import diamondwalker.sscary.registry.SScaryMusic;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
@@ -54,6 +56,11 @@ public class VanillaOverrideHandler {
             event.overrideMusic(SScaryMusic.PARTY);
             return;
         }
-        event.overrideMusic(null);
+        if (
+                !Config.ALLOW_VANILLA_MUSIC.get() ||
+                Minecraft.getInstance().screen instanceof ConsoleScreen
+        ) {
+            event.overrideMusic(null);
+        }
     }
 }

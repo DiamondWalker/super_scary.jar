@@ -14,7 +14,7 @@ public class SleepEvent {
 
         if (player.getRandom().nextInt(10) == 0) {
             event.setProblem(Player.BedSleepingProblem.OTHER_PROBLEM);
-            player.displayClientMessage(Component.translatable("block.twais.bed.scare"), true);
+            player.displayClientMessage(Component.translatable("block.sscary.bed.scare"), true);
         }
     }
 }

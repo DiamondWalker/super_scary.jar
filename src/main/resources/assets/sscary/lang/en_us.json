@@ -6,6 +6,8 @@
   "entity.sscary.corrupted": "c0rrup1e3_en1i1y",
 
   "sscary.configuration.title": "The Working-As-Intended Script Configs",
+  "sscary.configuration.displayAmbientScreenEffect": "Display Ambient Screen Effect",
+  "sscary.configuration.allowVanillaMusic": "Allow Vanilla Music",
   "sscary.configuration.maxEventInterval": "Maximum Event Interval",
   "sscary.configuration.medEventInterval": "Median Event Interval",
   "sscary.configuration.minEventInterval": "Minimum Event Interval",
