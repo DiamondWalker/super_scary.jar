@@ -1,4 +1,4 @@
-package diamondwalker.sscary;
+package diamondwalker.sscary.sky;
 
 import diamondwalker.sscary.data.client.ClientData;
 import net.minecraft.client.multiplayer.ClientLevel;

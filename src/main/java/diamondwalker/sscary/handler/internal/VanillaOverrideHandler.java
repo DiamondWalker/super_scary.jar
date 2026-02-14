@@ -1,24 +1,20 @@
 package diamondwalker.sscary.handler.internal;
 
 import diamondwalker.sscary.Config;
-import diamondwalker.sscary.OverworldSpecialEffects;
+import diamondwalker.sscary.sky.OverworldSpecialEffects;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.gui.screen.ConsoleScreen;
 import diamondwalker.sscary.gui.screen.FakePauseScreen;
 import diamondwalker.sscary.registry.SScaryMusic;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.SelectMusicEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
 
 @EventBusSubscriber
 public class VanillaOverrideHandler {

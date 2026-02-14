@@ -3,7 +3,9 @@ package diamondwalker.sscary.network;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.StaticData;
+import diamondwalker.sscary.sound.StaticSoundInstance;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -25,5 +27,6 @@ public record StaticScreenPacket(int time) implements CustomPacketPayload {
 
     public static void handle(final StaticScreenPacket packet, final IPayloadContext context) {
         ClientData.get().staticData = new StaticData(1.0f, 1.0f, packet.time(), true);
+        Minecraft.getInstance().getSoundManager().queueTickingSound(new StaticSoundInstance());
     }
 }

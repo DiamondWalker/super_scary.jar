@@ -1,8 +1,7 @@
 package diamondwalker.sscary.registry;
 
-import diamondwalker.sscary.PurgatorySpecialEffects;
+import diamondwalker.sscary.sky.PurgatorySpecialEffects;
 import diamondwalker.sscary.SScary;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;

@@ -1,4 +1,4 @@
-package diamondwalker.sscary;
+package diamondwalker.sscary.sky;
 
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.world.phys.Vec3;
