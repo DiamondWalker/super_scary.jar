@@ -12,8 +12,6 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class StaticHandler {
-    private static SimpleSoundInstance sound = null;
-
     @SubscribeEvent
     private static void tickStatic(ClientTickEvent.Post event) {
         StaticData data = ClientData.get().staticData;

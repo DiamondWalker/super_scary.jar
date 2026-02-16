@@ -1,5 +1,6 @@
 package diamondwalker.sscary.entity.friedsteve;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,6 +10,18 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 
 public class EntityFriedSteve extends Mob {
+    public static final String[] MESSAGES = new String[] {
+            "You skin is so soft. I can't wait to see it rip.",
+            "I'll make this quick.",
+            "I'm coming for you.",
+            "It'll all be over soon.",
+            "Don't struggle. It'll hurt more.",
+            "Say your prayers.",
+            "I'll be seeing you soon.",
+            "Your time is up.",
+            "This is going to be fun."
+    };
+
     public EntityFriedSteve(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
     }
@@ -23,5 +36,14 @@ public class EntityFriedSteve extends Mob {
                 //.add(Attributes.MAX_HEALTH, 20)
                 .add(Attributes.FOLLOW_RANGE, 20)
                 .add(Attributes.ATTACK_DAMAGE, 5);
+    }
+
+    private static String getName(RandomSource random) {
+        int length = 4 + random.nextInt(7); // [4, 10]
+        StringBuilder nameBuilder = new StringBuilder(length + 4);
+        nameBuilder.append("§k");
+        for (int i = 0; i < length; i++) nameBuilder.append('-');
+        nameBuilder.append("§r");
+        return nameBuilder.toString();
     }
 }
