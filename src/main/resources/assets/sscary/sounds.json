@@ -31,6 +31,14 @@
       }
     ]
   },
+  "fried_steve_music": {
+    "sounds": [
+      {
+        "name": "sscary:music/fried_steve",
+        "stream": true
+      }
+    ]
+  },
   "static": {
     "sounds": [
       {

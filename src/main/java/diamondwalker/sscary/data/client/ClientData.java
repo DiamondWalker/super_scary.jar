@@ -1,5 +1,6 @@
 package diamondwalker.sscary.data.client;
 
+import diamondwalker.sscary.entity.friedsteve.EntityFriedSteve;
 import net.minecraft.client.Minecraft;
 
 public class ClientData {
@@ -18,6 +19,9 @@ public class ClientData {
     public ScreenFlashData flash = null;
 
     private boolean silence = false;
+
+    public EntityFriedSteve friedSteve = null;
+    public int friedSteveChaseTint = 0;
 
     public void setVisageActive(boolean active) {
         isVisageActive = active;

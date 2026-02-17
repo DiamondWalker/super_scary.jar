@@ -1,5 +1,10 @@
 package diamondwalker.sscary.entity.friedsteve;
 
+import diamondwalker.sscary.data.client.ClientData;
+import diamondwalker.sscary.entity.visage.EntityVisage;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -9,7 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 
-public class EntityFriedSteve extends Mob {
+public class EntityFriedSteve extends Mob { // TODO: this guy should pause events
     public static final String[] MESSAGES = new String[] {
             "You skin is so soft. I can't wait to see it rip.",
             "I'll make this quick.",
@@ -22,13 +27,38 @@ public class EntityFriedSteve extends Mob {
             "This is going to be fun."
     };
 
+    public static final EntityDataAccessor<Boolean> CHASING = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.BOOLEAN);
+
     public EntityFriedSteve(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        return false;
+        return super.hurt(source, amount);//return false;
+    }
+
+    @Override
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+
+        if (level().isClientSide()) {
+            ClientData.get().friedSteve = this;
+        }
+    }
+
+    private void setChaseMode(boolean chasing) {
+        this.entityData.set(CHASING, chasing);
+    }
+
+    public boolean isChasing() {
+        return this.entityData.get(CHASING);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CHASING, true);
     }
 
     public static AttributeSupplier.Builder createAttributes() {

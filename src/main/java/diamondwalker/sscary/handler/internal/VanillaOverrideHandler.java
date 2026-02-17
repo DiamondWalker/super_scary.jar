@@ -48,10 +48,18 @@ public class VanillaOverrideHandler {
 
     @SubscribeEvent
     private static void stopMusic(SelectMusicEvent event) {
-        if (ClientData.get().wackyColors) {
+        ClientData data = ClientData.get();
+
+        if (data.friedSteve != null && data.friedSteve.isChasing()) {
+            event.overrideMusic(SScaryMusic.FRIED_STEVE);
+            return;
+        }
+
+        if (data.wackyColors) {
             event.overrideMusic(SScaryMusic.PARTY);
             return;
         }
+
         if (
                 !Config.ALLOW_VANILLA_MUSIC.get() ||
                 Minecraft.getInstance().screen instanceof ConsoleScreen
