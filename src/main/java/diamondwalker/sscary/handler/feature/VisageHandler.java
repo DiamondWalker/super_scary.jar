@@ -4,7 +4,7 @@ import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.entity.player.PlayerData;
 import diamondwalker.sscary.data.server.WorldData;
-import diamondwalker.sscary.entity.visage.EntityVisage;
+import diamondwalker.sscary.entity.entity.visage.EntityVisage;
 import diamondwalker.sscary.network.VisageFlashPacket;
 import diamondwalker.sscary.registry.SScaryDataAttachments;
 import diamondwalker.sscary.registry.SScaryEntities;

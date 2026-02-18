@@ -3,11 +3,16 @@ package diamondwalker.sscary.registry;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.item.InventoryBugItem;
 import diamondwalker.sscary.item.PepperSprayItem;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+@EventBusSubscriber
 public class SScaryItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(SScary.MODID);
 
@@ -27,5 +32,12 @@ public class SScaryItems {
 
     public static void register(IEventBus bus) {
         ITEMS.register(bus);
+    }
+
+    @SubscribeEvent
+    private static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
+            event.accept(SScaryItems.PEPPER_SPRAY.get());
+        }
     }
 }

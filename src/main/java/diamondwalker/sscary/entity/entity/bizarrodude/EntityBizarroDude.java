@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.bizarrodude;
+package diamondwalker.sscary.entity.entity.bizarrodude;
 
 import diamondwalker.sscary.util.ChatUtil;
 import net.minecraft.client.Minecraft;

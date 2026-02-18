@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.visage;
+package diamondwalker.sscary.entity.entity.visage;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

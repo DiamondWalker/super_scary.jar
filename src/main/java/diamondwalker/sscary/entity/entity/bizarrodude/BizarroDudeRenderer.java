@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.bizarrodude;
+package diamondwalker.sscary.entity.entity.bizarrodude;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

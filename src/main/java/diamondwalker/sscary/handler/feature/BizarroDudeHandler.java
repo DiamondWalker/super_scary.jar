@@ -1,7 +1,7 @@
 package diamondwalker.sscary.handler.feature;
 
 import diamondwalker.sscary.data.server.WorldData;
-import diamondwalker.sscary.entity.bizarrodude.EntityBizarroDude;
+import diamondwalker.sscary.entity.entity.bizarrodude.EntityBizarroDude;
 import diamondwalker.sscary.registry.SScaryEntities;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;

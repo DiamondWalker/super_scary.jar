@@ -1,22 +1,26 @@
 package diamondwalker.sscary.registry;
 
 import diamondwalker.sscary.SScary;
-import diamondwalker.sscary.entity.bizarrodude.BizarroDudeRenderer;
-import diamondwalker.sscary.entity.bizarrodude.EntityBizarroDude;
-import diamondwalker.sscary.entity.corrupted.CorruptedRenderer;
-import diamondwalker.sscary.entity.corrupted.EntityCorrupted;
-import diamondwalker.sscary.entity.friedsteve.EntityFriedSteve;
-import diamondwalker.sscary.entity.friedsteve.FriedSteveRenderer;
-import diamondwalker.sscary.entity.nametag.EntityNametag;
-import diamondwalker.sscary.entity.nametag.NametagRenderer;
-import diamondwalker.sscary.entity.taker.EntityTaker;
-import diamondwalker.sscary.entity.taker.ModelTaker;
-import diamondwalker.sscary.entity.taker.TakerRenderer;
-import diamondwalker.sscary.entity.visage.EntityVisage;
-import diamondwalker.sscary.entity.visage.VisageRenderer;
+import diamondwalker.sscary.entity.entity.bizarrodude.BizarroDudeRenderer;
+import diamondwalker.sscary.entity.entity.bizarrodude.EntityBizarroDude;
+import diamondwalker.sscary.entity.entity.corrupted.CorruptedRenderer;
+import diamondwalker.sscary.entity.entity.corrupted.EntityCorrupted;
+import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
+import diamondwalker.sscary.entity.entity.friedsteve.FriedSteveRenderer;
+import diamondwalker.sscary.entity.misc.nametag.EntityNametag;
+import diamondwalker.sscary.entity.entity.taker.EntityTaker;
+import diamondwalker.sscary.entity.entity.taker.ModelTaker;
+import diamondwalker.sscary.entity.entity.taker.TakerRenderer;
+import diamondwalker.sscary.entity.entity.visage.EntityVisage;
+import diamondwalker.sscary.entity.entity.visage.VisageRenderer;
+import diamondwalker.sscary.entity.projectile.pepperspray.EntityPepperSpray;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -76,6 +80,13 @@ public class SScaryEntities {
             .build("taker")
     );
 
+    public static final Supplier<EntityType<EntityPepperSpray>> PEPPER_SPRAY = ENTITY_TYPES.register("pepper_spray", () -> EntityType.Builder.of(
+                (EntityType<EntityPepperSpray> type, Level level) -> new EntityPepperSpray(type, level), MobCategory.MISC
+            )
+            .sized(0.2f, 0.2f)
+            .build("pepper_spray")
+    );
+
     public static final Supplier<EntityType<EntityBizarroDude>> BIZZARO_DUDE = ENTITY_TYPES.register("bizarro", () -> EntityType.Builder.of(
                             EntityBizarroDude::new,
                             MobCategory.CREATURE
@@ -97,12 +108,14 @@ public class SScaryEntities {
 
     @SubscribeEvent
     private static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(SScaryEntities.NAMETAG.get(), NametagRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.NAMETAG.get(), NoopRenderer<EntityNametag>::new);
         event.registerEntityRenderer(SScaryEntities.VISAGE.get(), VisageRenderer::new);
         event.registerEntityRenderer(SScaryEntities.CORRUPTED.get(), (cntx) -> new CorruptedRenderer(cntx, false));
         event.registerEntityRenderer(SScaryEntities.BIZZARO_DUDE.get(), BizarroDudeRenderer::new);
         event.registerEntityRenderer(SScaryEntities.TAKER.get(), TakerRenderer::new);
         event.registerEntityRenderer(SScaryEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
+
+        event.registerEntityRenderer(SScaryEntities.PEPPER_SPRAY.get(), NoopRenderer<EntityPepperSpray>::new);
     }
 
     @SubscribeEvent

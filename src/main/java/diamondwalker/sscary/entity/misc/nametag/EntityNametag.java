@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.nametag;
+package diamondwalker.sscary.entity.misc.nametag;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;

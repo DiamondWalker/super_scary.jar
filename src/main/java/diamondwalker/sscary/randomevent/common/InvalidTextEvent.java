@@ -1,6 +1,6 @@
 package diamondwalker.sscary.randomevent.common;
 
-import diamondwalker.sscary.entity.nametag.EntityNametag;
+import diamondwalker.sscary.entity.misc.nametag.EntityNametag;
 import diamondwalker.sscary.registry.SScaryEntities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;

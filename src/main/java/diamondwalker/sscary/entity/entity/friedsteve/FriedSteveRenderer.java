@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.friedsteve;
+package diamondwalker.sscary.entity.entity.friedsteve;
 
 import diamondwalker.sscary.SScary;
 import net.minecraft.client.model.HumanoidModel;

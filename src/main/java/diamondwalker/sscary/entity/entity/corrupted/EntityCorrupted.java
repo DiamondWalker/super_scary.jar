@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.corrupted;
+package diamondwalker.sscary.entity.entity.corrupted;
 
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.registry.SScarySounds;

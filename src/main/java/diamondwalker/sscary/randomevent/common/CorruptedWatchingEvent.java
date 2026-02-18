@@ -1,6 +1,6 @@
 package diamondwalker.sscary.randomevent.common;
 
-import diamondwalker.sscary.entity.corrupted.EntityCorrupted;
+import diamondwalker.sscary.entity.entity.corrupted.EntityCorrupted;
 import diamondwalker.sscary.registry.SScaryEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;

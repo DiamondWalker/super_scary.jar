@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.visage;
+package diamondwalker.sscary.entity.entity.visage;
 
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.handler.feature.VisageHandler;
@@ -7,7 +7,6 @@ import diamondwalker.sscary.network.VisageDisconnectPacket;
 import diamondwalker.sscary.network.VisageFlashPacket;
 import diamondwalker.sscary.network.VisageActivePacket;
 import diamondwalker.sscary.registry.SScaryDataAttachments;
-import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.sound.VisageSoundInstance;
 import diamondwalker.sscary.util.EntityUtil;
 import net.minecraft.client.Minecraft;

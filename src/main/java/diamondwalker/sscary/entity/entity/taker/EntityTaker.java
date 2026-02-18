@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.taker;
+package diamondwalker.sscary.entity.entity.taker;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;

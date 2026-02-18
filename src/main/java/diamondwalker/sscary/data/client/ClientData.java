@@ -1,6 +1,6 @@
 package diamondwalker.sscary.data.client;
 
-import diamondwalker.sscary.entity.friedsteve.EntityFriedSteve;
+import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
 import net.minecraft.client.Minecraft;
 
 public class ClientData {

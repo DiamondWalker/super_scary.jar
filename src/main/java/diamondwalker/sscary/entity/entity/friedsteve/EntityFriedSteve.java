@@ -1,7 +1,6 @@
-package diamondwalker.sscary.entity.friedsteve;
+package diamondwalker.sscary.entity.entity.friedsteve;
 
 import diamondwalker.sscary.data.client.ClientData;
-import diamondwalker.sscary.entity.visage.EntityVisage;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -59,6 +58,10 @@ public class EntityFriedSteve extends Mob { // TODO: this guy should pause event
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(CHASING, true);
+    }
+
+    public void pepperSpray() {
+
     }
 
     public static AttributeSupplier.Builder createAttributes() {

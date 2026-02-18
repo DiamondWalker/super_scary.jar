@@ -1,6 +1,7 @@
 package diamondwalker.sscary.handler.internal;
 
 import diamondwalker.sscary.Config;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.sky.OverworldSpecialEffects;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.gui.screen.ConsoleScreen;
@@ -22,7 +23,7 @@ public class VanillaOverrideHandler {
 
     @SubscribeEvent
     private static void handleMenuOpen(ScreenEvent.Opening event) {
-        if (event.getNewScreen() instanceof TitleScreen title && !changed) {
+        if (event.getNewScreen() instanceof TitleScreen title && !changed && !SScary.DEV_MODE) {
             changed = true;
             event.setNewScreen(new ConsoleScreen(title));
         }

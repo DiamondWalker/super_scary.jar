@@ -1,4 +1,4 @@
-package diamondwalker.sscary.entity.taker;
+package diamondwalker.sscary.entity.entity.taker;
 
 import diamondwalker.sscary.SScary;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

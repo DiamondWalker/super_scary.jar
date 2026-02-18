@@ -1,13 +1,9 @@
 package diamondwalker.sscary.sound;
 
-import diamondwalker.sscary.entity.visage.EntityVisage;
+import diamondwalker.sscary.entity.entity.visage.EntityVisage;
 import diamondwalker.sscary.registry.SScarySounds;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 
 public class VisageSoundInstance extends AbstractTickableSoundInstance {
     private final EntityVisage visage;

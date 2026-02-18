@@ -18,7 +18,7 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
         ClientData data = ClientData.get();
 
         if (data.friedSteveChaseTint > 0) {
-            Vector3f fadeTo = new Vector3f(1.0f, 0.45f, 0.15f);
+            Vector3f fadeTo = new Vector3f(1.0f, 0.20f, 0.05f);
             float f = (((data.friedSteve != null && data.friedSteve.isChasing()) ? partialTicks : -partialTicks) + data.friedSteveChaseTint) / FriedSteveHandler.COLOR_FADE_TIME;
             colors.set(colors.lerp(fadeTo, f));
         }
