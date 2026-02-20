@@ -4,6 +4,8 @@ import diamondwalker.sscary.data.client.ClientData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
+import net.neoforged.neoforge.client.event.ViewportEvent;
 
 @EventBusSubscriber
 public class FriedSteveHandler {
@@ -19,6 +21,15 @@ public class FriedSteveHandler {
             if (data.friedSteveChaseTint < COLOR_FADE_TIME) data.friedSteveChaseTint++;
         } else {
             if (data.friedSteveChaseTint > 0) data.friedSteveChaseTint--;
+        }
+    }
+
+    @SubscribeEvent
+    private static void handleJumpscareFOV(ComputeFovModifierEvent event) {
+        ClientData data = ClientData.get();
+
+        if (data.friedSteve != null && data.friedSteve.getJumpscareTime() > 0) {
+            event.setNewFovModifier(event.getNewFovModifier() * (data.friedSteve.getRandom().nextFloat() * 0.4f + 0.8f));
         }
     }
 }

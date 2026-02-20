@@ -69,7 +69,7 @@ public class EntityPepperSpray extends Projectile {
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
-        if (this.getOwner() instanceof EntityFriedSteve friedSteve) {
+        if (result.getEntity() instanceof EntityFriedSteve friedSteve) {
             friedSteve.pepperSpray();
             this.discard();
         }
