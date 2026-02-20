@@ -26,13 +26,13 @@ public class CalculationEvent {
         if (data.scripts.hasLock("calculation")) return false;
 
         RandomSource random = server.overworld().getRandom();
-        data.calculation.questionCount++;
-        boolean impossible = data.calculation.questionCount >= 5 && Config.ULTRA_SCARY_MODE.get();
+        data.calculation.impossibleQuestionCounter++;
+        boolean impossible = data.calculation.impossibleQuestionCounter >= 5 && Config.ULTRA_SCARY_MODE.get();
 
         CalculationQuestion question;
         if (impossible) {
             question = CalculationQuestion.generateImpossibleQuestion(random);
-            data.calculation.questionCount = 0;
+            data.calculation.impossibleQuestionCounter = 0;
         } else {
             question = CalculationQuestion.generateRegularQuestion(random);
         }

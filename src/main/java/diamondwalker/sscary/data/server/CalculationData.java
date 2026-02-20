@@ -3,9 +3,10 @@ package diamondwalker.sscary.data.server;
 import net.minecraft.nbt.CompoundTag;
 
 public class CalculationData extends PersistentWorldData {
-    public int questionCount = 0;
     public String expectedAnswer = null;
     public String givenAnswer = null;
+
+    public int impossibleQuestionCounter = 0;
 
     CalculationData(WorldData data) {
         super(data);
@@ -18,11 +19,11 @@ public class CalculationData extends PersistentWorldData {
 
     @Override
     public void save(CompoundTag tag) {
-        tag.putInt("questions", questionCount);
+        tag.putInt("impossibleQuestionCounter", impossibleQuestionCounter);
     }
 
     @Override
     public void load(CompoundTag tag) {
-        questionCount = tag.getInt("questions");
+        impossibleQuestionCounter = tag.getInt("impossibleQuestionCounter");
     }
 }
