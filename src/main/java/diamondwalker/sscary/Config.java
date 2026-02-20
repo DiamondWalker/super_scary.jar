@@ -28,6 +28,10 @@ public class Config {
             .comment("The minimum time, in ticks, that will pass between random events.")
             .defineInRange("minEventInterval", 20 * 90,  0, Integer.MAX_VALUE); // 1.5 minutes
 
+    public static final ModConfigSpec.BooleanValue ULTRA_SCARY_MODE = BUILDER
+            .comment("Enable this if you hate yourself.")
+            .define("ultraScaryMode", false);
+
     /*public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
             .comment("What you want the introduction message to be for the magic number")
             .define("magicNumberIntroduction", "The magic number is... ");

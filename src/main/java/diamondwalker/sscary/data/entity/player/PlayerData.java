@@ -9,6 +9,9 @@ public class PlayerData implements INBTSerializable<CompoundTag> {
     public boolean visageHealDisable = false;
     public int healFlashCooldown = 0;
 
+    public boolean fallDisabled = false;
+    public int fallGracePeriod = 0;
+
     public int deathCounter = 0;
     public boolean eternalPurgatory = false;
 

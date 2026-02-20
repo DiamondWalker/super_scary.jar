@@ -2,6 +2,7 @@ package diamondwalker.sscary.util;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -35,5 +36,9 @@ public class EntityUtil {
 
     public static boolean isOnSurface(Entity entity, boolean includeLeaves) {
         return entity.getBlockY() >= entity.level().getHeight(includeLeaves ? Heightmap.Types.MOTION_BLOCKING : Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, entity.getBlockX(), entity.getBlockZ());
+    }
+
+    public static boolean isFalling(LivingEntity entity) {
+        return !entity.onGround() && !entity.isInWater() && !entity.onClimbable();
     }
 }

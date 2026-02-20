@@ -15,6 +15,7 @@
   "sscary.configuration.uncommonEventChance": "Uncommon Event Chance",
   "sscary.configuration.rareEventChance": "Rare Event Chance",
   "sscary.configuration.extraRareEventChance": "Extra-Rare Event Chance",
+  "sscary.configuration.ultraScaryMode": "ultra_scary mode",
   "sscary.configuration.section.twais.common.toml": "The Working-As-Intended Script Configs",
   "sscary.configuration.section.twais.common.toml.title": "The Working-As-Intended Script Configs"
 }

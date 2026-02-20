@@ -1,5 +1,6 @@
 package diamondwalker.sscary.randomevent.common;
 
+import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.server.CalculationData;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
@@ -26,7 +27,7 @@ public class CalculationEvent {
 
         RandomSource random = server.overworld().getRandom();
         data.calculation.questionCount++;
-        boolean impossible = data.calculation.questionCount >= 5;
+        boolean impossible = data.calculation.questionCount >= 5 && Config.ULTRA_SCARY_MODE.get();
 
         CalculationQuestion question;
         if (impossible) {

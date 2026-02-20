@@ -1,5 +1,7 @@
 package diamondwalker.sscary.randomevent.uncommon;
 
+import diamondwalker.sscary.Config;
+import diamondwalker.sscary.handler.internal.PlayerFallHandler;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,6 +25,8 @@ public class TossedAroundEvent {
                     Vec3 motion = new Vec3(x, y, z).scale(0.25);
                     player.addDeltaMovement(motion);
                     player.hurtMarked = true;
+
+                    if (!Config.ULTRA_SCARY_MODE.get()) PlayerFallHandler.disableFall(player);
                 });
             }
             builder.startScript();
