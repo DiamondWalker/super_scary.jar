@@ -2,6 +2,7 @@ package diamondwalker.sscary.handler.internal;
 
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
+import diamondwalker.sscary.gui.screen.ImmediatelyFastDisclaimerScreen;
 import diamondwalker.sscary.sky.OverworldSpecialEffects;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.gui.screen.ConsoleScreen;
@@ -12,10 +13,16 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.SelectMusicEvent;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 @EventBusSubscriber
 public class VanillaOverrideHandler {
@@ -23,9 +30,30 @@ public class VanillaOverrideHandler {
 
     @SubscribeEvent
     private static void handleMenuOpen(ScreenEvent.Opening event) {
-        if (event.getNewScreen() instanceof TitleScreen title && !changed && !SScary.DEV_MODE) {
-            changed = true;
-            event.setNewScreen(new ConsoleScreen(title));
+        if (event.getNewScreen() instanceof TitleScreen title) {
+            if (ModList.get().isLoaded("immediatelyfast")) {
+                File file = new File(Minecraft.getInstance().gameDirectory, "config/immediatelyfast.json");
+
+                if (file.exists()) {
+                    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            if (line.matches("(\\s+)?\"hud_batching\"(\\s+)?:(\\s+)?true(\\s+)?,(\\s+)?")) {
+                                event.setNewScreen(new ImmediatelyFastDisclaimerScreen(file));
+                                return;
+                            }
+                        }
+                    } catch (IOException e) {
+                        SScary.LOGGER.warn("Error while reading Immediately Fast's config file", e);
+                    }
+                }
+            }
+
+            if (!changed && !SScary.DEV_MODE) {
+                changed = true;
+                event.setNewScreen(new ConsoleScreen(title));
+                return;
+            }
         }
     }
 
