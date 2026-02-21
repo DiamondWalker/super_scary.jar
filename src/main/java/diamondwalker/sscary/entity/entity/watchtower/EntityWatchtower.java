@@ -24,10 +24,10 @@ public class EntityWatchtower extends Mob {
     public void baseTick() {
         super.baseTick();
 
-        if (tickCount % 1 == 0) {
-            dusts.add(new TowerDust(tickCount, random.nextFloat() * Mth.TWO_PI));
-            while (dusts.size() > 50) dusts.remove();
-        }
+        do {
+            dusts.add(new TowerDust(tickCount, random.nextFloat() * 2 + 3.5f, random.nextFloat() * Mth.TWO_PI));
+        } while (random.nextInt(3) == 0);
+        while (!dusts.isEmpty() && tickCount - dusts.peek().time > TowerDust.MAX_TIME) dusts.remove();
     }
 
     @Override
@@ -62,12 +62,15 @@ public class EntityWatchtower extends Mob {
                 .add(Attributes.ATTACK_DAMAGE, 5);
     }
 
-    protected class TowerDust {
+    protected static class TowerDust {
+        protected static final int MAX_TIME = 50;
         protected final int time;
+        protected final float dist;
         protected final float angle;
 
-        public TowerDust(int time, float angle) {
+        public TowerDust(int time, float dist, float angle) {
             this.time = time;
+            this.dist = dist;
             this.angle = angle;
         }
     }
