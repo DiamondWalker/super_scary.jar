@@ -88,6 +88,7 @@ public class SScaryEntities {
             MobCategory.CREATURE
             )
             .sized(4.25f, 37.5f)
+            .eyeHeight(42.4f)
             .clientTrackingRange(300)
             .build("watchtower")
     );
