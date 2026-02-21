@@ -7,6 +7,9 @@ import diamondwalker.sscary.entity.entity.corrupted.CorruptedRenderer;
 import diamondwalker.sscary.entity.entity.corrupted.EntityCorrupted;
 import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
 import diamondwalker.sscary.entity.entity.friedsteve.FriedSteveRenderer;
+import diamondwalker.sscary.entity.entity.watchtower.EntityWatchtower;
+import diamondwalker.sscary.entity.entity.watchtower.ModelWatchtower;
+import diamondwalker.sscary.entity.entity.watchtower.WatchtowerRenderer;
 import diamondwalker.sscary.entity.misc.nametag.EntityNametag;
 import diamondwalker.sscary.entity.entity.taker.EntityTaker;
 import diamondwalker.sscary.entity.entity.taker.ModelTaker;
@@ -80,6 +83,15 @@ public class SScaryEntities {
             .build("taker")
     );
 
+    public static final Supplier<EntityType<EntityWatchtower>> WATCHTOWER = ENTITY_TYPES.register("watchtower", () -> EntityType.Builder.of(
+            EntityWatchtower::new,
+            MobCategory.CREATURE
+            )
+            .sized(4.25f, 37.5f)
+            .clientTrackingRange(300)
+            .build("watchtower")
+    );
+
     public static final Supplier<EntityType<EntityPepperSpray>> PEPPER_SPRAY = ENTITY_TYPES.register("pepper_spray", () -> EntityType.Builder.of(
                 (EntityType<EntityPepperSpray> type, Level level) -> new EntityPepperSpray(type, level), MobCategory.MISC
             )
@@ -104,6 +116,7 @@ public class SScaryEntities {
         event.put(SScaryEntities.BIZZARO_DUDE.get(), EntityBizarroDude.createAttributes().build());
         event.put(SScaryEntities.TAKER.get(), EntityTaker.createAttributes().build());
         event.put(SScaryEntities.FRIED_STEVE.get(), EntityFriedSteve.createAttributes().build());
+        event.put(SScaryEntities.WATCHTOWER.get(), EntityWatchtower.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -113,6 +126,7 @@ public class SScaryEntities {
         event.registerEntityRenderer(SScaryEntities.CORRUPTED.get(), (cntx) -> new CorruptedRenderer(cntx, false));
         event.registerEntityRenderer(SScaryEntities.BIZZARO_DUDE.get(), BizarroDudeRenderer::new);
         event.registerEntityRenderer(SScaryEntities.TAKER.get(), TakerRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.WATCHTOWER.get(), WatchtowerRenderer::new);
         event.registerEntityRenderer(SScaryEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
 
         event.registerEntityRenderer(SScaryEntities.PEPPER_SPRAY.get(), NoopRenderer<EntityPepperSpray>::new);
@@ -121,6 +135,7 @@ public class SScaryEntities {
     @SubscribeEvent
     private static void registerEntityRenders(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ModelTaker.LAYER_LOCATION, ModelTaker::createBodyLayer);
+        event.registerLayerDefinition(ModelWatchtower.LAYER_LOCATION, ModelWatchtower::createBodyLayer);
     }
 
     public static void register(IEventBus bus) {
