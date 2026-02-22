@@ -9,6 +9,7 @@ import diamondwalker.sscary.network.VisageActivePacket;
 import diamondwalker.sscary.registry.SScaryDataAttachments;
 import diamondwalker.sscary.sound.VisageSoundInstance;
 import diamondwalker.sscary.util.EntityUtil;
+import diamondwalker.sscary.util.rendering.AnimatedSpriteHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -32,6 +33,14 @@ public class EntityVisage extends Entity {
 
     int teleportCounter = 0;
     int teleportCooldown = 0;
+
+    protected final AnimatedSpriteHelper animationHelper = new AnimatedSpriteHelper(4, 1);
+    private final AnimatedSpriteHelper.SpriteAnimation idleAnimation = animationHelper.defineAnimation()
+            .addFrame(0, 0, 2)
+            .addFrame(1, 0, 2)
+            .addFrame(2, 0, 2)
+            .addFrame(3, 0, 2)
+            .build();
 
     public EntityVisage(EntityType<?> p_19870_, Level p_19871_) {
         super(p_19870_, p_19871_);
@@ -101,6 +110,11 @@ public class EntityVisage extends Entity {
                     this.teleport(player);
                 }
             }
+        }
+
+        if (level().isClientSide()) {
+            animationHelper.setAnimation(idleAnimation);
+            animationHelper.tick();
         }
     }
 

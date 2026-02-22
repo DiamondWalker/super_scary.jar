@@ -1,14 +1,13 @@
 package diamondwalker.sscary.entity.entity.watchtower;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import diamondwalker.sscary.SScary;
-import diamondwalker.sscary.entity.entity.taker.EntityTaker;
-import diamondwalker.sscary.entity.entity.taker.ModelTaker;
-import diamondwalker.sscary.util.AnimatedSpriteHelper;
+import diamondwalker.sscary.util.rendering.AnimatedSpriteHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -17,7 +16,6 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 
 public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatchtower> {
     private static final RenderType RENDER_TYPE = RenderType.create(
@@ -67,7 +65,6 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
             drawCircle(vertexConsumer, poseStack, packedLight, Mth.cos(dust.angle) * dist * dust.dist, Mth.sin(dust.angle) * dist * dust.dist, alpha, alpha);
         }
 
-        AnimatedSpriteHelper helper = new AnimatedSpriteHelper(1, 1);
         float widthAspect = 20.0f / 21;
         float heightAspect = 1.0f;
 
@@ -76,10 +73,10 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
 
         PoseStack.Pose pose = poseStack.last();
         VertexConsumer eyeVertexConsumer = buffer.getBuffer(RENDER_TYPE_EYE);
-        eyeVertex(eyeVertexConsumer, pose, packedLight, -widthAspect, -heightAspect, helper.u1(), helper.v2(), 1.0f);
-        eyeVertex(eyeVertexConsumer, pose, packedLight, widthAspect, -heightAspect, helper.u2(), helper.v2(), 1.0f);
-        eyeVertex(eyeVertexConsumer, pose, packedLight, widthAspect, heightAspect, helper.u2(), helper.v1(), 1.0f);
-        eyeVertex(eyeVertexConsumer, pose, packedLight, -widthAspect, heightAspect, helper.u1(), helper.v1(), 1.0f);
+        eyeVertex(eyeVertexConsumer, pose, packedLight, -widthAspect, -heightAspect, entity.eyeAnimationHelper.u1(), entity.eyeAnimationHelper.v2(), 1.0f);
+        eyeVertex(eyeVertexConsumer, pose, packedLight, widthAspect, -heightAspect, entity.eyeAnimationHelper.u2(), entity.eyeAnimationHelper.v2(), 1.0f);
+        eyeVertex(eyeVertexConsumer, pose, packedLight, widthAspect, heightAspect, entity.eyeAnimationHelper.u2(), entity.eyeAnimationHelper.v1(), 1.0f);
+        eyeVertex(eyeVertexConsumer, pose, packedLight, -widthAspect, heightAspect, entity.eyeAnimationHelper.u1(), entity.eyeAnimationHelper.v1(), 1.0f);
 
         poseStack.popPose();
     }

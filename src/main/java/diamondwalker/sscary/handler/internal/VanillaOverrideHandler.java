@@ -59,7 +59,7 @@ public class VanillaOverrideHandler {
 
     @SubscribeEvent
     private static void handleVisagePauseScreen(ScreenEvent.Opening event) {
-        if (ClientData.get().isVisageActive()) {
+        if (ClientData.get().isVisageActive() && !SScary.DEV_MODE) {
             if (event.getNewScreen() instanceof PauseScreen originalPauseScreen) {
                 if (ClientData.get().canPause()) {
                     event.setNewScreen(new FakePauseScreen(originalPauseScreen.showsPauseMenu()));

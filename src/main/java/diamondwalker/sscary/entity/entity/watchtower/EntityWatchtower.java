@@ -1,5 +1,6 @@
 package diamondwalker.sscary.entity.entity.watchtower;
 
+import diamondwalker.sscary.util.rendering.AnimatedSpriteHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -15,19 +16,37 @@ import java.util.Queue;
 
 public class EntityWatchtower extends Mob {
     protected final Queue<TowerDust> dusts = new LinkedList<>();
+    protected final AnimatedSpriteHelper eyeAnimationHelper = new AnimatedSpriteHelper(1, 6);
+    private final AnimatedSpriteHelper.SpriteAnimation blinkAnimation = eyeAnimationHelper.defineAnimation()
+            .addFrame(0, 0, 200)
+            .addFrame(0, 1, 2)
+            .addFrame(0, 2, 2)
+            .addFrame(0, 3, 2)
+            .addFrame(0, 4, 2)
+            .addFrame(0, 5, 2)
+            .addFrame(0, 4, 2)
+            .addFrame(0, 3, 2)
+            .addFrame(0, 2, 2)
+            .addFrame(0, 1, 2)
+            .build();
 
     public EntityWatchtower(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
     }
 
     @Override
-    public void baseTick() {
+    public void tick() {
         super.baseTick();
 
-        do {
-            dusts.add(new TowerDust(tickCount, random.nextFloat() * 2 + 3.5f, random.nextFloat() * Mth.TWO_PI));
-        } while (random.nextInt(3) == 0);
-        while (!dusts.isEmpty() && tickCount - dusts.peek().time > TowerDust.MAX_TIME) dusts.remove();
+        if (level().isClientSide()) {
+            do {
+                dusts.add(new TowerDust(tickCount, random.nextFloat() * 2 + 3.5f, random.nextFloat() * Mth.TWO_PI));
+            } while (random.nextInt(3) == 0);
+            while (!dusts.isEmpty() && tickCount - dusts.peek().time > TowerDust.MAX_TIME) dusts.remove();
+
+            eyeAnimationHelper.setAnimation(blinkAnimation);
+            eyeAnimationHelper.tick();
+        }
     }
 
     @Override
