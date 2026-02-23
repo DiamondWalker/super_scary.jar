@@ -18,16 +18,33 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatchtower> {
-    private static final RenderType RENDER_TYPE = RenderType.create(
-            "color_quads",
+    private static final RenderType RENDER_TYPE_COLOR_ONLY = RenderType.create(
+            "watchtower_dust_color",
             DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.QUADS,
             1536,
+            false,
+            false,
             RenderType.CompositeState.builder()
-                    .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
-                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                    .setLightmapState(RenderStateShard.LIGHTMAP)
-                    .setOverlayState(RenderStateShard.OVERLAY)
+                    .setShaderState(RenderType.POSITION_COLOR_SHADER)
+                    .setTransparencyState(RenderStateShard.TransparencyStateShard.TRANSLUCENT_TRANSPARENCY)
+                    .setCullState(RenderStateShard.NO_CULL)
+                    .setWriteMaskState(RenderStateShard.COLOR_WRITE)
+                    .createCompositeState(false)
+    );
+
+    private static final RenderType RENDER_TYPE_DEPTH_ONLY = RenderType.create(
+            "watchtower_dust_depth",
+            DefaultVertexFormat.POSITION_COLOR,
+            VertexFormat.Mode.QUADS,
+            1536,
+            false,
+            false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RenderType.POSITION_COLOR_SHADER)
+                    .setTransparencyState(RenderStateShard.TransparencyStateShard.TRANSLUCENT_TRANSPARENCY)
+                    .setCullState(RenderStateShard.NO_CULL)
+                    .setWriteMaskState(RenderStateShard.DEPTH_WRITE)
                     .createCompositeState(false)
     );
 
@@ -51,19 +68,12 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
         poseStack.pushPose();
         poseStack.translate(0, entity.getEyeHeight(), 0);
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        VertexConsumer vertexConsumer = buffer.getBuffer(RENDER_TYPE);
 
-        drawCircle(vertexConsumer, poseStack, packedLight, 0, 0, 5, 1.0f);
-
-        for (EntityWatchtower.TowerDust dust : entity.dusts) {
-            float time = partialTicks + (entity.tickCount - dust.time);
-            float f = time / EntityWatchtower.TowerDust.MAX_TIME;
-            if (f > 1.0f) continue;
-
-            float dist = 1.0f - (1.0f - f) * (1.0f - f);
-            float alpha = Mth.clamp((1.0f - f) * 2, 0.0f, 1.0f);
-            drawCircle(vertexConsumer, poseStack, packedLight, Mth.cos(dust.angle) * dist * dust.dist, Mth.sin(dust.angle) * dist * dust.dist, alpha, alpha);
-        }
+        poseStack.pushPose();
+        poseStack.translate(0, 0, -0.1f);
+        drawDust(RENDER_TYPE_DEPTH_ONLY, buffer, entity, partialTicks, poseStack, packedLight);
+        poseStack.popPose();
+        drawDust(RENDER_TYPE_COLOR_ONLY, buffer, entity, partialTicks, poseStack, packedLight);
 
         float widthAspect = 20.0f / 21;
         float heightAspect = 1.0f;
@@ -81,9 +91,25 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
         poseStack.popPose();
     }
 
+    private void drawDust(RenderType type, MultiBufferSource buffer, EntityWatchtower entity, float partialTicks, PoseStack poseStack, int packedLight) {
+        VertexConsumer vertexConsumer = buffer.getBuffer(type);
+
+        drawCircle(vertexConsumer, poseStack, packedLight, 0, 0, 5, 1.0f);
+
+        for (EntityWatchtower.TowerDust dust : entity.dusts) {
+            float time = partialTicks + (entity.tickCount - dust.time);
+            float f = time / EntityWatchtower.TowerDust.MAX_TIME;
+            if (f > 1.0f) continue;
+
+            float dist = 1.0f - (1.0f - f) * (1.0f - f);
+            float alpha = Mth.clamp((1.0f - f) * 2, 0.0f, 1.0f);
+            drawCircle(vertexConsumer, poseStack, packedLight, Mth.cos(dust.angle) * dist * dust.dist, Mth.sin(dust.angle) * dist * dust.dist, alpha, alpha);
+        }
+    }
+
     private static final int SUBDIVISIONS = 30;
     private static final float FADE_OUT_START = 0.6f;
-    private static void drawCircle(VertexConsumer consumer, PoseStack stack, int packedLight, float x, float y, float size, float transparency) {
+    private void drawCircle(VertexConsumer consumer, PoseStack stack, int packedLight, float x, float y, float size, float transparency) {
         stack.pushPose();
         stack.translate(x, y, 0);
         PoseStack.Pose pose = stack.last();
@@ -108,7 +134,7 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
         stack.popPose();
     }
 
-    private static void vertex(VertexConsumer consumer, PoseStack.Pose pose, int light, float x, float y, float r, float g, float b, float a) {
+    private void vertex(VertexConsumer consumer, PoseStack.Pose pose, int light, float x, float y, float r, float g, float b, float a) {
         consumer
                 .addVertex(pose, x * 0.7f, y * 0.7f, 0.0F)
                 .setColor(r, g, b, a)
@@ -117,7 +143,7 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
                 .setNormal(pose, 0.0F, 1.0F, 0.0F);
     }
 
-    private static void eyeVertex(VertexConsumer consumer, PoseStack.Pose pose, int light, float x, float y, float u, float v, float transparency) {
+    private void eyeVertex(VertexConsumer consumer, PoseStack.Pose pose, int light, float x, float y, float u, float v, float transparency) {
         consumer
                 .addVertex(pose, x, y, 0.1F)
                 .setColor(1.0f, 1.0f, 1.0f, transparency)

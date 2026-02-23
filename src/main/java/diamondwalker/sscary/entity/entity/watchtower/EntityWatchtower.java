@@ -36,7 +36,7 @@ public class EntityWatchtower extends Mob {
 
     @Override
     public void tick() {
-        super.baseTick();
+        super.tick();
 
         if (level().isClientSide()) {
             do {
