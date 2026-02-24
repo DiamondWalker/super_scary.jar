@@ -1,6 +1,8 @@
 package diamondwalker.sscary.entity.entity.watchtower;
 
+import diamondwalker.sscary.util.EntityUtil;
 import diamondwalker.sscary.util.rendering.AnimatedSpriteHelper;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -9,14 +11,18 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class EntityWatchtower extends Mob {
+public class EntityWatchtower extends Monster {
     protected final Queue<TowerDust> dusts = new LinkedList<>();
     protected final AnimatedSpriteHelper eyeAnimationHelper = new AnimatedSpriteHelper(1, 6);
+
     private final AnimatedSpriteHelper.SpriteAnimation blinkAnimation = eyeAnimationHelper.defineAnimation()
             .addFrame(0, 0, 200)
             .addFrame(0, 1, 2)
@@ -30,7 +36,21 @@ public class EntityWatchtower extends Mob {
             .addFrame(0, 1, 2)
             .build();
 
-    public EntityWatchtower(EntityType<? extends Mob> entityType, Level level) {
+    private final AnimatedSpriteHelper.SpriteAnimation winceAnimation = eyeAnimationHelper.defineAnimation()
+            .addFrame(0, 4, 1)
+            .build();
+
+    private final AnimatedSpriteHelper.SpriteAnimation despawnAnimation = eyeAnimationHelper.defineAnimation()
+            .addFrame(0, 0, 2)
+            .addFrame(0, 1, 2)
+            .addFrame(0, 2, 2)
+            .addFrame(0, 3, 2)
+            .addFrame(0, 4, 2)
+            .addFrame(0, 5, 2)
+            .nextAnimation(null)
+            .build();
+
+    public EntityWatchtower(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -44,8 +64,27 @@ public class EntityWatchtower extends Mob {
             } while (random.nextInt(3) == 0);
             while (!dusts.isEmpty() && tickCount - dusts.peek().time > TowerDust.MAX_TIME) dusts.remove();
 
-            eyeAnimationHelper.setAnimation(blinkAnimation);
+            if (eyeAnimationHelper.getCurrentAnimation() != blinkAnimation) eyeAnimationHelper.setAnimation(blinkAnimation);
             eyeAnimationHelper.tick();
+        }
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+
+        for (Player player : level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(128))) {
+            if (EntityUtil.hasLongLineOfSight(this, player, 128) && canAttack(player)) {
+                if (!level().isClientSide()) {
+                    player.hurt(player.damageSources().generic(), 3); // custom source
+                } else {
+                    eyeAnimationHelper.setAnimation(null);
+                    //Vec3 look = player.getLookAngle();
+                    //Vec3 desiredLook = this.getEyePosition().subtract(player.getEyePosition()).normalize();
+                    //desiredLook = look.lerp(desiredLook, 0.1).add(player.getEyePosition());
+                    player.lookAt(EntityAnchorArgument.Anchor.EYES, this.getEyePosition());
+                }
+            }
         }
     }
 

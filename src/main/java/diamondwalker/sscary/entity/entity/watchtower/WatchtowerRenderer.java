@@ -68,6 +68,7 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
         poseStack.pushPose();
         poseStack.translate(0, entity.getEyeHeight(), 0);
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        poseStack.scale(2, 2, 2);
 
         poseStack.pushPose();
         poseStack.translate(0, 0, -0.1f);

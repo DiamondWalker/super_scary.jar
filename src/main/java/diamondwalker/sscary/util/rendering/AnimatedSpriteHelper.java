@@ -2,6 +2,7 @@ package diamondwalker.sscary.util.rendering;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AnimatedSpriteHelper {
     private final int frameCountX;
@@ -33,13 +34,16 @@ public class AnimatedSpriteHelper {
 
     public void tick() {
         if (currentAnimation != null && frameTimer-- <= 0) {
-            setAnimationFrame((animationIndex + 1) % currentAnimation.getFrameCount());
+            int index = animationIndex + 1;
+            if (index >= currentAnimation.getFrameCount()) {
+                setAnimation(currentAnimation.nextAnimation);
+            } else {
+                setAnimationFrame(index);
+            }
         }
     }
 
     public void setAnimation(SpriteAnimation animation) {
-        if (animation == currentAnimation) return;
-
         if (animation == null) {
             setFrame(0, 0);
             animationIndex = 0;
@@ -50,6 +54,10 @@ public class AnimatedSpriteHelper {
         if (animation.builtFor != this) throw new IllegalStateException("This animation was not built for this AnimatedSpriteHelper!");
         currentAnimation = animation;
         setAnimationFrame(0);
+    }
+
+    public SpriteAnimation getCurrentAnimation() {
+        return currentAnimation;
     }
 
     public AnimationBuilder defineAnimation() {
@@ -85,7 +93,8 @@ public class AnimatedSpriteHelper {
 
     public class AnimationBuilder {
         private final AnimatedSpriteHelper buildingFor;
-        private List<AnimationFrame> frames = new ArrayList<>();
+        private final List<AnimationFrame> frames = new ArrayList<>();
+        private Optional<SpriteAnimation> nextAnimation = null;
 
         private AnimationBuilder(AnimatedSpriteHelper buildingFor) {
             this.buildingFor = buildingFor;
@@ -96,18 +105,35 @@ public class AnimatedSpriteHelper {
             return this;
         }
 
+        public AnimationBuilder nextAnimation(SpriteAnimation animation) {
+            nextAnimation = Optional.ofNullable(animation);
+            return this;
+        }
+
         public SpriteAnimation build() {
-            return new SpriteAnimation(buildingFor, frames.toArray(new AnimationFrame[]{}));
+            if (nextAnimation != null) {
+                return new SpriteAnimation(buildingFor, frames.toArray(new AnimationFrame[]{}), nextAnimation.orElse(null));
+            } else {
+                return new SpriteAnimation(buildingFor, frames.toArray(new AnimationFrame[]{}));
+            }
         }
     }
 
     public class SpriteAnimation {
         private final AnimatedSpriteHelper builtFor;
         private final AnimationFrame[] frames;
+        private final SpriteAnimation nextAnimation;
 
         protected SpriteAnimation(AnimatedSpriteHelper builtFor, AnimationFrame[] frames) {
             this.builtFor = builtFor;
             this.frames = frames;
+            nextAnimation = this;
+        }
+
+        protected SpriteAnimation(AnimatedSpriteHelper builtFor, AnimationFrame[] frames, SpriteAnimation switchTo) {
+            this.builtFor = builtFor;
+            this.frames = frames;
+            this.nextAnimation = switchTo;
         }
 
         private int getFrameCount() {

@@ -113,7 +113,7 @@ public class EntityVisage extends Entity {
         }
 
         if (level().isClientSide()) {
-            animationHelper.setAnimation(idleAnimation);
+            if (animationHelper.getCurrentAnimation() != idleAnimation) animationHelper.setAnimation(idleAnimation);
             animationHelper.tick();
         }
     }

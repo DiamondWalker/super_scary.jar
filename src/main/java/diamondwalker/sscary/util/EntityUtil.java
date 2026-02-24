@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -14,6 +15,22 @@ import net.minecraft.world.phys.Vec3;
 public class EntityUtil {
     public static Vec3 getEntityCenter(Entity entity) {
         return entity.position().add(0, entity.getBbHeight() / 2, 0);
+    }
+
+    public static boolean hasLongLineOfSight(Entity entityLooking, Entity entityLookedAt) {
+        return hasLongLineOfSight(entityLooking, entityLookedAt, Double.MAX_VALUE);
+    }
+
+    public static boolean hasLongLineOfSight(Entity entityLooking, Entity entityLookedAt, double maxDistance) {
+        if (entityLookedAt.level() != entityLooking.level()) {
+            return false;
+        } else {
+            Vec3 vec3 = new Vec3(entityLooking.getX(), entityLooking.getEyeY(), entityLooking.getZ());
+            Vec3 vec31 = new Vec3(entityLookedAt.getX(), entityLookedAt.getEyeY(), entityLookedAt.getZ());
+            return vec31.distanceTo(vec3) > maxDistance
+                    ? false
+                    : entityLooking.level().clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entityLooking)).getType() == HitResult.Type.MISS;
+        }
     }
 
     public static boolean isPlayerLookingAt(Player player, Entity entity) {
