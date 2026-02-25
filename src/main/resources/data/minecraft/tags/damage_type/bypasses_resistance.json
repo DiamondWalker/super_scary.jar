@@ -1,8 +1,5 @@
 {
   "values": [
-    {
-      "id": "sscary:calculation",
-      "required": false
-    }
+    "sscary:calculation"
   ]
 }

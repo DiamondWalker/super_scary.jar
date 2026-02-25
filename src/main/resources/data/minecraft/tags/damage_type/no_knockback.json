@@ -1,8 +1,6 @@
 {
   "values": [
-    {
-      "id": "sscary:calculation",
-      "required": false
-    }
+    "sscary:calculation",
+    "sscary:migraine"
   ]
 }

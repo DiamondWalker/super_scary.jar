@@ -1,5 +1,6 @@
 package diamondwalker.sscary.entity.entity.watchtower;
 
+import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.util.EntityUtil;
 import diamondwalker.sscary.util.rendering.AnimatedSpriteHelper;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -76,7 +77,7 @@ public class EntityWatchtower extends Monster {
         for (Player player : level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(128))) {
             if (EntityUtil.hasLongLineOfSight(this, player, 128) && canAttack(player)) {
                 if (!level().isClientSide()) {
-                    player.hurt(player.damageSources().generic(), 3); // custom source
+                    player.hurt(SScaryDamageTypes.migraine(player, this), 3); // custom source
                 } else {
                     eyeAnimationHelper.setAnimation(null);
                     //Vec3 look = player.getLookAngle();
