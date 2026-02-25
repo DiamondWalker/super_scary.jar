@@ -18,11 +18,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class EntityFriedSteve extends Mob { // TODO: this guy should pause events
+public class EntityFriedSteve extends Monster { // TODO: this guy should pause events
     public static final String[] MESSAGES = new String[] {
             "You skin is so soft. I can't wait to see it rip.",
             "I'll make this quick.",
@@ -41,7 +42,7 @@ public class EntityFriedSteve extends Mob { // TODO: this guy should pause event
     public static final EntityDataAccessor<Integer> JUMPSCARE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> CHASING = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.BOOLEAN);
 
-    public EntityFriedSteve(EntityType<? extends Mob> entityType, Level level) {
+    public EntityFriedSteve(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
     }
 

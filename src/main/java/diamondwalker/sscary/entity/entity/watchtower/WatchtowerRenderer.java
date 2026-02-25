@@ -71,10 +71,10 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
         poseStack.scale(2, 2, 2);
 
         poseStack.pushPose();
-        poseStack.translate(0, 0, -0.1f);
+        //poseStack.translate(0, 0, -0.1f);
+        drawDust(RENDER_TYPE_COLOR_ONLY, buffer, entity, partialTicks, poseStack, packedLight);
         drawDust(RENDER_TYPE_DEPTH_ONLY, buffer, entity, partialTicks, poseStack, packedLight);
         poseStack.popPose();
-        drawDust(RENDER_TYPE_COLOR_ONLY, buffer, entity, partialTicks, poseStack, packedLight);
 
         float widthAspect = 20.0f / 21;
         float heightAspect = 1.0f;
@@ -82,12 +82,14 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
         widthAspect *= 2;
         heightAspect *= 2;
 
+        float trans = Mth.clamp(1.0f - (partialTicks + entity.getDespawnTicks()) / 10, -0.001f, 1);
+
         PoseStack.Pose pose = poseStack.last();
         VertexConsumer eyeVertexConsumer = buffer.getBuffer(RENDER_TYPE_EYE);
-        eyeVertex(eyeVertexConsumer, pose, packedLight, -widthAspect, -heightAspect, entity.eyeAnimationHelper.u1(), entity.eyeAnimationHelper.v2(), 1.0f);
-        eyeVertex(eyeVertexConsumer, pose, packedLight, widthAspect, -heightAspect, entity.eyeAnimationHelper.u2(), entity.eyeAnimationHelper.v2(), 1.0f);
-        eyeVertex(eyeVertexConsumer, pose, packedLight, widthAspect, heightAspect, entity.eyeAnimationHelper.u2(), entity.eyeAnimationHelper.v1(), 1.0f);
-        eyeVertex(eyeVertexConsumer, pose, packedLight, -widthAspect, heightAspect, entity.eyeAnimationHelper.u1(), entity.eyeAnimationHelper.v1(), 1.0f);
+        eyeVertex(eyeVertexConsumer, pose, packedLight, -widthAspect, -heightAspect, entity.eyeAnimationHelper.u1(), entity.eyeAnimationHelper.v2(), trans);
+        eyeVertex(eyeVertexConsumer, pose, packedLight, widthAspect, -heightAspect, entity.eyeAnimationHelper.u2(), entity.eyeAnimationHelper.v2(), trans);
+        eyeVertex(eyeVertexConsumer, pose, packedLight, widthAspect, heightAspect, entity.eyeAnimationHelper.u2(), entity.eyeAnimationHelper.v1(), trans);
+        eyeVertex(eyeVertexConsumer, pose, packedLight, -widthAspect, heightAspect, entity.eyeAnimationHelper.u1(), entity.eyeAnimationHelper.v1(), trans);
 
         poseStack.popPose();
     }
@@ -95,7 +97,8 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
     private void drawDust(RenderType type, MultiBufferSource buffer, EntityWatchtower entity, float partialTicks, PoseStack poseStack, int packedLight) {
         VertexConsumer vertexConsumer = buffer.getBuffer(type);
 
-        drawCircle(vertexConsumer, poseStack, packedLight, 0, 0, 5, 1.0f);
+        float trans = Mth.clamp(1.0f - (partialTicks + entity.getDespawnTicks()) / 10, -0.001f, 1);
+        drawCircle(vertexConsumer, poseStack, packedLight, 0, 0, 5, trans);
 
         for (EntityWatchtower.TowerDust dust : entity.dusts) {
             float time = partialTicks + (entity.tickCount - dust.time);
@@ -121,10 +124,10 @@ public class WatchtowerRenderer extends MobRenderer<EntityWatchtower, ModelWatch
             f1 *= Mth.TWO_PI;
             f2 *= Mth.TWO_PI;
 
-            vertex(consumer, pose, packedLight, 0, 0, 0, 0, 0, 1);
+            vertex(consumer, pose, packedLight, 0, 0, 0, 0, 0, transparency);
             vertex(consumer, pose, packedLight, Mth.cos(f1) * size * FADE_OUT_START, Mth.sin(f1) * size * FADE_OUT_START, 0, 0, 0, transparency);
             vertex(consumer, pose, packedLight, Mth.cos(f2) * size * FADE_OUT_START, Mth.sin(f2) * size * FADE_OUT_START, 0, 0, 0, transparency);
-            vertex(consumer, pose, packedLight, 0, 0, 0, 0, 0, 1);
+            vertex(consumer, pose, packedLight, 0, 0, 0, 0, 0, transparency);
 
             vertex(consumer, pose, packedLight, Mth.cos(f1) * size * FADE_OUT_START, Mth.sin(f1) * size * FADE_OUT_START, 0, 0, 0, transparency);
             vertex(consumer, pose, packedLight, Mth.cos(f1) * size, Mth.sin(f1) * size, 0, 0, 0, 0);
