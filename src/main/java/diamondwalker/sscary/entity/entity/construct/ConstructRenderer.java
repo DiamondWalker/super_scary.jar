@@ -7,6 +7,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
 public class ConstructRenderer extends HumanoidMobRenderer<EntityConstruct, HumanoidModel<EntityConstruct>> {
@@ -14,6 +15,11 @@ public class ConstructRenderer extends HumanoidMobRenderer<EntityConstruct, Huma
 
     public ConstructRenderer(EntityRendererProvider.Context context) {
         super(context, new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5f);
+    }
+
+    @Override
+    protected int getBlockLightLevel(EntityConstruct entity, BlockPos pos) {
+        return 15;
     }
 
     @Override

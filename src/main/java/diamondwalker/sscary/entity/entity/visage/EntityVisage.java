@@ -145,10 +145,6 @@ public class EntityVisage extends Entity {
     public void onAddedToLevel() {
         super.onAddedToLevel();
 
-        /*if (!level().isClientSide() && tickCount % 45 == 0) { // TODO: maybe this should loop better and be on the client side
-            this.playSound(SScarySounds.VISAGE_CHASE.value(), 2.0f, 1.0f);
-        }*/
-
         if (level().isClientSide()) {
             Minecraft.getInstance().getSoundManager().queueTickingSound(new VisageSoundInstance(this));
         }

@@ -19,7 +19,7 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
 
         if (data.friedSteveChaseTint > 0) {
             Vector3f fadeTo = new Vector3f(1.0f, 0.20f, 0.05f);
-            float f = (((data.friedSteve != null && data.friedSteve.isChasing()) ? partialTicks : -partialTicks) + data.friedSteveChaseTint) / FriedSteveHandler.COLOR_FADE_TIME;
+            float f = (((data.friedSteve != null && data.friedSteve.isChasing()) ? partialTicks : -partialTicks) + data.friedSteveChaseTint) / FriedSteveHandler.COLOR_FADE_TIME; // FIXME: can go over 1 or under 0 due to partial ticks
             colors.set(colors.lerp(fadeTo, f));
         }
 
@@ -27,7 +27,7 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
             Random thisTickRand = new Random(level.getGameTime() / WACKY_COLOR_TICKS * (pixelX + pixelY + 1));
             Random nextTickRand = new Random((level.getGameTime() / WACKY_COLOR_TICKS + 1) * (pixelX + pixelY + 1));
 
-            float lerp = ((partialTicks + level.getGameTime()) % WACKY_COLOR_TICKS) / WACKY_COLOR_TICKS; // FIXME: can go over 1 or under 0 due to partial ticks
+            float lerp = ((partialTicks + level.getGameTime()) % WACKY_COLOR_TICKS) / WACKY_COLOR_TICKS;
 
             Vector3f thisTickCol = new Vector3f(thisTickRand.nextFloat(), thisTickRand.nextFloat(), thisTickRand.nextFloat()).mul(thisTickRand.nextFloat());
             Vector3f nextTickCol = new Vector3f(nextTickRand.nextFloat(), nextTickRand.nextFloat(), nextTickRand.nextFloat()).mul(nextTickRand.nextFloat());

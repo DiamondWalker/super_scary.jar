@@ -89,7 +89,7 @@ public class EntityConstruct extends Monster {
     public static AttributeSupplier.Builder createAttributes() {
         return LivingEntity.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 100)
-                .add(Attributes.FOLLOW_RANGE, 20)
+                .add(Attributes.FOLLOW_RANGE, 200)
                 .add(Attributes.ATTACK_DAMAGE, 7);
     }
 }

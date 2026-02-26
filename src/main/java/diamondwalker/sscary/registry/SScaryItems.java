@@ -18,7 +18,7 @@ public class SScaryItems {
 
     public static final DeferredItem<Item> INVENTORY_BUG = ITEMS.registerItem("inventory_bug", InventoryBugItem::new, new Item.Properties().stacksTo(1));
 
-    public static final DeferredItem<Item> PEPPER_SPRAY = ITEMS.registerItem("pepper_spray", PepperSprayItem::new, new Item.Properties().stacksTo(1).durability(4)); // TODO: put this in creative tab
+    public static final DeferredItem<Item> PEPPER_SPRAY = ITEMS.registerItem("pepper_spray", PepperSprayItem::new, new Item.Properties().stacksTo(1).durability(4));
 
     /*public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
