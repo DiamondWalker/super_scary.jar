@@ -1,7 +1,12 @@
 package diamondwalker.sscary.data.client;
 
+import diamondwalker.sscary.entity.entity.construct.EntityConstruct;
 import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
 import net.minecraft.client.Minecraft;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class ClientData {
     public boolean slience = false;
@@ -15,6 +20,8 @@ public class ClientData {
     public boolean wackyColors = false;
 
     public StaticData staticData = null;
+
+    public ColorOverlayData colorOverlay = null;
 
     public ScreenFlashData flash = null;
 

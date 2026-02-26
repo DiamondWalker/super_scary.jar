@@ -3,6 +3,8 @@ package diamondwalker.sscary.registry;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.entity.entity.bizarrodude.BizarroDudeRenderer;
 import diamondwalker.sscary.entity.entity.bizarrodude.EntityBizarroDude;
+import diamondwalker.sscary.entity.entity.construct.ConstructRenderer;
+import diamondwalker.sscary.entity.entity.construct.EntityConstruct;
 import diamondwalker.sscary.entity.entity.corrupted.CorruptedRenderer;
 import diamondwalker.sscary.entity.entity.corrupted.EntityCorrupted;
 import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
@@ -76,7 +78,7 @@ public class SScaryEntities {
             .build("fried_steve")
     );
 
-    public static final Supplier<EntityType<EntityTaker>> TAKER =  ENTITY_TYPES.register("taker", () -> EntityType.Builder.of(
+    public static final Supplier<EntityType<EntityTaker>> TAKER = ENTITY_TYPES.register("taker", () -> EntityType.Builder.of(
             EntityTaker::new,
             MobCategory.CREATURE
             )
@@ -91,6 +93,15 @@ public class SScaryEntities {
             .eyeHeight(47.3f)
             .clientTrackingRange(300)
             .build("watchtower")
+    );
+
+    public static final Supplier<EntityType<EntityConstruct>> CONSTRUCT = ENTITY_TYPES.register("construct", () -> EntityType.Builder.of(
+                            EntityConstruct::new,
+                            MobCategory.CREATURE
+                    )
+                    .sized(0.6f, 1.8f)
+                    .eyeHeight(1.62f)
+                    .build("construct")
     );
 
     public static final Supplier<EntityType<EntityPepperSpray>> PEPPER_SPRAY = ENTITY_TYPES.register("pepper_spray", () -> EntityType.Builder.of(
@@ -118,6 +129,7 @@ public class SScaryEntities {
         event.put(SScaryEntities.TAKER.get(), EntityTaker.createAttributes().build());
         event.put(SScaryEntities.FRIED_STEVE.get(), EntityFriedSteve.createAttributes().build());
         event.put(SScaryEntities.WATCHTOWER.get(), EntityWatchtower.createAttributes().build());
+        event.put(SScaryEntities.CONSTRUCT.get(), EntityConstruct.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -129,6 +141,7 @@ public class SScaryEntities {
         event.registerEntityRenderer(SScaryEntities.TAKER.get(), TakerRenderer::new);
         event.registerEntityRenderer(SScaryEntities.WATCHTOWER.get(), WatchtowerRenderer::new);
         event.registerEntityRenderer(SScaryEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.CONSTRUCT.get(), ConstructRenderer::new);
 
         event.registerEntityRenderer(SScaryEntities.PEPPER_SPRAY.get(), NoopRenderer<EntityPepperSpray>::new);
     }

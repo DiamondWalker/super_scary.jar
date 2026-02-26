@@ -1,6 +1,7 @@
 package diamondwalker.sscary.registry;
 
 import diamondwalker.sscary.SScary;
+import diamondwalker.sscary.gui.overlay.ColorOverlay;
 import diamondwalker.sscary.gui.overlay.FlashOverlay;
 import diamondwalker.sscary.gui.overlay.StaticOverlay;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +15,7 @@ public class SScaryGui {
     @SubscribeEvent(priority = EventPriority.LOWEST) // make sure this is lowest priority so the overlays will be above/below all the other GUI
     public static void registerGui(RegisterGuiLayersEvent event) {
         event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "static"), new StaticOverlay());
+        event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "color_overlay"), new ColorOverlay());
         event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "flash"), new FlashOverlay());
     }
 }
