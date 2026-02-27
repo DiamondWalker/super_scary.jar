@@ -22,6 +22,8 @@ public class SScarySounds {
 
     public static final Holder<SoundEvent> CORRUPTED_JUMPSCARE = SOUNDS.register("corrupted_jumpscare", SoundEvent::createVariableRangeEvent);
 
+    public static final Holder<SoundEvent> CONSTRUCT = SOUNDS.register("construct", SoundEvent::createVariableRangeEvent);
+
     public static final Holder<SoundEvent> VISAGE_SPAWN = SOUNDS.register("visage_spawn", SoundEvent::createVariableRangeEvent);
     public static final Holder<SoundEvent> VISAGE_CHASE = SOUNDS.register("visage_chase", SoundEvent::createVariableRangeEvent);
     public static final Holder<SoundEvent> VISAGE_TELEPORT = SOUNDS.register("visage_teleport", SoundEvent::createVariableRangeEvent);

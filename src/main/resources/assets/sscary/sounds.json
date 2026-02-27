@@ -55,6 +55,14 @@
       }
     ]
   },
+  "construct": {
+    "sounds": [
+      {
+        "name": "sscary:entity/construct/construct",
+        "stream": false
+      }
+    ]
+  },
   "visage_chase": {
     "sounds": [
       {

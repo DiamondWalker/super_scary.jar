@@ -5,6 +5,8 @@ import diamondwalker.sscary.ai.ImprovedMeleeAttackGoal;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ColorOverlayData;
 import diamondwalker.sscary.entity.entity.watchtower.EntityWatchtower;
+import diamondwalker.sscary.sound.ConstructSoundInstance;
+import diamondwalker.sscary.sound.VisageSoundInstance;
 import diamondwalker.sscary.util.shader.EnumShaderLayer;
 import diamondwalker.sscary.util.shader.PostProcessingShader;
 import net.minecraft.client.Minecraft;
@@ -60,12 +62,17 @@ public class EntityConstruct extends Monster {
     }
 
     @Override
+    public boolean canDisableShield() {
+        return true;
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
 
         if (level().isClientSide()) {
-            Player player = Minecraft.getInstance().player;
-            if (player != null && entityData.get(TARGET) == Minecraft.getInstance().player.getId()) {
+            if (showAngeryEffects()) {
+                Player player = Minecraft.getInstance().player;
                 player.setXRot(player.getXRot() + (player.getRandom().nextFloat() - 0.5f) * 8);
                 player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * 8);
                 if (tickCount % 3 == 0) ClientData.get().colorOverlay = new ColorOverlayData(1.0f, 0.0f, 0.0f, random.nextFloat() * 0.5f, 20);
@@ -79,10 +86,23 @@ public class EntityConstruct extends Monster {
         }
     }
 
+    public boolean showAngeryEffects() {
+        Player player = Minecraft.getInstance().player;
+        return player != null && entityData.get(TARGET) == player.getId();
+    }
+
     @Override
     public void setTarget(@Nullable LivingEntity target) {
         super.setTarget(target);
         this.entityData.set(TARGET, target != null ? target.getId() : -1);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (level().isClientSide() && TARGET.equals(key) && showAngeryEffects()) {
+            Minecraft.getInstance().getSoundManager().queueTickingSound(new ConstructSoundInstance(this));
+        }
     }
 
     @Override
