@@ -5,6 +5,7 @@ import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.util.EntityUtil;
 import diamondwalker.sscary.util.rendering.AnimatedSpriteHelper;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -143,7 +144,17 @@ public class EntityWatchtower extends Monster { // TODO: maybe the eye stunning 
         builder.define(DESPAWN_TICKS, 0);
     }
 
-    //TODO: save despawn timer
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("dayDespawnTicks", getDespawnTicks());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        setDespawnTicks(compound.getInt("dayDespawnTicks"));
+    }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
