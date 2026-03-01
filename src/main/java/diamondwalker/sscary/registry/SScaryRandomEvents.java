@@ -4,6 +4,7 @@ import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.randomevent.EnumEventRarity;
 import diamondwalker.sscary.randomevent.RegisteredEvent;
 import diamondwalker.sscary.randomevent.common.*;
+import diamondwalker.sscary.randomevent.common.calculation.CalculationEvent;
 import diamondwalker.sscary.randomevent.extrarare.*;
 import diamondwalker.sscary.randomevent.rare.*;
 import diamondwalker.sscary.randomevent.uncommon.*;

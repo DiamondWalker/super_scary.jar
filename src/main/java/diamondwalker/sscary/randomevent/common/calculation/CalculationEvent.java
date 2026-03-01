@@ -1,4 +1,4 @@
-package diamondwalker.sscary.randomevent.common;
+package diamondwalker.sscary.randomevent.common.calculation;
 
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.server.CalculationData;
@@ -31,10 +31,10 @@ public class CalculationEvent {
 
         CalculationQuestion question;
         if (impossible) {
-            question = CalculationQuestion.generateImpossibleQuestion(random);
+            question = QuestionProvider.generateImpossibleQuestion(random);
             data.calculation.impossibleQuestionCounter = 0;
         } else {
-            question = CalculationQuestion.generateRegularQuestion(random);
+            question = QuestionProvider.generateRegularQuestion(0, random);
         }
         AtomicBoolean blowUp = new AtomicBoolean(false);
 
@@ -92,95 +92,6 @@ public class CalculationEvent {
             try {
                 data.calculation.givenAnswer = String.valueOf(Long.valueOf(message));
             } catch (NumberFormatException ignored) {}
-        }
-    }
-
-    private static class CalculationQuestion {
-        private String question;
-        private String answer;
-
-        private static final String[] NAMES = new String[] {
-                "Voorhees",
-                "Myers",
-                "Krueger",
-                "Lecter"
-        };
-
-        private CalculationQuestion(String question) {
-            this(question, "");
-        }
-
-        private CalculationQuestion(String question, String answer) {
-            this.question = question;
-            this.answer = answer;
-        }
-
-        private static CalculationQuestion generateRegularQuestion(RandomSource random) {
-            int opeerand1 = random.nextInt(10) + 1;
-            int opeerand2 = random.nextInt(10) + 1;
-            String answerString = opeerand1 + " + " + opeerand2 + " = ";
-
-            return new CalculationQuestion(answerString, String.valueOf(opeerand1 + opeerand2));
-        }
-
-        private static CalculationQuestion generateImpossibleQuestion(RandomSource random) {
-            String question;
-            switch (random.nextInt(4)) {
-                case 0: {
-                    String name = NAMES[random.nextInt(NAMES.length)];
-                    int principal = (random.nextInt(99) + 1) * 1000;
-                    int rate = random.nextInt(5) + 1;
-                    question = "Mr. " + name + " has opened a savings account with a principal of " + principal + ". " +
-                            "This account has an interest rate of " + rate + "%, compounded continuously. " +
-                            "How much money will Mr. " + name + " have saved by the time the heat death of the universe occurs in a googol years? " +
-                            "(Helpful tip: 1 googol = 10^100)";
-                    break;
-                }
-                case 1: {
-                    question = "What is the numerical value of the imaginary unit i?";
-                    break;
-                }
-                case 2: {
-                    int digits = 256 + random.nextInt(501);
-                    question = "Please type the first " + digits + " digits of PI.";
-                    break;
-                }
-                default: {
-                    int[] exponents = new int[4];
-                    for (int i = 0; i < exponents.length; i++) {
-                        int newNum;
-                        SEARCH: while (true) {
-                            newNum = random.nextInt(9) + 1;
-                            for (int j = 0; j < i; j++) {
-                                if (exponents[j] == newNum) continue SEARCH;
-                            }
-                            break;
-                        }
-
-                        exponents[i] = newNum;
-                    }
-
-                    Arrays.sort(exponents);
-
-                    int bound1;
-                    int bound2;
-                    do {
-                        bound1 = random.nextInt(-10, 10);
-                        bound2 = random.nextInt(-10, 10);
-                    } while (bound1 == bound2);
-
-                    question = "Consider the graph of function f(x) = " + (random.nextInt(9) + 1) + "^" + exponents[3] + " + " +
-                            (random.nextInt(9) + 1) + "^" + exponents[2] + " + " +
-                            (random.nextInt(9) + 1) + "^" + exponents[1] + " + " +
-                            (random.nextInt(9) + 1) + "^" + exponents[0] + ". " +
-                            "Use integration to find the area under the graph of f when bounded by x = " + Math.min(bound1, bound2) +
-                            " and x = " + Math.max(bound1, bound2) + ".";
-
-                    break;
-                }
-            }
-
-            return new CalculationQuestion(question);
         }
     }
 }

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class InventoryBugHandler {
     @SubscribeEvent
     private static void handlePlayerTick(PlayerTickEvent.Post event) {
-        if (!event.getEntity().isLocalPlayer()) {
+        if (event.getEntity().getServer() != null) {
             if (event.getEntity().tickCount % 8 == 0) {
                 Inventory inventory = event.getEntity().getInventory();
 
