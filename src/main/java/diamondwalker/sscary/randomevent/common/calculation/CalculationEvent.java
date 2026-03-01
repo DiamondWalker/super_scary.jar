@@ -34,7 +34,7 @@ public class CalculationEvent {
             question = QuestionProvider.generateImpossibleQuestion(random);
             data.calculation.impossibleQuestionCounter = 0;
         } else {
-            question = QuestionProvider.generateRegularQuestion(0, random);
+            question = QuestionProvider.generateRegularQuestion(12, random);
         }
         AtomicBoolean blowUp = new AtomicBoolean(false);
 
@@ -47,7 +47,7 @@ public class CalculationEvent {
                     calc.expectedAnswer = question.answer;
                     calc.givenAnswer = null;
                 })
-                .rest(impossible ? 200 : 60)
+                .rest(question.secondsToRespond * 20)
                 .action((serv) -> {
                     CalculationData calc = WorldData.get(serv).calculation;
                     if (calc.givenAnswer == null) {

@@ -2,18 +2,20 @@ package diamondwalker.sscary.randomevent.common.calculation;
 
 import net.minecraft.util.RandomSource;
 import net.neoforged.neoforge.client.event.ClientPauseChangeEvent;
+import oshi.util.tuples.Pair;
 
 import java.util.Arrays;
 
 class QuestionProvider {
     protected static CalculationQuestion generateRegularQuestion(int grade, RandomSource random) {
         int selection = random.nextInt(Math.min(grade + 1, 5));
+        int level = grade - selection;
 
-        if (selection == 0) return generateAddition(grade, random);
-        if (selection == 1) return generateSubtraction(grade - 1, random);
-        if (selection == 2) return generateMultiplication(grade - 2, random);
-        if (selection == 3) return generateDivision(grade - 3, random);
-        if (selection == 4) return generateExponent(grade - 4, random);
+        if (selection == 0) return generateAddition(level, random);
+        if (selection == 1) return generateSubtraction(level, random);
+        if (selection == 2) return generateMultiplication(level, random);
+        if (selection == 3) return generateDivision(level, random);
+        if (selection == 4) return generateExponent(level, random);
 
         throw new RuntimeException("Invalid Calculation question selection");
     }
@@ -21,28 +23,20 @@ class QuestionProvider {
     private static CalculationQuestion generateAddition(int level, RandomSource random) {
         if (level > 0) level--; // the first two levels should be the same
 
-        // I do not know how to explain this function. I just screwed around with desmos until I was happy with the result.
-        int b = (level % 9) + 1;
-        int h = level / 9;
-        int z = (int)Math.round(Math.pow(10, h + 1));
-        int maxTerm = z * b;
+        int maxTerm = maxTermFunc(level);
 
         int operand1 = random.nextInt(maxTerm) + 1;
         int operand2 = random.nextInt(maxTerm) + 1;
         String answerString = operand1 + " + " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf(operand1 + operand2));
+        return new CalculationQuestion(answerString, String.valueOf(operand1 + operand2), 3 + (Math.min(operand1, operand2) - 1) / 10);
     }
 
     private static CalculationQuestion generateSubtraction(int level, RandomSource random) {
         boolean allowNegativeResult = level > 0;
         if (level > 0) level--;
 
-        // I do not know how to explain this function. I just screwed around with desmos until I was happy with the result.
-        int b = (level % 9) + 1;
-        int h = level / 9;
-        int z = (int)Math.round(Math.pow(10, h + 1));
-        int maxTerm = z * b;
+        int maxTerm = maxTermFunc(level);
 
         int operand1;
         int operand2;
@@ -62,50 +56,62 @@ class QuestionProvider {
 
         String answerString = operand1 + " - " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf(operand1 - operand2));
+        return new CalculationQuestion(answerString, String.valueOf(operand1 - operand2), 3 + (Math.min(Math.abs(operand1), Math.abs(operand2)) - 1) / 10);
     }
 
     private static CalculationQuestion generateMultiplication(int level, RandomSource random) {
-        int extraZeroes = level / 2;
-        int extraZeroes1 = random.nextInt(extraZeroes + 1);
-        int extraZeroes2 = extraZeroes - extraZeroes1;
+        int level1 = random.nextInt(level + 1);
+        int level2 = level - level1;
 
-        int maxFactor1 = (int)Math.round(Math.pow(10, extraZeroes1 + 1));
-        int maxFactor2 = (int)Math.round(Math.pow(10, extraZeroes2 + 1));
+        int maxTerm1 = maxTermFunc(level1);
+        int maxTerm2 = maxTermFunc(level2);
 
-        int operand1 = random.nextInt(maxFactor1) + 1;
-        int operand2 = random.nextInt(maxFactor2) + 1;
+        int operand1 = random.nextInt(maxTerm1 - 1) + 1 + 1; // we don't want to multiply by 1 that's too easy
+        int operand2 = random.nextInt(maxTerm2 - 1) + 1 + 1; // we don't want to multiply by 1 that's too easy
         if (level > 1) {
             if (random.nextBoolean()) operand1 = -operand1;
             if (random.nextBoolean()) operand2 = -operand2;
         }
         String answerString = operand1 + " x " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf(operand1 * operand2));
+        return new CalculationQuestion(answerString, String.valueOf(operand1 * operand2), 3 + Math.abs(operand1 + operand2) / 10);
     }
 
     private static CalculationQuestion generateDivision(int level, RandomSource random) {
-        int extraZeroes = level / 2;
-        int extraZeroes1 = random.nextInt(extraZeroes + 1);
-        int extraZeroes2 = extraZeroes - extraZeroes1;
+        int level1 = random.nextInt(level + 1);
+        int level2 = level - level1;
 
-        int maxFactor1 = (int)Math.round(Math.pow(10, extraZeroes1 + 1));
-        int maxFactor2 = (int)Math.round(Math.pow(10, extraZeroes2 + 1));
+        int maxTerm1 = maxTermFunc(level1);
+        int maxTerm2 = maxTermFunc(level2);
 
-        int operand1 = random.nextInt(maxFactor1 - 1) + 1 + 1;
-        int operand2 = random.nextInt(maxFactor2 - 1) + 1 + 1;
+        int operand1 = random.nextInt(maxTerm1 - 1) + 1 + 1; // we don't want to multiply by 1 that's too easy
+        int operand2 = random.nextInt(maxTerm2 - 1) + 1 + 1; // we don't want to multiply by 1 that's too easy
+
         int dividend = operand1 * operand2;
         String answerString = dividend + " / " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf(operand1));
+        return new CalculationQuestion(answerString, String.valueOf(operand1), 3 + (operand1 + operand2) / 10);
     }
 
     private static CalculationQuestion generateExponent(int level, RandomSource random) {
-        int operand1 = random.nextInt(10) + 1;
-        int operand2 = random.nextInt(level + 1) + 2;
+        int level1 = random.nextInt(level + 1);
+        int level2 = level - level1;
+
+        int maxBaseTerm = maxTermFunc(level1);
+
+        int operand1 = random.nextInt(maxBaseTerm - 1) + 1 + 1;
+        int operand2 = level2 + 2;
         String answerString = operand1 + " ^ " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf((int)Math.round(Math.pow(operand1, operand2))));
+        return new CalculationQuestion(answerString, String.valueOf((int)Math.round(Math.pow(operand1, operand2))), (operand1 * operand2) / 3);
+    }
+
+    private static int maxTermFunc(int level) {
+        // I do not know how to explain this function. I just screwed around with desmos until I was happy with the result.
+        int b = (level % 9) + 1;
+        int h = level / 9;
+        int z = (int)Math.round(Math.pow(10, h + 1));
+        return z * b;
     }
 
     private static final String[] NAMES = new String[] {
@@ -171,6 +177,6 @@ class QuestionProvider {
             }
         }
 
-        return new CalculationQuestion(question);
+        return new CalculationQuestion(question, "", 10);
     }
 }
