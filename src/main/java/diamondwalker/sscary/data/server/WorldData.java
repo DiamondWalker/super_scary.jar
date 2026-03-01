@@ -4,6 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
+import org.checkerframework.checker.units.qual.N;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class WorldData extends SavedData {
     public final ScriptData scripts = new ScriptData();
     public final FriendData friend = new FriendData(this);
 
+    public final NewScriptsData newScripts = new NewScriptsData(this);
     public final CalculationData calculation = new CalculationData(this);
 
     public final CorruptedEntityBuildData corruptedEntityBuilds = new CorruptedEntityBuildData(this);

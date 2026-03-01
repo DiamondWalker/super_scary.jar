@@ -6,7 +6,7 @@ import oshi.util.tuples.Pair;
 
 import java.util.Arrays;
 
-class QuestionProvider {
+public class QuestionProvider {
     protected static CalculationQuestion generateRegularQuestion(int grade, RandomSource random) {
         int selection = random.nextInt(Math.min(grade + 1, 5));
         int level = grade - selection;

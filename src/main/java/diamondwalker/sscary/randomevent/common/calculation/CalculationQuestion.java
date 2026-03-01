@@ -1,9 +1,9 @@
 package diamondwalker.sscary.randomevent.common.calculation;
 
-class CalculationQuestion {
-    protected String question;
-    protected String answer;
-    protected int secondsToRespond;
+public class CalculationQuestion {
+    public String question;
+    public String answer;
+    public int secondsToRespond;
 
     protected CalculationQuestion(String question, String answer, int timeToRespond) {
         this.question = question;

@@ -4,6 +4,7 @@ import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.server.CalculationData;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
+import diamondwalker.sscary.script.CalculationScript;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +19,7 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@EventBusSubscriber
+//@EventBusSubscriber
 public class CalculationEvent {
     public static boolean execute(MinecraftServer server) {
         WorldData data = WorldData.get(server);
@@ -36,55 +37,11 @@ public class CalculationEvent {
         } else {
             question = QuestionProvider.generateRegularQuestion(12, random);
         }
-        AtomicBoolean blowUp = new AtomicBoolean(false);
 
-        new ScriptBuilder(server, "calculation")
-                .chatMessageForAll(ChatUtil.getJoinMessage(ChatUtil.CALCULATION_NAME))
-                .rest(40)
-                .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, question.question))
-                .action((serv) -> {
-                    CalculationData calc = WorldData.get(serv).calculation;
-                    calc.expectedAnswer = question.answer;
-                    calc.givenAnswer = null;
-                })
-                .rest(question.secondsToRespond * 20)
-                .action((serv) -> {
-                    CalculationData calc = WorldData.get(serv).calculation;
-                    if (calc.givenAnswer == null) {
-                        blowUp.set(true);
-                        serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Time's up!"), false);
-                    } else if (!calc.givenAnswer.equals(calc.expectedAnswer)) {
-                        blowUp.set(true);
-                        serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Incorrect!"), false);
-                    } else {
-                        blowUp.set(false);
-                        serv.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Correct!"), false);
-                    }
-
-                    calc.givenAnswer = null;
-                    calc.expectedAnswer = null;
-                })
-                .rest(20)
-                .action((serv) -> {
-                    if (blowUp.get()) {
-                        for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
-                            player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
-                            for (int i = 0; i < 15; i++) {
-                                Vec3 pos = player.position();
-                                pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);
-                                player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
-                            }
-                        }
-                    }
-                })
-                .rest(40)
-                .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.CALCULATION_NAME))
-                .startScript();
-
-        return true;
+        return data.newScripts.startScript(new CalculationScript(server, random, question));
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     private static void handlePlayerChat(ServerChatEvent event) {
         WorldData data = WorldData.get(event.getPlayer().server);
         if (data.calculation.expectedAnswer != null && data.calculation.givenAnswer == null && data.scripts.hasLock("calculation")) {
@@ -93,5 +50,5 @@ public class CalculationEvent {
                 data.calculation.givenAnswer = String.valueOf(Long.valueOf(message));
             } catch (NumberFormatException ignored) {}
         }
-    }
+    }*/
 }
