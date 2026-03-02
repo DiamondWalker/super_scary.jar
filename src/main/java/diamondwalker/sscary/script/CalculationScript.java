@@ -2,6 +2,7 @@ package diamondwalker.sscary.script;
 
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
+import diamondwalker.sscary.registry.SScaryScripts;
 import diamondwalker.sscary.util.ChatUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -18,12 +19,12 @@ public class CalculationScript extends Script {
 
     private CalculationState state = CalculationState.NOT_ASKED;
 
-    public CalculationScript(MinecraftServer server, RandomSource random) {
-        super(server, random);
+    public CalculationScript(MinecraftServer server) {
+        super(SScaryScripts.CALCULATION.get(), server);
     }
 
-    public CalculationScript(MinecraftServer server, RandomSource random, CalculationQuestion question) {
-        this(server, random);
+    public CalculationScript(MinecraftServer server, CalculationQuestion question) {
+        this(server);
         this.question = question.question;
         this.answer = question.answer;
         this.timeToAnswer = question.secondsToRespond * 20;

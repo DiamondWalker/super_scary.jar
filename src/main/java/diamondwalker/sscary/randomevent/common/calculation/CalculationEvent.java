@@ -19,12 +19,9 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-//@EventBusSubscriber
 public class CalculationEvent {
     public static boolean execute(MinecraftServer server) {
         WorldData data = WorldData.get(server);
-
-        if (data.scripts.hasLock("calculation")) return false;
 
         RandomSource random = server.overworld().getRandom();
         data.calculation.impossibleQuestionCounter++;
@@ -38,17 +35,6 @@ public class CalculationEvent {
             question = QuestionProvider.generateRegularQuestion(12, random);
         }
 
-        return data.newScripts.startScript(new CalculationScript(server, random, question));
+        return data.newScripts.startScript(new CalculationScript(server, question));
     }
-
-    /*@SubscribeEvent
-    private static void handlePlayerChat(ServerChatEvent event) {
-        WorldData data = WorldData.get(event.getPlayer().server);
-        if (data.calculation.expectedAnswer != null && data.calculation.givenAnswer == null && data.scripts.hasLock("calculation")) {
-            String message = event.getMessage().getString();
-            try {
-                data.calculation.givenAnswer = String.valueOf(Long.valueOf(message));
-            } catch (NumberFormatException ignored) {}
-        }
-    }*/
 }

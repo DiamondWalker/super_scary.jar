@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class WorldData extends SavedData {
+    protected final MinecraftServer server;
+
     public final ScriptData scripts = new ScriptData();
     public final FriendData friend = new FriendData(this);
 
@@ -28,7 +30,9 @@ public class WorldData extends SavedData {
 
     private final ArrayList<PersistentWorldData> persistentData = new ArrayList<>();
 
-    public WorldData() {
+    public WorldData(MinecraftServer server) {
+        this.server = server;
+
         try {
             for (Field field : WorldData.class.getDeclaredFields()) {
                 if (field.get(this) instanceof PersistentWorldData persistentWorldData) {
@@ -51,8 +55,8 @@ public class WorldData extends SavedData {
         return tag;
     }
 
-    public static WorldData load(CompoundTag nbt) {
-        WorldData data = new WorldData();
+    public static WorldData load(CompoundTag nbt, MinecraftServer server) {
+        WorldData data = new WorldData(server);
 
         for (PersistentWorldData persistentWorldData : data.persistentData) {
             persistentWorldData.load(nbt.getCompound(persistentWorldData.getId()));
@@ -62,7 +66,7 @@ public class WorldData extends SavedData {
     }
 
     public static WorldData get(MinecraftServer server) {
-        WorldData data = server.overworld().getDataStorage().computeIfAbsent(new SavedData.Factory<>(WorldData::new, (nbt, provider) -> WorldData.load(nbt)), "twais_data");
+        WorldData data = server.overworld().getDataStorage().computeIfAbsent(new SavedData.Factory<>(() -> new WorldData(server), (nbt, provider) -> WorldData.load(nbt, server)), "twais_data");
         data.setDirty();
         return data;
     }

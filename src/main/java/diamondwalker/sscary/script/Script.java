@@ -7,15 +7,20 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 
 public abstract class Script {
     private boolean ended = false;
+
+    public final ScriptType<? extends Script> type;
+
     protected final MinecraftServer server;
     protected final RandomSource random;
 
-    public Script(MinecraftServer server, RandomSource random) {
+    public Script(ScriptType<? extends Script> type, MinecraftServer server) {
+        this.type = type;
         this.server = server;
-        this.random = random;
+        this.random = server.overworld().getRandom();
     }
 
     public abstract void tick();
@@ -33,7 +38,7 @@ public abstract class Script {
     }
 
     public boolean isCompatibleWith(Script other) {
-        return this.getClass() != other.getClass();
+        return this.type != other.type;
     }
 
     public void sendJoinMessage(String name) {
