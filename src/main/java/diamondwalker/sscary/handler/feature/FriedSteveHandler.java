@@ -1,6 +1,7 @@
 package diamondwalker.sscary.handler.feature;
 
 import diamondwalker.sscary.data.client.ClientData;
+import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -13,6 +14,8 @@ public class FriedSteveHandler {
 
     @SubscribeEvent
     private static void handleTick(ClientTickEvent.Post event) {
+        if (Minecraft.getInstance().isPaused()) return;
+
         ClientData data = ClientData.get();
 
         if (data.friedSteve != null && data.friedSteve.isRemoved()) data.friedSteve = null;

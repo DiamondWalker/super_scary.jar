@@ -3,6 +3,7 @@ package diamondwalker.sscary.handler.internal;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ColorOverlayData;
 import diamondwalker.sscary.data.client.StaticData;
+import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -11,6 +12,8 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 public class ColorOverlayHandler {
     @SubscribeEvent
     private static void tickOverlay(ClientTickEvent.Post event) {
+        if (Minecraft.getInstance().isPaused()) return;
+
         ColorOverlayData data = ClientData.get().colorOverlay;
 
         if (data != null) {

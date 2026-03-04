@@ -14,6 +14,8 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 public class StaticHandler {
     @SubscribeEvent
     private static void tickStatic(ClientTickEvent.Post event) {
+        if (Minecraft.getInstance().isPaused()) return;
+
         StaticData data = ClientData.get().staticData;
 
         if (data != null) {
