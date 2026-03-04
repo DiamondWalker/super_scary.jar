@@ -4,6 +4,7 @@ import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ColorOverlayData;
 import diamondwalker.sscary.handler.internal.PlayerFallHandler;
+import diamondwalker.sscary.network.CalculationPacket;
 import diamondwalker.sscary.network.ScreenColorShaderPacket;
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
@@ -68,6 +69,10 @@ public class CalculationScript extends Script {
         super(SScaryScripts.CALCULATION.get(), server);
     }
 
+    public CalculationScript(int clientId) {
+        super(SScaryScripts.CALCULATION.get(), clientId);
+    }
+
     public CalculationScript(MinecraftServer server, CalculationQuestion question) {
         this(server);
         this.question = question.question;
@@ -77,34 +82,37 @@ public class CalculationScript extends Script {
 
     @Override
     public void onStart() {
-        sendJoinMessage(ChatUtil.CALCULATION_NAME);
+        if (!clientSide) {
+            sendJoinMessage(ChatUtil.CALCULATION_NAME);
+        }
     }
 
     @Override
     public void tick() {
-        if (state == CalculationState.NOT_ASKED) {
-            if (ticks >= 40) {
-                chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, question));
-                state = CalculationState.WAITING_FOR_ANSWER;
-                ticks = 0;
-            }
-
-        } else if (state == CalculationState.WAITING_FOR_ANSWER || state == CalculationState.CORRECT_BUT_WAITING || state == CalculationState.INCORRECT_BUT_WAITING) {
-            if (ticks >= timeToAnswer) {
-                if (state == CalculationState.WAITING_FOR_ANSWER) {
-                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Time's up!"));
-                } else if (state == CalculationState.CORRECT_BUT_WAITING) {
-                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, CORRECT_MESSAGES[random.nextInt(CORRECT_MESSAGES.length)]));
-                } else {
-                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, INCORRECT_MESSAGES[random.nextInt(INCORRECT_MESSAGES.length)]));
+        if (!clientSide) {
+            if (state == CalculationState.NOT_ASKED) {
+                if (ticks >= 40) {
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, question));
+                    state = CalculationState.WAITING_FOR_ANSWER;
+                    ticks = 0;
                 }
-                state = state != CalculationState.CORRECT_BUT_WAITING ? CalculationState.PUNISHMENT : CalculationState.LEAVE;
-                ticks = 0;
-            }
 
-        } else if (state == CalculationState.PUNISHMENT) {
-            if (ticks >= 40) {
-                for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            } else if (state == CalculationState.WAITING_FOR_ANSWER || state == CalculationState.CORRECT_BUT_WAITING || state == CalculationState.INCORRECT_BUT_WAITING) {
+                if (ticks >= timeToAnswer) {
+                    if (state == CalculationState.WAITING_FOR_ANSWER) {
+                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Time's up!"));
+                    } else if (state == CalculationState.CORRECT_BUT_WAITING) {
+                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, CORRECT_MESSAGES[random.nextInt(CORRECT_MESSAGES.length)]));
+                    } else {
+                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, INCORRECT_MESSAGES[random.nextInt(INCORRECT_MESSAGES.length)]));
+                    }
+                    state = state != CalculationState.CORRECT_BUT_WAITING ? CalculationState.PUNISHMENT : CalculationState.LEAVE;
+                    ticks = 0;
+                }
+
+            } else if (state == CalculationState.PUNISHMENT) {
+                if (ticks >= 40) {
+                    for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     /*player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
                     for (int i = 0; i < 15; i++) {
                         Vec3 pos = player.position();
@@ -112,45 +120,53 @@ public class CalculationScript extends Script {
                         player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
                     }*/
 
-                    double x = random.nextDouble() * 1.5 - 0.75;
-                    double y = random.nextDouble() * 1 - 0.5;
-                    double z = random.nextDouble() * 1.5 - 0.75;
-                    Vec3 motion = new Vec3(x, y, z);
-                    player.addDeltaMovement(motion);
-                    player.hurtMarked = true;
-                    PlayerFallHandler.disableFall(player);
-                }
+                        double x = random.nextDouble() * 1.5 - 0.75;
+                        double y = random.nextDouble() * 1 - 0.5;
+                        double z = random.nextDouble() * 1.5 - 0.75;
+                        Vec3 motion = new Vec3(x, y, z);
+                        player.addDeltaMovement(motion);
+                        player.hurtMarked = true;
+                        PlayerFallHandler.disableFall(player);
 
-                if (ticks >= 100) {
-                    for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                        player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
+                        PacketDistributor.sendToPlayer(player, new CalculationPacket(true));
+                    }
 
-                        if (Config.ULTRA_SCARY_MODE.get()) {
-                            for (int i = 0; i < 15; i++) {
-                                Vec3 pos = player.position();
-                                pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);
-                                player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
+                    if (ticks >= 100) {
+                        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                            player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
+                            PacketDistributor.sendToPlayer(player, new CalculationPacket(false));
+
+                            if (Config.ULTRA_SCARY_MODE.get()) {
+                                for (int i = 0; i < 15; i++) {
+                                    Vec3 pos = player.position();
+                                    pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);
+                                    player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
+                                }
                             }
                         }
+                        state = CalculationState.LEAVE;
+                        ticks = 0;
                     }
-                    state = CalculationState.LEAVE;
-                    ticks = 0;
                 }
+
+            } else if (state == CalculationState.LEAVE) {
+                if (ticks >= 40) end();
+
+            } else {
+                throw new IllegalStateException("Illegal Calculation state: " + state.toString());
             }
 
-        } else if (state == CalculationState.LEAVE) {
-            if (ticks >= 40) end();
-
+            ticks++;
         } else {
-            throw new IllegalStateException("Illegal Calculation state: " + state.toString());
+            // screen flash (if angered)
         }
-
-        ticks++;
     }
 
     @Override
     public void onEnd() {
-        sendLeaveMessage(ChatUtil.CALCULATION_NAME);
+        if (!clientSide) {
+            sendLeaveMessage(ChatUtil.CALCULATION_NAME);
+        }
     }
 
     @Override

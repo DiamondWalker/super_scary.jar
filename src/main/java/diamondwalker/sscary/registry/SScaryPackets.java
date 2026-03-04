@@ -20,5 +20,7 @@ public class SScaryPackets {
         registrar.playToClient(SilencePacket.TYPE, SilencePacket.CODEC, SilencePacket::handle);
         registrar.playToClient(VisageDisconnectPacket.TYPE, VisageDisconnectPacket.CODEC, VisageDisconnectPacket::handle);
         registrar.playToClient(CalculationPacket.TYPE, CalculationPacket.CODEC, CalculationPacket::handle);
+        registrar.playToClient(AddSyncedScriptPacket.TYPE, AddSyncedScriptPacket.CODEC, AddSyncedScriptPacket::handle);
+        registrar.playToClient(RemoveSyncedScriptPacket.TYPE, RemoveSyncedScriptPacket.CODEC, RemoveSyncedScriptPacket::handle);
     }
 }

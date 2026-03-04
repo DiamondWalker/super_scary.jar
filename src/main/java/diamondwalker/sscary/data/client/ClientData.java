@@ -27,6 +27,8 @@ public class ClientData {
 
     public ScreenFlashData flash = null;
 
+    public NewScriptsClientData scripts = new NewScriptsClientData();
+
     private boolean silence = false;
 
     public EntityFriedSteve friedSteve = null;

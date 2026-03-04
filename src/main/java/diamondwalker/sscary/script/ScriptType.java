@@ -6,12 +6,27 @@ import java.util.function.Function;
 
 public class ScriptType <T extends Script> {
     private final Function<MinecraftServer, T> provider;
+    private final Function<Integer, T> clientProvider;
 
     public ScriptType(Function<MinecraftServer, T> provider) {
-        this.provider = provider;
+        this(provider, null);
     }
 
-    public T build(MinecraftServer server) {
+    public ScriptType(Function<MinecraftServer, T> serverProvider, Function<Integer, T> clientProvider) {
+        this.provider = serverProvider;
+        this.clientProvider = clientProvider;
+    }
+
+    public T buildForServer(MinecraftServer server) {
         return provider.apply(server);
+    }
+
+    public T buildForClient(int id) {
+        if (clientProvider == null) throw new IllegalStateException("Client constructor was never defined for script");
+        return clientProvider.apply(id);
+    }
+
+    public boolean shouldSendToClient() {
+        return clientProvider != null;
     }
 }

@@ -15,12 +15,29 @@ public abstract class Script {
     public final ScriptType<? extends Script> type;
 
     protected final MinecraftServer server;
-    protected final RandomSource random;
+    protected final RandomSource random = RandomSource.create();
+    protected final boolean clientSide;
+
+    private static int currentSyncId;
+    private final int syncId;
 
     public Script(ScriptType<? extends Script> type, MinecraftServer server) {
         this.type = type;
         this.server = server;
-        this.random = server.overworld().getRandom();
+        clientSide = false;
+
+        if (type.shouldSendToClient()) {
+            syncId = currentSyncId++;
+        } else {
+            syncId = 0;
+        }
+    }
+
+    public Script(ScriptType<? extends Script> type, int clientId) {
+        this.type = type;
+        this.server = null;
+        clientSide = true;
+        syncId = clientId;
     }
 
     public abstract void tick();
@@ -35,6 +52,12 @@ public abstract class Script {
 
     public void onEnd() {
 
+    }
+
+    public final int getSyncId() {
+        if (!type.shouldSendToClient()) throw new IllegalStateException("This script isn't synced to the client so the sync id should be unused!");
+
+        return syncId;
     }
 
     public boolean isCompatibleWith(Script other) {

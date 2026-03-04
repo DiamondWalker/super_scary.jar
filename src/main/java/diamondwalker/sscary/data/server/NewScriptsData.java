@@ -1,11 +1,15 @@
 package diamondwalker.sscary.data.server;
 
+import diamondwalker.sscary.network.AddSyncedScriptPacket;
+import diamondwalker.sscary.network.RemoveSyncedScriptPacket;
 import diamondwalker.sscary.registry.CustomRegistries;
+import diamondwalker.sscary.registry.SScaryScripts;
 import diamondwalker.sscary.script.Script;
 import diamondwalker.sscary.script.ScriptType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 
@@ -22,6 +26,9 @@ public class NewScriptsData extends PersistentWorldData {
         }
         scripts.add(script);
         script.onStart();
+        if (script.type.shouldSendToClient()) {
+            PacketDistributor.sendToAllPlayers(new AddSyncedScriptPacket(CustomRegistries.SCRIPT_REGISTRY.getId(script.type), script.getSyncId()));
+        }
         return true;
     }
 
@@ -33,6 +40,9 @@ public class NewScriptsData extends PersistentWorldData {
             if (script.hasEnded()) {
                 script.onEnd();
                 scripts.remove(i);
+                if (script.type.shouldSendToClient()) {
+                    PacketDistributor.sendToAllPlayers(new RemoveSyncedScriptPacket(script.getSyncId()));
+                }
             } else {
                 i++;
             }
@@ -70,7 +80,7 @@ public class NewScriptsData extends PersistentWorldData {
         for (int i = 0; i < listTag.size(); i++) {
             CompoundTag compound = listTag.getCompound(i);
             ScriptType<?> type = CustomRegistries.SCRIPT_REGISTRY.byId(compound.getInt("scriptType"));
-            Script script = type.build(mainData.server);
+            Script script = type.buildForServer(mainData.server);
             script.load(compound);
             scripts.add(script);
         }
