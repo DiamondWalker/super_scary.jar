@@ -16,7 +16,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 public class CustomRegistries {
     public static final ResourceKey<Registry<ScriptType<?>>> SCRIPT_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "scripts"));
     public static final Registry<ScriptType<?>> SCRIPT_REGISTRY = new RegistryBuilder<>(SCRIPT_REGISTRY_KEY)
-            .sync(true) // If you want to enable integer id syncing, for networking.
+            .sync(true) // If you want to active integer id syncing, for networking.
             .create();
 
     @SubscribeEvent

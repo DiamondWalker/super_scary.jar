@@ -5,7 +5,7 @@ public class ColorOverlayData {
     private float green;
     private float blue;
     private float alpha;
-    public int timeLeft;
+    protected int timeLeft;
 
     public ColorOverlayData(float r, float g, float b, float a, int ticks) {
         this.red = r;
@@ -13,6 +13,11 @@ public class ColorOverlayData {
         this.blue = b;
         this.alpha = a;
         this.timeLeft = ticks;
+    }
+
+    public boolean shouldContinue() {
+        timeLeft--;
+        return timeLeft > 0;
     }
 
     public float red() {

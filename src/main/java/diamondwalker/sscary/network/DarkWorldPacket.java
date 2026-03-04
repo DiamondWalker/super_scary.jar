@@ -9,11 +9,11 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record DarkWorldPacket(boolean enable) implements CustomPacketPayload {
+public record DarkWorldPacket(boolean active) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<DarkWorldPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "dark_world"));
 
     public static final StreamCodec<ByteBuf, DarkWorldPacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL, DarkWorldPacket::enable,
+            ByteBufCodecs.BOOL, DarkWorldPacket::active,
             DarkWorldPacket::new
     );
 
@@ -23,6 +23,6 @@ public record DarkWorldPacket(boolean enable) implements CustomPacketPayload {
     }
 
     public static void handle(final DarkWorldPacket packet, final IPayloadContext context) {
-        ClientData.get().darkWorld = packet.enable();
+        ClientData.get().darkWorld = packet.active();
     }
 }

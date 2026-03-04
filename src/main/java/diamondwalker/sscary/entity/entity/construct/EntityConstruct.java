@@ -75,7 +75,14 @@ public class EntityConstruct extends Monster {
                 Player player = Minecraft.getInstance().player;
                 player.setXRot(player.getXRot() + (player.getRandom().nextFloat() - 0.5f) * 8);
                 player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * 8);
-                if (tickCount % 3 == 0) ClientData.get().colorOverlay = new ColorOverlayData(1.0f, 0.0f, 0.0f, random.nextFloat() * 0.5f, 20);
+
+                EntityConstruct ref = this;
+                if (tickCount % 3 == 0) ClientData.get().colorOverlay = new ColorOverlayData(1.0f, 0.0f, 0.0f, random.nextFloat() * 0.5f, 20) {
+                    @Override
+                    public boolean shouldContinue() {
+                        return super.shouldContinue() && !ref.isRemoved();
+                    }
+                };
             }
         } else {
             if (getTarget() instanceof Player) {

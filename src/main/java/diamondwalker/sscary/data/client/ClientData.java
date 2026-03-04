@@ -19,6 +19,8 @@ public class ClientData {
     public boolean darkWorld = false;
     public boolean wackyColors = false;
 
+    public boolean calculationAngry = false;
+
     public StaticData staticData = null;
 
     public ColorOverlayData colorOverlay = null;

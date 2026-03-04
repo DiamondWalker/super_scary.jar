@@ -1,5 +1,10 @@
 package diamondwalker.sscary.script;
 
+import diamondwalker.sscary.Config;
+import diamondwalker.sscary.data.client.ClientData;
+import diamondwalker.sscary.data.client.ColorOverlayData;
+import diamondwalker.sscary.handler.internal.PlayerFallHandler;
+import diamondwalker.sscary.network.ScreenColorShaderPacket;
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.registry.SScaryScripts;
@@ -10,8 +15,48 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class CalculationScript extends Script {
+    private static final String[] CORRECT_MESSAGES = {
+            "Correct!",
+            "Good job!",
+            "Great work!",
+            "Splendid!",
+            "Excellent!",
+            "Very good!",
+            "Well done!",
+            "Great!",
+            "Exemplary!",
+            "Yes!",
+            "Fantastic!",
+            "Wonderful!",
+            "Wow!",
+            "Good one!",
+            "You are smarter than Einstein!"
+    };
+
+    private static final String[] INCORRECT_MESSAGES = {
+            "Incorrect!",
+            "No!",
+            "Try again!",
+            "Fail!",
+            "Failure!",
+            "Wrong!",
+            "'A' for effort!",
+            "Better luck next time!",
+            "Not quite!",
+            "You should have studied harder!",
+            "Your parents would be so disappointed in you!",
+            "You get detention!",
+            "You will amount to nothing in life!",
+            "You have brought shame upon your family!",
+            "You will be a janitor when you grow up!"
+    };
+
     private String question;
     private String answer;
     private int timeToAnswer;
@@ -49,26 +94,48 @@ public class CalculationScript extends Script {
                 if (state == CalculationState.WAITING_FOR_ANSWER) {
                     chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Time's up!"));
                 } else if (state == CalculationState.CORRECT_BUT_WAITING) {
-                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Correct!"));
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, CORRECT_MESSAGES[random.nextInt(CORRECT_MESSAGES.length)]));
                 } else {
-                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Incorrect!"));
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, INCORRECT_MESSAGES[random.nextInt(INCORRECT_MESSAGES.length)]));
                 }
                 state = state != CalculationState.CORRECT_BUT_WAITING ? CalculationState.PUNISHMENT : CalculationState.LEAVE;
                 ticks = 0;
             }
 
         } else if (state == CalculationState.PUNISHMENT) {
-            if (ticks >= 20) {
+            if (ticks >= 40) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                    player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
+                    /*player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
                     for (int i = 0; i < 15; i++) {
                         Vec3 pos = player.position();
                         pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);
                         player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
-                    }
+                    }*/
+
+                    double x = random.nextDouble() * 1.5 - 0.75;
+                    double y = random.nextDouble() * 1 - 0.5;
+                    double z = random.nextDouble() * 1.5 - 0.75;
+                    Vec3 motion = new Vec3(x, y, z);
+                    player.addDeltaMovement(motion);
+                    player.hurtMarked = true;
+                    PlayerFallHandler.disableFall(player);
                 }
-                state = CalculationState.LEAVE;
-                ticks = 0;
+
+                if (ticks >= 100) {
+                    for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                        player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
+
+                        if (Config.ULTRA_SCARY_MODE.get()) {
+                            for (int i = 0; i < 15; i++) {
+                                Vec3 pos = player.position();
+                                pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);
+                                player.level().explode(null, pos.x, pos.y, pos.z, 20.0f, Level.ExplosionInteraction.MOB);
+                            }
+                        }
+                    }
+                    state = CalculationState.LEAVE;
+                    ticks = 0;
+                }
             }
 
         } else if (state == CalculationState.LEAVE) {

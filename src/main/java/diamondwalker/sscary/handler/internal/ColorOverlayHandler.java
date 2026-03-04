@@ -14,8 +14,7 @@ public class ColorOverlayHandler {
         ColorOverlayData data = ClientData.get().colorOverlay;
 
         if (data != null) {
-            data.timeLeft--;
-            if (data.timeLeft <= 0) {
+            if (!data.shouldContinue()) {
                 ClientData.get().colorOverlay = null;
             }
         }

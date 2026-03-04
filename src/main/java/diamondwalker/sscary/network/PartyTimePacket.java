@@ -9,11 +9,11 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record PartyTimePacket(boolean enable) implements CustomPacketPayload {
+public record PartyTimePacket(boolean active) implements CustomPacketPayload {
     public static final Type<PartyTimePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "party_time"));
 
     public static final StreamCodec<ByteBuf, PartyTimePacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL, PartyTimePacket::enable,
+            ByteBufCodecs.BOOL, PartyTimePacket::active,
             PartyTimePacket::new
     );
 
@@ -23,6 +23,6 @@ public record PartyTimePacket(boolean enable) implements CustomPacketPayload {
     }
 
     public static void handle(final PartyTimePacket packet, final IPayloadContext context) {
-        ClientData.get().wackyColors = packet.enable();
+        ClientData.get().wackyColors = packet.active();
     }
 }
