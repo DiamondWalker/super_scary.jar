@@ -25,6 +25,6 @@ public record RemoveSyncedScriptPacket(int scriptId) implements CustomPacketPayl
     }
 
     public static void handle(final RemoveSyncedScriptPacket packet, final IPayloadContext context) {
-        ClientData.get().scripts.removeScript(ClientData.get().scripts.getScriptFromSyncId(packet.scriptId));
+        ClientData.get().scripts.getScriptFromSyncId(packet.scriptId).end();
     }
 }

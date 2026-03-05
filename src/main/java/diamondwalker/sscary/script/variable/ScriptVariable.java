@@ -17,7 +17,7 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
 
             for (int i = 0; i < size; i++) {
                 int type = buf.readInt();
-                list.add(CustomRegistries.SCRIPT_VARIABLE_TYPE_REGISTRY.byId(type).build(buf));
+                list.add(CustomRegistries.SCRIPT_VARIABLE_TYPE_REGISTRY.byIdOrThrow(type).build(buf));
             }
 
             return list;

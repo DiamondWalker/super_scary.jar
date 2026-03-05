@@ -1,5 +1,6 @@
 package diamondwalker.sscary.script.variable;
 
+import diamondwalker.sscary.data.server.NewScriptsData;
 import diamondwalker.sscary.script.Script;
 import net.minecraft.nbt.CompoundTag;
 
@@ -15,17 +16,20 @@ public class ScriptVariableManager {
     }
 
     public <T extends ScriptVariable<?, ?>> T add(T variable) {
-        for (ScriptVariable<?, ?> var : variables) if (var.saveKey.equals(variable.saveKey)) throw new IllegalStateException("Conflicting variable save ID: " + var.saveKey);
+        for (ScriptVariable<?, ?> var : variables) {
+            if (var.saveKey.equals(variable.saveKey)) throw new IllegalStateException("Conflicting variable save ID: " + var.saveKey);
+            if (var.saveKey.equals(NewScriptsData.TYPE_NBT_KEY)) throw new IllegalStateException("Script variable may not be called " + NewScriptsData.TYPE_NBT_KEY);
+        }
         variables.add(variable);
         return variable;
     }
 
-    public List<ScriptVariable.Update<?>> getVariablesForSync() {
+    public List<ScriptVariable.Update<?>> getVariablesForSync(boolean getAll) {
         List<ScriptVariable.Update<?>> list = new ArrayList<>();
 
         for (int i = 0; i < variables.size(); i++) {
             ScriptVariable<?, ?> variable = variables.get(i);
-            if (variable.shouldSync && variable.isChanged()) {
+            if (variable.shouldSync && (variable.isChanged() || getAll)) {
                 list.add(variable.getUpdate(i));
                 variable.markSynced();
             }

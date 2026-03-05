@@ -4,11 +4,13 @@ import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.server.WorldData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 @EventBusSubscriber
@@ -26,6 +28,13 @@ public class ScriptHandler {
         WorldData data = WorldData.get(server);
 
         data.newScripts.tick();
+    }
+
+    @SubscribeEvent
+    private static void handlePlayerJoinServer(PlayerEvent.PlayerLoggedInEvent event) {
+        ServerPlayer player = (ServerPlayer) event.getEntity();
+        WorldData data = WorldData.get(player.server);
+        data.newScripts.addNewPlayer(player);
     }
 
     @SubscribeEvent

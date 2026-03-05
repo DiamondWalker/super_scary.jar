@@ -86,19 +86,11 @@ public abstract class Script {
         server.getPlayerList().broadcastSystemMessage(msg, true);
     }
 
-    protected final void end() {
+    public final void end() {
         ended = true;
     }
 
     public final boolean hasEnded() {
         return ended;
-    }
-
-    public void save(CompoundTag nbt) {
-
-    }
-
-    public void load(CompoundTag nbt) {
-
     }
 }

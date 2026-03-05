@@ -75,8 +75,6 @@ public class RandomEventHandler {
         } else {
             data.randomEvents.timeSinceLastEvent++;
         }
-
-        if (SScary.DEV_MODE) System.out.println("Time left for random event: " + (data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent));
     }
 
     public static void refreshEventTime(WorldData data, RandomSource random) {

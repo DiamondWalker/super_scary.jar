@@ -122,7 +122,6 @@ public class VisageHandler {
             } else {
                 data.visage.spawnTicks = 0;
             }
-            if (SScary.DEV_MODE) System.out.println("VISAGE: " + data.visage.spawnTicks);
         }
     }
 

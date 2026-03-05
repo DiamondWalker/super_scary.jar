@@ -21,12 +21,6 @@ public class NewScriptsClientData {
         script.onStart();
     }
 
-    public void removeScript(Script script) {
-        script.onEnd();
-        if (syncedScriptMap.remove(script.getSyncId()) == null) throw new IllegalStateException("Script with id " + script.getSyncId() + " was not on the client!");
-        scripts.remove(script);
-    }
-
     public Script getScriptFromSyncId(int id) {
         return syncedScriptMap.get(id);
     }
@@ -35,9 +29,11 @@ public class NewScriptsClientData {
         int i = 0;
         while (i < scripts.size()) {
             Script script = scripts.get(i);
-            script.tick();
-            if (script.hasEnded()) {
-                removeScript(script);
+            if (!script.hasEnded()) script.tick(); // script may have been ended by outside forces, in which case we don't tick
+            if (script.hasEnded()) { // script may have ended during the tick, so we need a second check
+                script.onEnd();
+                if (syncedScriptMap.remove(script.getSyncId()) == null) throw new IllegalStateException("Script with id " + script.getSyncId() + " was not on the client!");
+                scripts.remove(script);
             } else {
                 i++;
             }
