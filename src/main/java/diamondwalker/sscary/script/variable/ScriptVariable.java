@@ -1,6 +1,9 @@
 package diamondwalker.sscary.script.variable;
 
+import diamondwalker.sscary.registry.CustomRegistries;
+import diamondwalker.sscary.registry.SScaryScriptVariables;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.StreamCodec;
 
 import java.util.ArrayList;
@@ -14,7 +17,7 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
 
             for (int i = 0; i < size; i++) {
                 int type = buf.readInt();
-                list.add(VariableType.values()[type].constructor.apply(buf));
+                list.add(CustomRegistries.SCRIPT_VARIABLE_TYPE_REGISTRY.byId(type).build(buf));
             }
 
             return list;
@@ -23,21 +26,20 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
         public void encode(ByteBuf buf, List<Update<?>> list) {
             buf.writeInt(list.size());
             for (Update<?> var : list) {
-                buf.writeInt(var.getType().ordinal());
+                buf.writeInt(CustomRegistries.SCRIPT_VARIABLE_TYPE_REGISTRY.getId(var.getType()));
                 var.writeToBuffer(buf);
             }
         }
     };
 
     protected T value;
-    protected T oldValue;
+    protected T syncedValue; // the last value that was synced to the client
 
     protected boolean shouldSync = false;
-    protected String saveId;
+    protected String saveKey;
 
-    protected ScriptVariable(ScriptVariableManager manager, T originalValue) {
-        this.value = this.oldValue = originalValue;
-        manager.add(this);
+    protected ScriptVariable(T originalValue) {
+        this.value = this.syncedValue = originalValue;
     }
 
     public void set(T value) {
@@ -48,17 +50,20 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
         return value;
     }
 
-    protected final void receive(Update<?> update) {
+    /**
+     * Called on the client side to read a new value from an update.
+     * Override if updates need custom handling (e.g. enum variables being read from integer updates)
+     */
+    protected void receive(Update<?> update) {
         value = (T)update.data;
-        markSynced();
     }
 
     public boolean isChanged() {
-        return !oldValue.equals(value);
+        return !syncedValue.equals(value);
     }
 
     public void markSynced() {
-        oldValue = value;
+        syncedValue = value;
     }
 
     public E sync() {
@@ -67,12 +72,20 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
     }
 
     public E save(String id) {
-        saveId = id;
+        saveKey = id;
         return (E)this;
     }
 
-    public abstract Update<T> getUpdate(int id);
+    protected abstract void writeToNBT(CompoundTag tag);
 
+    protected abstract void readFromNBT(CompoundTag tag);
+
+    public abstract Update<?> getUpdate(int id);
+
+    /**
+     * This class represents a data change that will be transmitted through the script update packet
+     * @param <T> The type of the data being sent. Usually the same as the ScriptVariable's contained type, except in instances where the ScriptVariable transmits data a different way (e.g. enums)
+     */
     public static abstract class Update<T> {
         protected int id;
         protected T data;
@@ -86,10 +99,14 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
             this.readFromBuffer(buf);
         }
 
-        public abstract void writeToBuffer(ByteBuf buffer);
+        public void writeToBuffer(ByteBuf buffer) {
+            buffer.writeInt(id);
+        }
 
-        public abstract void readFromBuffer(ByteBuf buffer);
+        public void readFromBuffer(ByteBuf buffer) {
+            id = buffer.readInt();
+        }
 
-        public abstract VariableType getType();
+        public abstract ScriptVariableType getType();
     }
 }

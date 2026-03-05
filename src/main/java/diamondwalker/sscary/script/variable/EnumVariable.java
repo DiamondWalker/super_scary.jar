@@ -4,24 +4,33 @@ import diamondwalker.sscary.registry.SScaryScriptVariables;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 
-public class IntegerVariable extends ScriptVariable<Integer, IntegerVariable> {
-    public IntegerVariable(int originalValue) {
+public class EnumVariable<T extends Enum<?>> extends ScriptVariable<T, EnumVariable<T>> {
+    private final Class<T> theEnum;
+
+    public EnumVariable(T originalValue) {
         super(originalValue);
+        theEnum = (Class<T>) originalValue.getClass();
     }
 
     @Override
     protected void writeToNBT(CompoundTag tag) {
-        tag.putInt(saveKey, get());
+        tag.putInt(saveKey, get().ordinal());
     }
 
     @Override
     protected void readFromNBT(CompoundTag tag) {
-        set(tag.getInt(saveKey));
+        set(theEnum.getEnumConstants()[tag.getInt(saveKey)]);
+    }
+
+    // bit of a hack; we're using the integer updates and then converting
+    @Override
+    protected void receive(ScriptVariable.Update<?> update) {
+        value = theEnum.getEnumConstants()[((Update)update).data];
     }
 
     @Override
     public Update getUpdate(int id) {
-        return new Update(id, value);
+        return new Update(id, value.ordinal());
     }
 
     public static class Update extends ScriptVariable.Update<Integer> {
@@ -47,7 +56,7 @@ public class IntegerVariable extends ScriptVariable<Integer, IntegerVariable> {
 
         @Override
         public ScriptVariableType getType() {
-            return SScaryScriptVariables.INTEGER.get();
+            return SScaryScriptVariables.ENUM.get();
         }
     }
 }

@@ -8,7 +8,7 @@ import diamondwalker.sscary.network.CalculationStatePacket;
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.registry.SScaryScripts;
-import diamondwalker.sscary.script.variable.BooleanVariable;
+import diamondwalker.sscary.script.variable.*;
 import diamondwalker.sscary.util.ChatUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -54,12 +54,12 @@ public class CalculationScript extends Script {
             "You will be a janitor when you grow up!"
     };
 
-    private String question;
-    private String answer;
-    private int timeToAnswer;
-    private int ticks = 0;
+    private final StringVariable question = variableManager.add(new StringVariable("").save("question"));
+    private final StringVariable answer = variableManager.add(new StringVariable("").save("answer"));
+    private final IntegerVariable timeToAnswer = variableManager.add(new IntegerVariable(0).save("time"));
+    private final IntegerVariable ticks = variableManager.add(new IntegerVariable(0).save("ticks"));
 
-    private CalculationState state = CalculationState.NOT_ASKED;
+    private final EnumVariable<CalculationState> state = variableManager.add(new EnumVariable<>(CalculationState.NOT_ASKED).save("state").sync());
 
     public CalculationScript(MinecraftServer server) {
         super(SScaryScripts.CALCULATION.get(), server);
@@ -71,9 +71,9 @@ public class CalculationScript extends Script {
 
     public CalculationScript(MinecraftServer server, CalculationQuestion question) {
         this(server);
-        this.question = question.question;
-        this.answer = question.answer;
-        this.timeToAnswer = question.secondsToRespond * 20;
+        this.question.set(question.question);
+        this.answer.set(question.answer);
+        this.timeToAnswer.set(question.secondsToRespond * 20);
     }
 
     @Override
@@ -86,27 +86,27 @@ public class CalculationScript extends Script {
     @Override
     public void tick() {
         if (!clientSide) {
-            if (state == CalculationState.NOT_ASKED) {
-                if (ticks >= 40) {
-                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, question));
+            if (state.get() == CalculationState.NOT_ASKED) {
+                if (ticks.get() >= 40) {
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, question.get()));
                     setState(CalculationState.WAITING_FOR_ANSWER);
                 }
 
-            } else if (state == CalculationState.WAITING_FOR_ANSWER || state == CalculationState.CORRECT_BUT_WAITING || state == CalculationState.INCORRECT_BUT_WAITING) {
-                if (ticks >= timeToAnswer) {
-                    if (state == CalculationState.WAITING_FOR_ANSWER) {
+            } else if (state.get() == CalculationState.WAITING_FOR_ANSWER || state.get() == CalculationState.CORRECT_BUT_WAITING || state.get() == CalculationState.INCORRECT_BUT_WAITING) {
+                if (ticks.get() >= timeToAnswer.get()) {
+                    if (state.get() == CalculationState.WAITING_FOR_ANSWER) {
                         chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Time's up!"));
-                    } else if (state == CalculationState.CORRECT_BUT_WAITING) {
+                    } else if (state.get() == CalculationState.CORRECT_BUT_WAITING) {
                         chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, CORRECT_MESSAGES[random.nextInt(CORRECT_MESSAGES.length)]));
                     } else {
                         chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, INCORRECT_MESSAGES[random.nextInt(INCORRECT_MESSAGES.length)]));
                     }
-                    setState(state != CalculationState.CORRECT_BUT_WAITING ? CalculationState.PREPARING_TO_PUNISH : CalculationState.LEAVE);
+                    setState(state.get() != CalculationState.CORRECT_BUT_WAITING ? CalculationState.PREPARING_TO_PUNISH : CalculationState.LEAVE);
                 }
 
-            } else if (state == CalculationState.PREPARING_TO_PUNISH) {
-                if (ticks >= 40) setState(CalculationState.PUNISHMENT);
-            } else if (state == CalculationState.PUNISHMENT) {
+            } else if (state.get() == CalculationState.PREPARING_TO_PUNISH) {
+                if (ticks.get() >= 40) setState(CalculationState.PUNISHMENT);
+            } else if (state.get() == CalculationState.PUNISHMENT) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     double x = random.nextDouble() * 1.5 - 0.75;
                     double y = random.nextDouble() * 1 - 0.5;
@@ -117,7 +117,7 @@ public class CalculationScript extends Script {
                     PlayerFallHandler.disableFall(player);
                 }
 
-                if (ticks >= 60) {
+                if (ticks.get() >= 60) {
                     for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                         player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
 
@@ -132,28 +132,35 @@ public class CalculationScript extends Script {
                     setState(CalculationState.LEAVE);
                 }
 
-            } else if (state == CalculationState.LEAVE) {
-                if (ticks >= 40) end();
+            } else if (state.get() == CalculationState.LEAVE) {
+                if (ticks.get() >= 40) end();
 
             } else {
                 throw new IllegalStateException("Illegal Calculation state: " + state.toString());
             }
         }
-        ticks++;
+        ticks.set(ticks.get() + 1);
     }
 
     public void setState(CalculationState newState) {
-        this.state = newState;
-        this.ticks = 0;
+        state.set(newState);
+        ticks.set(0);
 
         if (!clientSide) {
-            PacketDistributor.sendToAllPlayers(new CalculationStatePacket(getSyncId(), state));
-        } else if (state == CalculationState.PUNISHMENT) {
+            PacketDistributor.sendToAllPlayers(new CalculationStatePacket(getSyncId(), state.get()));
+        }
+    }
+
+    @Override
+    public void onVariableUpdate(ScriptVariable<?, ?> updatedVariable) {
+        super.onVariableUpdate(updatedVariable);
+
+        if (updatedVariable == state && state.get() == CalculationState.PUNISHMENT) {
             CalculationScript ref = this;
             ClientData.get().colorOverlay = new ColorOverlayData(0.8f, 0.0f, 0.0f, 0.4f, 0) {
                 @Override
                 public boolean shouldContinue() {
-                    return ref.state == CalculationState.PUNISHMENT && !ref.hasEnded();
+                    return ref.state.get() == CalculationState.PUNISHMENT && !ref.hasEnded();
                 }
             };
         }
@@ -168,12 +175,12 @@ public class CalculationScript extends Script {
 
     @Override
     public void handleChatInput(ServerPlayer sender, String message) {
-        if (state == CalculationState.WAITING_FOR_ANSWER) { // make sure enough time has elapsed
-            setState(message.equals(answer) ? CalculationState.CORRECT_BUT_WAITING : CalculationState.INCORRECT_BUT_WAITING);
+        if (state.get() == CalculationState.WAITING_FOR_ANSWER) { // make sure enough time has elapsed
+            setState(message.equals(answer.get()) ? CalculationState.CORRECT_BUT_WAITING : CalculationState.INCORRECT_BUT_WAITING);
         }
     }
 
-    @Override
+    /*@Override
     public void save(CompoundTag nbt) {
         nbt.putString("question", question);
         nbt.putString("answer", answer);
@@ -189,7 +196,7 @@ public class CalculationScript extends Script {
         timeToAnswer = nbt.getInt("time");
         state = CalculationState.values()[nbt.getInt("result")];
         ticks = nbt.getInt("ticks");
-    }
+    }*/
 
     public enum CalculationState {
         NOT_ASKED,

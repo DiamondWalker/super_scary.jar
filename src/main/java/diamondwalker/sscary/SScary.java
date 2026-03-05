@@ -24,6 +24,7 @@ public class SScary {
         SScaryItems.register(modEventBus);
         SScaryEntities.register(modEventBus);
         SScaryScripts.register(modEventBus);
+        SScaryScriptVariables.register(modEventBus);
         SScarySounds.register(modEventBus);
         SScaryDataAttachments.register(modEventBus);
 

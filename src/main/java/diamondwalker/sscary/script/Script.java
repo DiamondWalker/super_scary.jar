@@ -1,14 +1,13 @@
 package diamondwalker.sscary.script;
 
+import diamondwalker.sscary.script.variable.ScriptVariable;
 import diamondwalker.sscary.script.variable.ScriptVariableManager;
 import diamondwalker.sscary.util.ChatUtil;
-import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
 
 public abstract class Script {
     private boolean ended = false;
@@ -19,7 +18,7 @@ public abstract class Script {
     protected final RandomSource random = RandomSource.create();
     protected final boolean clientSide;
 
-    public final ScriptVariableManager variableManager = new ScriptVariableManager();
+    public final ScriptVariableManager variableManager = new ScriptVariableManager(this);
 
     private static int currentSyncId;
     private final int syncId;
@@ -61,6 +60,10 @@ public abstract class Script {
         if (!type.shouldSendToClient()) throw new IllegalStateException("This script isn't synced to the client so the sync id should be unused!");
 
         return syncId;
+    }
+
+    public void onVariableUpdate(ScriptVariable<?, ?> updatedVariable) {
+
     }
 
     public boolean isCompatibleWith(Script other) {

@@ -1,14 +1,23 @@
 package diamondwalker.sscary.script.variable;
 
+import diamondwalker.sscary.script.Script;
+import net.minecraft.nbt.CompoundTag;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScriptVariableManager {
     private final ArrayList<ScriptVariable<?, ?>> variables = new ArrayList<>();
+    private final Script script;
 
-    protected void add(ScriptVariable<?, ?> variable) {
-        for (ScriptVariable<?, ?> var : variables) if (var.saveId.equals(variable.saveId)) throw new IllegalStateException("Conflicting variable save ID: " + var.saveId);
+    public ScriptVariableManager(Script script) {
+        this.script = script;
+    }
+
+    public <T extends ScriptVariable<?, ?>> T add(T variable) {
+        for (ScriptVariable<?, ?> var : variables) if (var.saveKey.equals(variable.saveKey)) throw new IllegalStateException("Conflicting variable save ID: " + var.saveKey);
         variables.add(variable);
+        return variable;
     }
 
     public List<ScriptVariable.Update<?>> getVariablesForSync() {
@@ -27,7 +36,22 @@ public class ScriptVariableManager {
 
     public void receiveUpdates(List<ScriptVariable.Update<?>> updates) {
         for (ScriptVariable.Update<?> update : updates) {
-            variables.get(update.id).receive(update);
+            ScriptVariable<?, ?> variable = variables.get(update.id);
+            variable.receive(update);
+            script.onVariableUpdate(variable);
+            variable.markSynced();
+        }
+    }
+
+    public void writeToNBT(CompoundTag nbt) {
+        for (ScriptVariable<?, ?> var : variables) {
+            if (var.saveKey != null) var.writeToNBT(nbt);
+        }
+    }
+
+    public void readFromNBT(CompoundTag nbt) {
+        for (ScriptVariable<?, ?> var : variables) {
+            if (var.saveKey != null) var.readFromNBT(nbt);
         }
     }
 }

@@ -1,10 +1,22 @@
 package diamondwalker.sscary.script.variable;
 
+import diamondwalker.sscary.registry.SScaryScriptVariables;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.CompoundTag;
 
 public class BooleanVariable extends ScriptVariable<Boolean, BooleanVariable> {
     public BooleanVariable(ScriptVariableManager manager, boolean originalValue) {
-        super(manager, originalValue);
+        super(originalValue);
+    }
+
+    @Override
+    protected void writeToNBT(CompoundTag tag) {
+        tag.putBoolean(saveKey, get());
+    }
+
+    @Override
+    protected void readFromNBT(CompoundTag tag) {
+        set(tag.getBoolean(saveKey));
     }
 
     @Override
@@ -12,28 +24,30 @@ public class BooleanVariable extends ScriptVariable<Boolean, BooleanVariable> {
         return new Update(id, value);
     }
 
-    protected static class Update extends ScriptVariable.Update<Boolean> {
+    public static class Update extends ScriptVariable.Update<Boolean> {
         protected Update(int id, Boolean data) {
             super(id, data);
         }
 
-        protected Update(ByteBuf buf) {
+        public Update(ByteBuf buf) {
             super(buf);
         }
 
         @Override
         public void writeToBuffer(ByteBuf buffer) {
+            super.writeToBuffer(buffer);
             buffer.writeBoolean(data);
         }
 
         @Override
         public void readFromBuffer(ByteBuf buffer) {
+            super.readFromBuffer(buffer);
             data = buffer.readBoolean();
         }
 
         @Override
-        public VariableType getType() {
-            return VariableType.BOOL;
+        public ScriptVariableType getType() {
+            return SScaryScriptVariables.BOOLEAN.get();
         }
     }
 }

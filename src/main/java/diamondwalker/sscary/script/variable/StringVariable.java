@@ -3,20 +3,21 @@ package diamondwalker.sscary.script.variable;
 import diamondwalker.sscary.registry.SScaryScriptVariables;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Utf8String;
 
-public class IntegerVariable extends ScriptVariable<Integer, IntegerVariable> {
-    public IntegerVariable(int originalValue) {
+public class StringVariable extends ScriptVariable<String, StringVariable> {
+    public StringVariable(String originalValue) {
         super(originalValue);
     }
 
     @Override
     protected void writeToNBT(CompoundTag tag) {
-        tag.putInt(saveKey, get());
+        tag.putString(saveKey, get());
     }
 
     @Override
     protected void readFromNBT(CompoundTag tag) {
-        set(tag.getInt(saveKey));
+        set(tag.getString(saveKey));
     }
 
     @Override
@@ -24,8 +25,8 @@ public class IntegerVariable extends ScriptVariable<Integer, IntegerVariable> {
         return new Update(id, value);
     }
 
-    public static class Update extends ScriptVariable.Update<Integer> {
-        private Update(int id, Integer data) {
+    public static class Update extends ScriptVariable.Update<String> {
+        private Update(int id, String data) {
             super(id, data);
         }
 
@@ -36,18 +37,18 @@ public class IntegerVariable extends ScriptVariable<Integer, IntegerVariable> {
         @Override
         public void writeToBuffer(ByteBuf buffer) {
             super.writeToBuffer(buffer);
-            buffer.writeInt(data);
+            Utf8String.write(buffer, data, 32767);
         }
 
         @Override
         public void readFromBuffer(ByteBuf buffer) {
             super.readFromBuffer(buffer);
-            data = buffer.readInt();
+            data = Utf8String.read(buffer, 32767);
         }
 
         @Override
         public ScriptVariableType getType() {
-            return SScaryScriptVariables.INTEGER.get();
+            return SScaryScriptVariables.STRING.get();
         }
     }
 }
