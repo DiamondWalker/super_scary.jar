@@ -5,9 +5,8 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
-public abstract class ScriptVariable<T> {
+public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
     public static final StreamCodec<ByteBuf, List<Update<?>>> STREAM_CODEC = new StreamCodec<>() {
         public List<Update<?>> decode(ByteBuf buf) {
             List<Update<?>> list = new ArrayList<>();
@@ -49,7 +48,7 @@ public abstract class ScriptVariable<T> {
         return value;
     }
 
-    protected final void recieve(Update<?> update) {
+    protected final void receive(Update<?> update) {
         value = (T)update.data;
         markSynced();
     }
@@ -62,19 +61,19 @@ public abstract class ScriptVariable<T> {
         oldValue = value;
     }
 
-    public ScriptVariable<T> sync() {
+    public E sync() {
         shouldSync = true;
-        return this;
+        return (E)this;
     }
 
-    public ScriptVariable<T> save(String id) {
+    public E save(String id) {
         saveId = id;
-        return this;
+        return (E)this;
     }
 
     public abstract Update<T> getUpdate(int id);
 
-    protected static abstract class Update<T> {
+    public static abstract class Update<T> {
         protected int id;
         protected T data;
 

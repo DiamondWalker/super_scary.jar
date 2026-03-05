@@ -2,16 +2,19 @@ package diamondwalker.sscary.data.server;
 
 import diamondwalker.sscary.network.AddSyncedScriptPacket;
 import diamondwalker.sscary.network.RemoveSyncedScriptPacket;
+import diamondwalker.sscary.network.UpdateSyncedScriptPacket;
 import diamondwalker.sscary.registry.CustomRegistries;
 import diamondwalker.sscary.registry.SScaryScripts;
 import diamondwalker.sscary.script.Script;
 import diamondwalker.sscary.script.ScriptType;
+import diamondwalker.sscary.script.variable.ScriptVariable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NewScriptsData extends PersistentWorldData {
     private final ArrayList<Script> scripts = new ArrayList<>();
@@ -44,6 +47,8 @@ public class NewScriptsData extends PersistentWorldData {
                     PacketDistributor.sendToAllPlayers(new RemoveSyncedScriptPacket(script.getSyncId()));
                 }
             } else {
+                List<ScriptVariable.Update<?>> updates = script.variableManager.getVariablesForSync();
+                if (!updates.isEmpty()) PacketDistributor.sendToAllPlayers(new UpdateSyncedScriptPacket(script.getSyncId(), updates));
                 i++;
             }
         }

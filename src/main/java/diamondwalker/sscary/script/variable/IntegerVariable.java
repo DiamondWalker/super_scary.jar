@@ -2,7 +2,7 @@ package diamondwalker.sscary.script.variable;
 
 import io.netty.buffer.ByteBuf;
 
-public class IntegerVariable extends ScriptVariable<Integer> {
+public class IntegerVariable extends ScriptVariable<Integer, IntegerVariable> {
     public IntegerVariable(ScriptVariableManager manager, int originalValue) {
         super(manager, originalValue);
     }

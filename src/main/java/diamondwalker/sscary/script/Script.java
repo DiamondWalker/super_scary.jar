@@ -1,5 +1,6 @@
 package diamondwalker.sscary.script;
 
+import diamondwalker.sscary.script.variable.ScriptVariableManager;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +18,8 @@ public abstract class Script {
     protected final MinecraftServer server;
     protected final RandomSource random = RandomSource.create();
     protected final boolean clientSide;
+
+    public final ScriptVariableManager variableManager = new ScriptVariableManager();
 
     private static int currentSyncId;
     private final int syncId;

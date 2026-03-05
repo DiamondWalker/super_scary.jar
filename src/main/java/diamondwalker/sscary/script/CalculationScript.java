@@ -8,6 +8,7 @@ import diamondwalker.sscary.network.CalculationStatePacket;
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.registry.SScaryScripts;
+import diamondwalker.sscary.script.variable.BooleanVariable;
 import diamondwalker.sscary.util.ChatUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;

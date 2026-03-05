@@ -22,5 +22,6 @@ public class SScaryPackets {
         registrar.playToClient(CalculationStatePacket.TYPE, CalculationStatePacket.CODEC, CalculationStatePacket::handle);
         registrar.playToClient(AddSyncedScriptPacket.TYPE, AddSyncedScriptPacket.CODEC, AddSyncedScriptPacket::handle);
         registrar.playToClient(RemoveSyncedScriptPacket.TYPE, RemoveSyncedScriptPacket.CODEC, RemoveSyncedScriptPacket::handle);
+        registrar.playToClient(UpdateSyncedScriptPacket.TYPE, UpdateSyncedScriptPacket.CODEC, UpdateSyncedScriptPacket::handle);
     }
 }

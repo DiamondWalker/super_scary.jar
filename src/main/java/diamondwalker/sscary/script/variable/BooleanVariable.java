@@ -2,7 +2,7 @@ package diamondwalker.sscary.script.variable;
 
 import io.netty.buffer.ByteBuf;
 
-public class BooleanVariable extends ScriptVariable<Boolean> {
+public class BooleanVariable extends ScriptVariable<Boolean, BooleanVariable> {
     public BooleanVariable(ScriptVariableManager manager, boolean originalValue) {
         super(manager, originalValue);
     }
