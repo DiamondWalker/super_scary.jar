@@ -13,11 +13,18 @@ public class ConstructSoundInstance extends LoopingSoundInstance {
     public ConstructSoundInstance(EntityConstruct construct) {
         super(SScarySounds.CONSTRUCT.value(), construct.getSoundSource());
         this.construct = construct;
+        volume = 0.35f;
         relative = true;
     }
 
     @Override
     protected boolean shouldContinue() {
         return !construct.isRemoved() && construct.showAngeryEffects();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        pitch = 0.4f + random.nextFloat() * 1.2f;
     }
 }

@@ -4,7 +4,6 @@ import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ColorOverlayData;
 import diamondwalker.sscary.handler.internal.PlayerFallHandler;
-import diamondwalker.sscary.network.CalculationStatePacket;
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.registry.SScaryScripts;
@@ -147,10 +146,6 @@ public class CalculationScript extends Script {
     public void setState(CalculationState newState) {
         state.set(newState);
         ticks.set(0);
-
-        if (!clientSide) {
-            PacketDistributor.sendToAllPlayers(new CalculationStatePacket(getSyncId(), state.get()));
-        }
     }
 
     @Override

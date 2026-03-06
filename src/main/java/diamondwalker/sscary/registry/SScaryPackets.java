@@ -19,7 +19,6 @@ public class SScaryPackets {
         registrar.playToClient(PartyTimePacket.TYPE, PartyTimePacket.CODEC, PartyTimePacket::handle);
         registrar.playToClient(SilencePacket.TYPE, SilencePacket.CODEC, SilencePacket::handle);
         registrar.playToClient(VisageDisconnectPacket.TYPE, VisageDisconnectPacket.CODEC, VisageDisconnectPacket::handle);
-        registrar.playToClient(CalculationStatePacket.TYPE, CalculationStatePacket.CODEC, CalculationStatePacket::handle);
         registrar.playToClient(AddSyncedScriptPacket.TYPE, AddSyncedScriptPacket.CODEC, AddSyncedScriptPacket::handle);
         registrar.playToClient(RemoveSyncedScriptPacket.TYPE, RemoveSyncedScriptPacket.CODEC, RemoveSyncedScriptPacket::handle);
         registrar.playToClient(UpdateSyncedScriptPacket.TYPE, UpdateSyncedScriptPacket.CODEC, UpdateSyncedScriptPacket::handle);
