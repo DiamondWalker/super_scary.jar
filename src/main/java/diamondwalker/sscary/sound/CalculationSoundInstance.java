@@ -10,7 +10,7 @@ public class CalculationSoundInstance extends LoopingSoundInstance {
     public CalculationSoundInstance(CalculationScript script) {
         super(SScarySounds.CALCULATION_PUNISHMENT.value(), SoundSource.MASTER);
         this.script = script;
-        volume = 0.2f;
+        volume = 0.4f;
         pitch = 0.7f + random.nextFloat() * 0.6f;
         relative = true;
     }

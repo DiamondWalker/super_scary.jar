@@ -4,6 +4,7 @@ import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ColorOverlayData;
 import diamondwalker.sscary.handler.internal.PlayerFallHandler;
+import diamondwalker.sscary.network.NarratorPacket;
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.registry.SScaryScripts;
@@ -89,18 +90,18 @@ public class CalculationScript extends Script {
         if (!clientSide) {
             if (state.get() == CalculationState.NOT_ASKED) {
                 if (ticks.get() >= 40) {
-                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, question.get()));
+                    say(question.get());
                     setState(CalculationState.WAITING_FOR_ANSWER);
                 }
 
             } else if (state.get() == CalculationState.WAITING_FOR_ANSWER || state.get() == CalculationState.CORRECT_BUT_WAITING || state.get() == CalculationState.INCORRECT_BUT_WAITING) {
                 if (ticks.get() >= timeToAnswer.get()) {
                     if (state.get() == CalculationState.WAITING_FOR_ANSWER) {
-                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, "Time's up!"));
+                        say("Time's up!");
                     } else if (state.get() == CalculationState.CORRECT_BUT_WAITING) {
-                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, CORRECT_MESSAGES[random.nextInt(CORRECT_MESSAGES.length)]));
+                        say(CORRECT_MESSAGES[random.nextInt(CORRECT_MESSAGES.length)]);
                     } else {
-                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, INCORRECT_MESSAGES[random.nextInt(INCORRECT_MESSAGES.length)]));
+                        say(INCORRECT_MESSAGES[random.nextInt(INCORRECT_MESSAGES.length)]);
                     }
                     setState(state.get() != CalculationState.CORRECT_BUT_WAITING ? CalculationState.PREPARING_TO_PUNISH : CalculationState.LEAVE);
                 }
@@ -137,7 +138,7 @@ public class CalculationScript extends Script {
                 if (ticks.get() >= 40) end();
 
             } else {
-                throw new IllegalStateException("Illegal Calculation state: " + state.toString());
+                throw new IllegalStateException("Illegal Calculation state: " + state);
             }
         }
         ticks.set(ticks.get() + 1);
@@ -176,6 +177,11 @@ public class CalculationScript extends Script {
         if (state.get() == CalculationState.WAITING_FOR_ANSWER) { // make sure enough time has elapsed
             setState(message.equals(answer.get()) ? CalculationState.CORRECT_BUT_WAITING : CalculationState.INCORRECT_BUT_WAITING);
         }
+    }
+
+    private void say(String msg) {
+        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, msg));
+        PacketDistributor.sendToAllPlayers(new NarratorPacket(msg));
     }
 
     /*@Override
