@@ -10,18 +10,16 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 
-public class StaticSoundInstance extends AbstractTickableSoundInstance {
+public class StaticSoundInstance extends LoopingSoundInstance {
     public StaticSoundInstance() {
-        super(SScarySounds.STATIC.value(), SoundSource.MASTER, SoundInstance.createUnseededRandom());
-        this.looping = true;
-        this.delay = 0;
+        super(SScarySounds.STATIC.value(), SoundSource.MASTER);
+        volume = 0.5f;
+        relative = true;
     }
 
     @Override
-    public void tick() {
+    protected boolean shouldContinue() {
         StaticData data = ClientData.get().staticData;
-        if (data == null || !data.shouldPlaySound()) {
-            this.stop();
-        }
+        return data != null && data.shouldPlaySound();
     }
 }

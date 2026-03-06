@@ -23,6 +23,14 @@
       }
     ]
   },
+  "calculation_punishment": {
+    "sounds": [
+      {
+        "name": "sscary:calculation_punishment",
+        "stream": false
+      }
+    ]
+  },
   "party": {
     "sounds": [
       {

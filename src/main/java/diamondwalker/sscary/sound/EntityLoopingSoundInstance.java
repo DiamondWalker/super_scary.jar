@@ -7,28 +7,24 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 
-public abstract class EntityLoopingSoundInstance<T extends Entity> extends AbstractTickableSoundInstance {
+public abstract class EntityLoopingSoundInstance<T extends Entity> extends LoopingSoundInstance {
     protected final T entity;
 
     public EntityLoopingSoundInstance(T entity, SoundEvent p_235076_) {
-        super(p_235076_, entity.getSoundSource(), SoundInstance.createUnseededRandom());
+        super(p_235076_, entity.getSoundSource());
         this.entity = entity;
-        this.looping = true;
-        this.delay = 0;
     }
 
+    @Override
     protected boolean shouldContinue() {
         return !entity.isRemoved();
     }
 
     @Override
     public void tick() {
-        if (shouldContinue()) {
-            this.x = (float)entity.getX();
-            this.y = (float)entity.getY();
-            this.z = (float)entity.getZ();
-        } else {
-            stop();
-        }
+        super.tick();
+        this.x = (float)entity.getX();
+        this.y = (float)entity.getY();
+        this.z = (float)entity.getZ();
     }
 }

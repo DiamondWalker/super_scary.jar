@@ -15,6 +15,8 @@ public class SScarySounds {
     public static final Holder<SoundEvent> SNORE = SOUNDS.register("snore", SoundEvent::createVariableRangeEvent);
     public static final Holder<SoundEvent> WORLD_DARKEN = SOUNDS.register("world_darken", SoundEvent::createVariableRangeEvent);
 
+    public static final Holder<SoundEvent> CALCULATION_PUNISHMENT = SOUNDS.register("calculation_punishment", SoundEvent::createVariableRangeEvent);
+
     public static final Holder<SoundEvent> PARTY_START = SOUNDS.register("party_start", SoundEvent::createVariableRangeEvent);
     public static final Holder<SoundEvent> PARTY = SOUNDS.register("party", SoundEvent::createVariableRangeEvent);
 

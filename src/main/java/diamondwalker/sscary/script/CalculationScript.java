@@ -9,7 +9,9 @@ import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.registry.SScaryScripts;
 import diamondwalker.sscary.script.variable.*;
+import diamondwalker.sscary.sound.CalculationSoundInstance;
 import diamondwalker.sscary.util.ChatUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -59,7 +61,7 @@ public class CalculationScript extends Script {
     private final IntegerVariable timeToAnswer = variableManager.add(new IntegerVariable(0).save("time"));
     private final IntegerVariable ticks = variableManager.add(new IntegerVariable(0).save("ticks"));
 
-    private final EnumVariable<CalculationState> state = variableManager.add(new EnumVariable<>(CalculationState.NOT_ASKED).save("state").sync());
+    public final EnumVariable<CalculationState> state = variableManager.add(new EnumVariable<>(CalculationState.NOT_ASKED).save("state").sync());
 
     public CalculationScript(MinecraftServer server) {
         super(SScaryScripts.CALCULATION.get(), server);
@@ -163,6 +165,7 @@ public class CalculationScript extends Script {
                     return ref.state.get() == CalculationState.PUNISHMENT && !ref.hasEnded();
                 }
             };
+            Minecraft.getInstance().getSoundManager().queueTickingSound(new CalculationSoundInstance(this));
         }
     }
 

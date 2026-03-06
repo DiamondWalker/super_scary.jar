@@ -19,6 +19,7 @@ public class VisageScareSoundInstance extends AbstractTickableSoundInstance { //
         this.looping = true;
         this.delay = 0;
         this.volume = 0.0f;
+        relative = true;
     }
 
     @Override
