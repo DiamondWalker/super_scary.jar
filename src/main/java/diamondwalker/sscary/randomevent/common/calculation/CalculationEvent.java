@@ -32,7 +32,7 @@ public class CalculationEvent {
             question = QuestionProvider.generateImpossibleQuestion(random);
             data.calculation.impossibleQuestionCounter = 0;
         } else {
-            question = QuestionProvider.generateRegularQuestion(0, random);
+            question = QuestionProvider.generateRegularQuestion(data.calculation.grade, random);
         }
 
         return data.newScripts.startScript(new CalculationScript(server, question));

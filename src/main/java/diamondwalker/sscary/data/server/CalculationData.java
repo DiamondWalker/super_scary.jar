@@ -3,13 +3,20 @@ package diamondwalker.sscary.data.server;
 import net.minecraft.nbt.CompoundTag;
 
 public class CalculationData extends PersistentWorldData {
-    public String expectedAnswer = null;
-    public String givenAnswer = null;
-
     public int impossibleQuestionCounter = 0;
+
+    public int grade = 0;
+    public int score = 0;
 
     CalculationData(WorldData data) {
         super(data);
+    }
+
+    public int getScoreForGraduation() {
+        return 0;
+        /*if (grade > 0) return Integer.MAX_VALUE;
+
+        return 3 + grade;*/
     }
 
     @Override

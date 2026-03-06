@@ -3,6 +3,8 @@ package diamondwalker.sscary.script;
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ColorOverlayData;
+import diamondwalker.sscary.data.server.CalculationData;
+import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.handler.internal.PlayerFallHandler;
 import diamondwalker.sscary.network.NarratorPacket;
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
@@ -11,13 +13,28 @@ import diamondwalker.sscary.registry.SScaryScripts;
 import diamondwalker.sscary.script.variable.*;
 import diamondwalker.sscary.sound.CalculationSoundInstance;
 import diamondwalker.sscary.util.ChatUtil;
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.FireworkExplosion;
+import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.List;
 
 public class CalculationScript extends Script {
     private static final String[] CORRECT_MESSAGES = {
@@ -87,6 +104,8 @@ public class CalculationScript extends Script {
 
     @Override
     public void tick() {
+        CalculationState oldState = state.get();
+
         if (!clientSide) {
             if (state.get() == CalculationState.NOT_ASKED) {
                 if (ticks.get() >= 40) {
@@ -103,11 +122,58 @@ public class CalculationScript extends Script {
                     } else {
                         say(INCORRECT_MESSAGES[random.nextInt(INCORRECT_MESSAGES.length)]);
                     }
-                    setState(state.get() != CalculationState.CORRECT_BUT_WAITING ? CalculationState.PREPARING_TO_PUNISH : CalculationState.LEAVE);
+
+                    CalculationData data = WorldData.get(server).calculation;
+                    if (state.get() == CalculationState.CORRECT_BUT_WAITING) {
+                        data.score++;
+                        if (data.score >= data.getScoreForGraduation()) {
+                            setState(CalculationState.PREPARING_TO_GRADUATE);
+                            data.grade++;
+                            data.score = 0;
+                        } else {
+                            setState(CalculationState.LEAVE);
+                        }
+                    } else {
+                        if (data.score > 0) data.score--;
+                        setState(CalculationState.PREPARING_TO_PUNISH);
+                    }
+                }
+
+            } else if (state.get() == CalculationState.PREPARING_TO_GRADUATE) {
+                if (ticks.get() >= 60) setState(CalculationState.GRADUATION);
+
+            } else if (state.get() == CalculationState.GRADUATION) {
+                int grade = WorldData.get(server).calculation.grade;
+                if (ticks.get() == 0) {
+                    for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                        say("Congratulations, you just graduated from §e" + getGradeName(grade - 1) + "§r!");
+                        player.sendSystemMessage(Component.literal(player.getName().getString() + " is now in §e" + getGradeName(grade) + "§r")); // TODO: this should be per player
+                    }
+                } else if (random.nextInt(3) == 0) {
+                    for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                        double magnitude = 10 + random.nextDouble() * 20;
+                        double angle = random.nextDouble() * Math.PI * 2;
+
+                        BlockPos pos = BlockPos.containing(
+                                Math.cos(angle) * magnitude + player.getX(),
+                                0,
+                                Math.sin(angle) * magnitude + player.getZ()
+                        );
+                        pos = pos.atY(player.level().getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()));
+                        Vec3 spawnPos = pos.getBottomCenter();
+
+                        Level level = player.level();
+                        FireworkRocketEntity firework = new FireworkRocketEntity(level, spawnPos.x, spawnPos.y, spawnPos.z, generateFirework());
+                        level.addFreshEntity(firework);
+                    }
+                }
+                if (ticks.get() >= 180 + grade * 20) {
+                    setState(CalculationState.LEAVE);
                 }
 
             } else if (state.get() == CalculationState.PREPARING_TO_PUNISH) {
-                if (ticks.get() >= 40) setState(CalculationState.PUNISHMENT);
+                if (ticks.get() >= 60) setState(CalculationState.PUNISHMENT);
+
             } else if (state.get() == CalculationState.PUNISHMENT) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     double x = random.nextDouble() * 1.5 - 0.75;
@@ -141,7 +207,8 @@ public class CalculationScript extends Script {
                 throw new IllegalStateException("Illegal Calculation state: " + state);
             }
         }
-        ticks.set(ticks.get() + 1);
+
+        if (state.get() == oldState) ticks.set(ticks.get() + 1); // if state changed we will leave it at 0 for one tick
     }
 
     public void setState(CalculationState newState) {
@@ -181,32 +248,57 @@ public class CalculationScript extends Script {
 
     private void say(String msg) {
         chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CALCULATION_NAME, msg));
+
+        msg = msg.replaceAll("-", "minus");
+        msg = msg.replaceAll("x", "times");
+        msg = msg.replaceAll("/", "divided by");
+
+        msg = msg.replaceAll("§.", "");
+
         PacketDistributor.sendToAllPlayers(new NarratorPacket(msg));
     }
 
-    /*@Override
-    public void save(CompoundTag nbt) {
-        nbt.putString("question", question);
-        nbt.putString("answer", answer);
-        nbt.putInt("time", timeToAnswer);
-        nbt.putInt("result", state.ordinal());
-        nbt.putInt("ticks", ticks);
+    private String getGradeName(int grade) {
+        if (grade < 0) throw new IllegalStateException(grade + " is not a valid grade level!");
+        if (grade == 0) return "Kindergarten";
+
+        return grade + switch (grade) {
+            case 1 -> "st";
+            case 2 -> "nd";
+            case 3 -> "rd";
+            default -> "th";
+        } + " Grade";
     }
 
-    @Override
-    public void load(CompoundTag nbt) {
-        question = nbt.getString("question");
-        answer = nbt.getString("answer");
-        timeToAnswer = nbt.getInt("time");
-        state = CalculationState.values()[nbt.getInt("result")];
-        ticks = nbt.getInt("ticks");
-    }*/
+    private ItemStack generateFirework() {
+        IntList color = IntList.of(Util.getRandom(DyeColor.values(), random).getFireworkColor());
+        IntList fadeColor = IntList.of();
+
+        FireworkExplosion.Shape shape = Util.getRandom(FireworkExplosion.Shape.values(), random);
+        int flightTime = random.nextInt(3) + 1;
+
+        boolean trail = random.nextInt(10) == 0;
+        boolean twinkle = random.nextInt(20) == 0;
+
+        ItemStack itemstack = new ItemStack(Items.FIREWORK_ROCKET);
+        itemstack.set(
+                DataComponents.FIREWORKS,
+                new Fireworks(
+                        (byte)flightTime,
+                        List.of(new FireworkExplosion(shape, color, fadeColor, trail, twinkle))
+                )
+        );
+
+        return itemstack;
+    }
 
     public enum CalculationState {
         NOT_ASKED,
         WAITING_FOR_ANSWER,
         CORRECT_BUT_WAITING,
         INCORRECT_BUT_WAITING,
+        PREPARING_TO_GRADUATE,
+        GRADUATION,
         PREPARING_TO_PUNISH,
         PUNISHMENT,
         LEAVE
