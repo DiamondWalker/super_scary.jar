@@ -1,10 +1,12 @@
 package diamondwalker.sscary.randomevent.common.calculation;
 
+import diamondwalker.sscary.util.MathUtil;
 import net.minecraft.util.RandomSource;
 import net.neoforged.neoforge.client.event.ClientPauseChangeEvent;
 import oshi.util.tuples.Pair;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class QuestionProvider {
     protected static CalculationQuestion generateRegularQuestion(int grade, RandomSource random) {
@@ -27,9 +29,39 @@ public class QuestionProvider {
 
         int operand1 = random.nextInt(maxTerm) + 1;
         int operand2 = random.nextInt(maxTerm) + 1;
+
+        List<Integer> digits1 = MathUtil.getDigits(operand1);
+        List<Integer> digits2 = MathUtil.getDigits(operand2);
+
+        // we will be altering the digit count so we need to save this
+        int digitCount1 = digits1.size();
+        int digitCount2 = digits2.size();
+
+        while (digits1.size() != digits2.size()) {
+            ((digits1.size() < digits2.size()) ? digits1 : digits2).addFirst(0);
+        }
+
+        // TODO: test this (the digit breakdown and carryover count) because I didn't have time
+        int carryOvers = 0;
+        boolean wasLastCarryOver = false;
+        for (int i = digits1.size() - 1; i >= 0; i--) {
+            int sum = digits1.get(i) + digits2.get(i);
+            if (wasLastCarryOver) sum++;
+
+            if (sum >= 10) {
+                wasLastCarryOver = true;
+                carryOvers++;
+            } else {
+                wasLastCarryOver = false;
+            }
+        }
+
+        int extraTimeForDigits = digitCount1 + digitCount2 - 2; // simplest calculations are just 2 digit so no extra time
+        int extraTimeForCarryOvers = 3 * carryOvers; // handling carryovers takes quite a bit of brainpower so 1 carryover adds more time than 1 digit
+
         String answerString = operand1 + " + " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf(operand1 + operand2), 3 + (Math.min(operand1, operand2) - 1) / 10);
+        return new CalculationQuestion(answerString, String.valueOf(operand1 + operand2), 3 + extraTimeForDigits + extraTimeForCarryOvers);
     }
 
     private static CalculationQuestion generateSubtraction(int level, RandomSource random) {
@@ -54,9 +86,11 @@ public class QuestionProvider {
             }
         }
 
+        int time = MathUtil.min(Math.abs(operand1 - operand2), Math.abs(operand1), Math.abs(operand2));
+
         String answerString = operand1 + " - " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf(operand1 - operand2), 3 + (Math.min(Math.abs(operand1), Math.abs(operand2)) - 1) / 10);
+        return new CalculationQuestion(answerString, String.valueOf(operand1 - operand2), 3 + (time - 1) / 5);
     }
 
     private static CalculationQuestion generateMultiplication(int level, RandomSource random) {
@@ -68,13 +102,15 @@ public class QuestionProvider {
 
         int operand1 = random.nextInt(maxTerm1 - 1) + 1 + 1; // we don't want to multiply by 1 that's too easy
         int operand2 = random.nextInt(maxTerm2 - 1) + 1 + 1; // we don't want to multiply by 1 that's too easy
+        int time = 3 + (operand1 + operand2) / 10;
+
         if (level > 1) {
             if (random.nextBoolean()) operand1 = -operand1;
             if (random.nextBoolean()) operand2 = -operand2;
         }
         String answerString = operand1 + " x " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf(operand1 * operand2), 3 + Math.abs(operand1 + operand2) / 10);
+        return new CalculationQuestion(answerString, String.valueOf(operand1 * operand2), time);
     }
 
     private static CalculationQuestion generateDivision(int level, RandomSource random) {
@@ -86,11 +122,12 @@ public class QuestionProvider {
 
         int operand1 = random.nextInt(maxTerm1 - 1) + 1 + 1; // we don't want to multiply by 1 that's too easy
         int operand2 = random.nextInt(maxTerm2 - 1) + 1 + 1; // we don't want to multiply by 1 that's too easy
+        int time = 3 + (operand1 + operand2) / 10;
 
         int dividend = operand1 * operand2;
         String answerString = dividend + " / " + operand2 + " = ";
 
-        return new CalculationQuestion(answerString, String.valueOf(operand1), 3 + (operand1 + operand2) / 10);
+        return new CalculationQuestion(answerString, String.valueOf(operand1), time);
     }
 
     private static CalculationQuestion generateExponent(int level, RandomSource random) {

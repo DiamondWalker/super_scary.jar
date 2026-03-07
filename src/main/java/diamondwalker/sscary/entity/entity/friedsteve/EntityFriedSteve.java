@@ -5,7 +5,10 @@ import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.handler.internal.ShaderHandler;
 import diamondwalker.sscary.util.shader.EnumShaderLayer;
 import diamondwalker.sscary.util.shader.PostProcessingShader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -84,11 +87,25 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
             if (!level().isClientSide()) {
                 setJumpscareTime(getJumpscareTime() - 1);
             } else {
-                if (getJumpscareTime() <= 50) {
+                if (getJumpscareTime() <= 100) {
                     darknessShader.deactivate();
                     jumpscareShader.activate();
                     jumpscareShader.setUniform("ColorScale", 1.5f, 0.0f, 0.0f);
                     jumpscareShader.setUniform("Saturation", 1.5f);
+
+                    if (tickCount % 4 == 0) {
+                        String[] scareLines = new String[] {
+                                "Nowhere to run",
+                                "Your time is up",
+                                "Found you",
+                                "No escape",
+                                "This is your end",
+                                "Say your prayers"
+                        };
+                        Gui gui = Minecraft.getInstance().gui;
+                        gui.setTimes(3, 70, 20);
+                        gui.setTitle(Component.literal(scareLines[random.nextInt(scareLines.length)]));
+                    }
                 }
             }
 
@@ -126,7 +143,7 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(JUMPSCARE, 100);
+        builder.define(JUMPSCARE, 150);
         builder.define(CHASING, false);
     }
 
