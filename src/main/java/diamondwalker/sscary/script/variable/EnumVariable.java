@@ -7,9 +7,9 @@ import net.minecraft.nbt.CompoundTag;
 public class EnumVariable<T extends Enum<?>> extends ScriptVariable<T, EnumVariable<T>> {
     private final Class<T> theEnum;
 
-    public EnumVariable(T originalValue) {
-        super(originalValue);
-        theEnum = (Class<T>) originalValue.getClass();
+    protected EnumVariable(T originalValue, boolean shouldSync, String saveKey, Class<T> theEnum) {
+        super(originalValue, shouldSync, saveKey);
+        this.theEnum = theEnum;
     }
 
     @Override
@@ -58,5 +58,9 @@ public class EnumVariable<T extends Enum<?>> extends ScriptVariable<T, EnumVaria
         public ScriptVariableType getType() {
             return SScaryScriptVariables.ENUM.get();
         }
+    }
+
+    public static <T extends Enum<?>> ScriptVariable.Builder<T, EnumVariable<T>> create(Class<T> theEnum) {
+        return new ScriptVariable.Builder<>(theEnum.getEnumConstants()[0], (value, sync, key) -> new EnumVariable<>(value, sync, key, theEnum));
     }
 }

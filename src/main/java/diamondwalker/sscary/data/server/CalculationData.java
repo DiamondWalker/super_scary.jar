@@ -1,5 +1,6 @@
 package diamondwalker.sscary.data.server;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 
 public class CalculationData extends PersistentWorldData {
@@ -13,10 +14,9 @@ public class CalculationData extends PersistentWorldData {
     }
 
     public int getScoreForGraduation() {
-        return 0;
-        /*if (grade > 0) return Integer.MAX_VALUE;
+        if (grade > 12) return Integer.MAX_VALUE;
 
-        return 3 + grade;*/
+        return 3 + grade;
     }
 
     @Override
@@ -26,11 +26,15 @@ public class CalculationData extends PersistentWorldData {
 
     @Override
     public void save(CompoundTag tag) {
+        tag.putInt("grade", grade);
+        tag.putInt("score", score);
         tag.putInt("impossibleQuestionCounter", impossibleQuestionCounter);
     }
 
     @Override
     public void load(CompoundTag tag) {
+        grade = tag.getInt("grade");
+        score = tag.getInt("score");
         impossibleQuestionCounter = tag.getInt("impossibleQuestionCounter");
     }
 }

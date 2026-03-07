@@ -73,12 +73,12 @@ public class CalculationScript extends Script {
             "You will be a janitor when you grow up!"
     };
 
-    private final StringVariable question = variableManager.add(new StringVariable("").save("question"));
-    private final StringVariable answer = variableManager.add(new StringVariable("").save("answer"));
-    private final IntegerVariable timeToAnswer = variableManager.add(new IntegerVariable(0).save("time"));
-    private final IntegerVariable ticks = variableManager.add(new IntegerVariable(0).save("ticks"));
+    private final StringVariable question = StringVariable.create().save("question").define(this);
+    private final StringVariable answer = StringVariable.create().save("answer").define(this);
+    private final IntegerVariable timeToAnswer = IntegerVariable.create().save("time").define(this);
+    private final IntegerVariable ticks = IntegerVariable.create().save("ticks").define(this);
 
-    public final EnumVariable<CalculationState> state = variableManager.add(new EnumVariable<>(CalculationState.NOT_ASKED).save("state").sync());
+    public final EnumVariable<CalculationState> state = EnumVariable.create(CalculationState.class).sync().save("state").define(this);
 
     public CalculationScript(MinecraftServer server) {
         super(SScaryScripts.CALCULATION.get(), server);
@@ -260,7 +260,10 @@ public class CalculationScript extends Script {
 
     private String getGradeName(int grade) {
         if (grade < 0) throw new IllegalStateException(grade + " is not a valid grade level!");
+
         if (grade == 0) return "Kindergarten";
+
+        if (grade > 12) return "College";
 
         return grade + switch (grade) {
             case 1 -> "st";

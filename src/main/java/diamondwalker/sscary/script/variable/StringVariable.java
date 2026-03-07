@@ -6,8 +6,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Utf8String;
 
 public class StringVariable extends ScriptVariable<String, StringVariable> {
-    public StringVariable(String originalValue) {
-        super(originalValue);
+
+    protected StringVariable(String originalValue, boolean shouldSync, String saveKey) {
+        super(originalValue, shouldSync, saveKey);
     }
 
     @Override
@@ -50,5 +51,9 @@ public class StringVariable extends ScriptVariable<String, StringVariable> {
         public ScriptVariableType getType() {
             return SScaryScriptVariables.STRING.get();
         }
+    }
+
+    public static ScriptVariable.Builder<String, StringVariable> create() {
+        return new ScriptVariable.Builder<>("", StringVariable::new);
     }
 }

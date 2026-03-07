@@ -5,8 +5,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 
 public class IntegerVariable extends ScriptVariable<Integer, IntegerVariable> {
-    public IntegerVariable(int originalValue) {
-        super(originalValue);
+    protected IntegerVariable(Integer originalValue, boolean shouldSync, String saveKey) {
+        super(originalValue, shouldSync, saveKey);
     }
 
     @Override
@@ -49,5 +49,9 @@ public class IntegerVariable extends ScriptVariable<Integer, IntegerVariable> {
         public ScriptVariableType getType() {
             return SScaryScriptVariables.INTEGER.get();
         }
+    }
+
+    public static ScriptVariable.Builder<Integer, IntegerVariable> create() {
+        return new ScriptVariable.Builder<>(0, IntegerVariable::new);
     }
 }

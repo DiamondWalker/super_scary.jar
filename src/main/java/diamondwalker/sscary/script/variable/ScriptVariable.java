@@ -2,9 +2,11 @@ package diamondwalker.sscary.script.variable;
 
 import diamondwalker.sscary.registry.CustomRegistries;
 import diamondwalker.sscary.registry.SScaryScriptVariables;
+import diamondwalker.sscary.script.Script;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.StreamCodec;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +37,13 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
     protected T value;
     protected T syncedValue; // the last value that was synced to the client
 
-    protected boolean shouldSync = false;
-    protected String saveKey;
+    protected final boolean shouldSync;
+    protected final String saveKey;
 
-    protected ScriptVariable(T originalValue) {
+    protected ScriptVariable(T originalValue, boolean shouldSync, String saveKey) {
         this.value = this.syncedValue = originalValue;
+        this.shouldSync = shouldSync;
+        this.saveKey = saveKey;
     }
 
     public void set(T value) {
@@ -64,16 +68,6 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
 
     public void markSynced() {
         syncedValue = value;
-    }
-
-    public E sync() {
-        shouldSync = true;
-        return (E)this;
-    }
-
-    public E save(String id) {
-        saveKey = id;
-        return (E)this;
     }
 
     protected abstract void writeToNBT(CompoundTag tag);
@@ -108,5 +102,38 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
         }
 
         public abstract ScriptVariableType getType();
+    }
+
+    public static final class Builder<T, E extends ScriptVariable<T, ?>> {
+        protected T startingValue;
+        protected boolean sync;
+        protected String save;
+
+        private final TriFunction<T, Boolean, String, E> constructor;
+
+        protected Builder(T defaultValue, TriFunction<T, Boolean, String, E> constructor) {
+            this.constructor = constructor;
+            this.startingValue = defaultValue;
+        }
+
+        public E define(Script script) {
+            E variable = constructor.apply(startingValue, sync, save);
+            script.variableManager.add(variable);
+            return variable;
+        }
+
+        public void defaultValue(T value) {
+            startingValue = value;
+        }
+
+        public Builder<T, E> sync() {
+            sync = true;
+            return this;
+        }
+
+        public Builder<T, E> save(String saveKey) {
+            save = saveKey;
+            return this;
+        }
     }
 }

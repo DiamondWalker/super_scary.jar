@@ -5,8 +5,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 
 public class BooleanVariable extends ScriptVariable<Boolean, BooleanVariable> {
-    public BooleanVariable(ScriptVariableManager manager, boolean originalValue) {
-        super(originalValue);
+    protected BooleanVariable(Boolean originalValue, boolean shouldSync, String saveKey) {
+        super(originalValue, shouldSync, saveKey);
     }
 
     @Override
@@ -49,5 +49,9 @@ public class BooleanVariable extends ScriptVariable<Boolean, BooleanVariable> {
         public ScriptVariableType getType() {
             return SScaryScriptVariables.BOOLEAN.get();
         }
+    }
+
+    public static ScriptVariable.Builder<Boolean, BooleanVariable> create() {
+        return new ScriptVariable.Builder<>(false, BooleanVariable::new);
     }
 }

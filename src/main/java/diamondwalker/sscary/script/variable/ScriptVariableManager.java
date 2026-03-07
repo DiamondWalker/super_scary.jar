@@ -15,13 +15,12 @@ public class ScriptVariableManager {
         this.script = script;
     }
 
-    public <T extends ScriptVariable<?, ?>> T add(T variable) {
+    protected void add(ScriptVariable<?, ?> variable) {
         for (ScriptVariable<?, ?> var : variables) {
             if (var.saveKey.equals(variable.saveKey)) throw new IllegalStateException("Conflicting variable save ID: " + var.saveKey);
             if (var.saveKey.equals(NewScriptsData.TYPE_NBT_KEY)) throw new IllegalStateException("Script variable may not be called " + NewScriptsData.TYPE_NBT_KEY);
         }
         variables.add(variable);
-        return variable;
     }
 
     public List<ScriptVariable.Update<?>> getVariablesForSync(boolean getAll) {
