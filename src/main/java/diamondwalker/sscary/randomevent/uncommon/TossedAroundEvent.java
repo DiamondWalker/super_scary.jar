@@ -2,14 +2,16 @@ package diamondwalker.sscary.randomevent.uncommon;
 
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.handler.internal.PlayerFallHandler;
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
-public class TossedAroundEvent {
-    public static boolean execute(MinecraftServer server) {
+public class TossedAroundEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         boolean executed = false;
 
         RandomSource random = server.overworld().getRandom();
@@ -34,5 +36,10 @@ public class TossedAroundEvent {
         }
 
         return executed;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.UNCOMMON;
     }
 }

@@ -1,12 +1,15 @@
 package diamondwalker.sscary.randomevent.rare;
 
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
-public class JoinAndLeaveEvent {
-    public static boolean execute(MinecraftServer server) {
+public class JoinAndLeaveEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         ScriptBuilder builder = new ScriptBuilder(server, "join-leave");
 
         Component join = ChatUtil.getJoinMessage("");
@@ -32,5 +35,10 @@ public class JoinAndLeaveEvent {
         builder.startScript();
 
         return true;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.RARE;
     }
 }

@@ -1,5 +1,7 @@
 package diamondwalker.sscary.randomevent.uncommon;
 
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -10,8 +12,8 @@ import net.minecraft.world.entity.Targeting;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 
-public class HealthChangeEvent {
-    public static boolean execute(MinecraftServer server) {
+public class HealthChangeEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         RandomSource random = server.overworld().getRandom();
 
         boolean executed = false;
@@ -30,6 +32,11 @@ public class HealthChangeEvent {
         }
 
         return executed;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.UNCOMMON;
     }
 
     private static boolean isInDanger(Player player) {

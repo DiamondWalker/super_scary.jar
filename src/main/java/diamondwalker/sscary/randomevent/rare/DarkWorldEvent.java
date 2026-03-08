@@ -1,6 +1,8 @@
 package diamondwalker.sscary.randomevent.rare;
 
 import diamondwalker.sscary.network.DarkWorldPacket;
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -10,8 +12,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class DarkWorldEvent {
-    public static boolean execute(MinecraftServer server) {
+public class DarkWorldEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         boolean executed = false;
 
         RandomSource random = server.overworld().getRandom();
@@ -29,5 +31,10 @@ public class DarkWorldEvent {
         }
 
         return executed;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.RARE;
     }
 }

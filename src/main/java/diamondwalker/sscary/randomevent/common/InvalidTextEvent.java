@@ -1,6 +1,8 @@
 package diamondwalker.sscary.randomevent.common;
 
 import diamondwalker.sscary.entity.misc.nametag.EntityNametag;
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.registry.SScaryEntities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -9,8 +11,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
-public class InvalidTextEvent {
-    public static boolean execute(MinecraftServer server) {
+public class InvalidTextEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         boolean returnValue = false;
 
         ServerLevel level = server.overworld();
@@ -39,5 +41,10 @@ public class InvalidTextEvent {
         }
 
         return returnValue;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.COMMON;
     }
 }

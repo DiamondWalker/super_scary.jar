@@ -1,6 +1,8 @@
 package diamondwalker.sscary.randomevent.extrarare;
 
 import diamondwalker.sscary.network.PartyTimePacket;
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.network.chat.Component;
@@ -10,8 +12,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class PartyEvent {
-    public static boolean execute(MinecraftServer server) {
+public class PartyEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         new ScriptBuilder(server)
                 .chatMessageForAll(Component.literal("PARTY TIME!!!!"))
                 .action((serv) -> {
@@ -33,5 +35,10 @@ public class PartyEvent {
                 }))
                 .startScript();
         return true;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.EXTRA_RARE;
     }
 }

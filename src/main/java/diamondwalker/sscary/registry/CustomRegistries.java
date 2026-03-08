@@ -1,6 +1,7 @@
 package diamondwalker.sscary.registry;
 
 import diamondwalker.sscary.SScary;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.script.ScriptType;
 import diamondwalker.sscary.script.variable.ScriptVariableType;
 import net.minecraft.core.Registry;
@@ -23,9 +24,14 @@ public class CustomRegistries {
             .sync(true)
             .create();
 
+    public static final ResourceKey<Registry<RandomEvent>> RANDOM_EVENT_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "random_event"));
+    public static final Registry<RandomEvent> RANDOM_EVENT_REGISTRY = new RegistryBuilder<>(RANDOM_EVENT_REGISTRY_KEY)
+            .create();
+
     @SubscribeEvent
     private static void register(NewRegistryEvent event) {
         event.register(SCRIPT_REGISTRY);
         event.register(SCRIPT_VARIABLE_TYPE_REGISTRY);
+        event.register(RANDOM_EVENT_REGISTRY);
     }
 }

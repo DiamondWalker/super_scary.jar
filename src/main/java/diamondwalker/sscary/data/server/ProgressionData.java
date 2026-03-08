@@ -1,6 +1,6 @@
 package diamondwalker.sscary.data.server;
 
-import diamondwalker.sscary.handler.feature.RandomEventHandler;
+import diamondwalker.sscary.handler.internal.RandomEventsHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -44,7 +44,7 @@ public class ProgressionData extends PersistentWorldData {
 
         mainData.corruptedEntityBuilds.flush();
 
-        RandomEventHandler.refreshEventTime(mainData, server.overworld().getRandom());
+        RandomEventsHandler.refreshEventTime(mainData, server.overworld().getRandom());
     }
 
     public boolean hasBeenAngered() {

@@ -1,11 +1,14 @@
 package diamondwalker.sscary.randomevent.common;
 
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
@@ -20,8 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StructureSpawnEvent {
-    public static boolean execute(MinecraftServer server) {
+public class StructureSpawnEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         ServerLevel level = server.overworld();
         List<LevelChunk> chunks = WorldUtil.getBuildableChunks(level, false);
         if (chunks.isEmpty()) return false;
@@ -43,6 +46,11 @@ public class StructureSpawnEvent {
         }
 
         return false;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.COMMON;
     }
 
     private static boolean buildMonolith(ServerLevel level, LevelChunk chunk, RandomSource rand) {

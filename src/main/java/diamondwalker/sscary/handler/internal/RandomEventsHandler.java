@@ -1,28 +1,33 @@
-package diamondwalker.sscary.handler.feature;
+package diamondwalker.sscary.handler.internal;
 
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.server.WorldData;
+import diamondwalker.sscary.handler.feature.VisageHandler;
 import diamondwalker.sscary.randomevent.EnumEventRarity;
-import diamondwalker.sscary.randomevent.RandomEventRegistry;
-import diamondwalker.sscary.randomevent.RegisteredEvent;
+import diamondwalker.sscary.randomevent.RandomEvent;
+import diamondwalker.sscary.registry.CustomRegistries;
+import diamondwalker.sscary.registry.SScaryRandomEvents;
 import diamondwalker.sscary.util.MathUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
+import java.util.List;
+
 @EventBusSubscriber
-public class RandomEventHandler {
+public class RandomEventsHandler {
     @SubscribeEvent
     private static void handleServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
 
-        if (server.getPlayerList().getPlayers().stream().noneMatch((player) -> player.level().dimension() == Level.OVERWORLD)) return;
+        ServerPlayer[] validPlayers = RandomEvent.getValidPlayers(server);
+        if (validPlayers.length == 0) return;
 
         RandomSource random = server.overworld().getRandom();
         WorldData data = WorldData.get(server);
@@ -41,6 +46,7 @@ public class RandomEventHandler {
             refreshEventTime(data, random, false);
         }
 
+        System.out.println(data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent);
         if (data.randomEvents.timeSinceLastEvent >= data.randomEvents.timeForNextEvent) {
             // if visage spawn is ready, it might happen instead of the event
             if (data.visage.spawnTicks >= 20 * 60 * 8 && random.nextBoolean()) { // after 8 minutes, the visage can spawn
@@ -48,7 +54,7 @@ public class RandomEventHandler {
                 data.visage.spawnTicks = 0;
             } else {
                 // random event
-                RegisteredEvent eventPick;
+                RandomEvent eventPick;
                 do {
                 /*
                    Common - 69%
@@ -67,8 +73,10 @@ public class RandomEventHandler {
                     } else {
                         type = EnumEventRarity.COMMON;
                     }
-                    eventPick = RandomEventRegistry.getRandomEventFromRarity(type, random);
-                } while (!eventPick.function.apply(server));
+
+                    RandomEvent[] eventsForRarity = CustomRegistries.RANDOM_EVENT_REGISTRY.stream().filter((randomEvent) -> randomEvent.getRarity() == type).toArray(RandomEvent[]::new);
+                    eventPick = eventsForRarity[random.nextInt(eventsForRarity.length)];
+                } while (!eventPick.execute(server, validPlayers));
             }
 
             refreshEventTime(data, random);

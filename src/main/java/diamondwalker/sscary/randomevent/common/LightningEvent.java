@@ -1,5 +1,7 @@
 package diamondwalker.sscary.randomevent.common;
 
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -12,8 +14,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 
-public class LightningEvent {
-    public static boolean execute(MinecraftServer server) {
+public class LightningEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             ServerLevel level = player.serverLevel();
             if (level.dimension() == Level.OVERWORLD) {
@@ -53,5 +55,10 @@ public class LightningEvent {
         }
 
         return true;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.COMMON;
     }
 }

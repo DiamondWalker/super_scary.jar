@@ -3,6 +3,8 @@ package diamondwalker.sscary.randomevent.common.calculation;
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.server.CalculationData;
 import diamondwalker.sscary.data.server.WorldData;
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.script.CalculationScript;
 import diamondwalker.sscary.util.ChatUtil;
@@ -19,8 +21,8 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CalculationEvent {
-    public static boolean execute(MinecraftServer server) {
+public class CalculationEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         WorldData data = WorldData.get(server);
 
         RandomSource random = server.overworld().getRandom();
@@ -36,5 +38,10 @@ public class CalculationEvent {
         }
 
         return data.newScripts.startScript(new CalculationScript(server, question));
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.COMMON;
     }
 }

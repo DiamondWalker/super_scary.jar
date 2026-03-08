@@ -1,13 +1,15 @@
 package diamondwalker.sscary.randomevent.uncommon;
 
 import diamondwalker.sscary.network.StaticScreenPacket;
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class StaticTeleportEvent {
-    public static boolean execute(MinecraftServer server) {
+public class StaticTeleportEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] players) {
         boolean executed = false;
 
         RandomSource random = server.overworld().getRandom();
@@ -25,5 +27,10 @@ public class StaticTeleportEvent {
         }
 
         return executed;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.UNCOMMON;
     }
 }

@@ -25,11 +25,11 @@ public class SScary {
         SScaryEntities.register(modEventBus);
         SScaryScripts.register(modEventBus);
         SScaryScriptVariables.register(modEventBus);
+        SScaryRandomEvents.register(modEventBus);
         SScarySounds.register(modEventBus);
         SScaryDataAttachments.register(modEventBus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        SScaryRandomEvents.registerRandomEvents();
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         if (DEV_MODE) LOGGER.info("super_scary.jar is running in a dev environment. Debug/WIP features will be active.");

@@ -1,5 +1,7 @@
 package diamondwalker.sscary.randomevent.rare;
 
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -10,8 +12,8 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Collections;
 
-public class TouchGrassEvent {
-    public static boolean execute(MinecraftServer server) {
+public class TouchGrassEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] players) {
         boolean executed = false;
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
@@ -22,5 +24,10 @@ public class TouchGrassEvent {
         }
 
         return executed;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.RARE;
     }
 }

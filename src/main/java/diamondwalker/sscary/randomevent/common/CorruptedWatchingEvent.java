@@ -1,6 +1,8 @@
 package diamondwalker.sscary.randomevent.common;
 
 import diamondwalker.sscary.entity.entity.corrupted.EntityCorrupted;
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.registry.SScaryEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -9,8 +11,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 
-public class CorruptedWatchingEvent {
-    public static boolean execute(MinecraftServer server) {
+import java.util.Random;
+
+public class CorruptedWatchingEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         ServerLevel level = server.overworld();
         RandomSource random = level.getRandom();
         for (ServerPlayer player : level.players()) {
@@ -36,5 +40,10 @@ public class CorruptedWatchingEvent {
         }
 
         return false;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.COMMON;
     }
 }

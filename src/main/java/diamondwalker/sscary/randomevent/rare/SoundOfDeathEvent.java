@@ -1,13 +1,16 @@
 package diamondwalker.sscary.randomevent.rare;
 
 import diamondwalker.sscary.network.SilencePacket;
+import diamondwalker.sscary.randomevent.EnumEventRarity;
+import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class SoundOfDeathEvent {
-    public static boolean execute(MinecraftServer server) {
+public class SoundOfDeathEvent extends RandomEvent {
+    public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         new ScriptBuilder(server)
                 .chatMessageForAll(Component.literal("This is what death sounds like."))
                 .action((serv) -> PacketDistributor.sendToAllPlayers(new SilencePacket(true)))
@@ -15,5 +18,10 @@ public class SoundOfDeathEvent {
                 .action((serv) -> PacketDistributor.sendToAllPlayers(new SilencePacket(false)))
                 .startScript();
         return true;
+    }
+
+    @Override
+    public EnumEventRarity getRarity() {
+        return EnumEventRarity.RARE;
     }
 }
