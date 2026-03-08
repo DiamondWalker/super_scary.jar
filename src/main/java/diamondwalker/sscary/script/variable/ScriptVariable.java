@@ -122,8 +122,9 @@ public abstract class ScriptVariable<T, E extends ScriptVariable<T, ?>> {
             return variable;
         }
 
-        public void defaultValue(T value) {
+        public Builder<T, E> defaultValue(T value) {
             startingValue = value;
+            return this;
         }
 
         public Builder<T, E> sync() {

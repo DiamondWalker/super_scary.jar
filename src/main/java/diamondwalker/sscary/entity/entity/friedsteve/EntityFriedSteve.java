@@ -27,18 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class EntityFriedSteve extends Monster { // TODO: this guy should pause events
-    public static final String[] MESSAGES = new String[] {
-            "You skin is so soft. I can't wait to see it rip.",
-            "I'll make this quick.",
-            "I'm coming for you.",
-            "It'll all be over soon.",
-            "Don't struggle. It'll hurt more.",
-            "Say your prayers.",
-            "I'll be seeing you soon.",
-            "Your time is up.",
-            "This is going to be fun."
-    };
-
     private PostProcessingShader darknessShader;
     private PostProcessingShader jumpscareShader;
 
@@ -100,7 +88,9 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
                                 "Found you",
                                 "No escape",
                                 "This is your end",
-                                "Say your prayers"
+                                "Say your prayers",
+                                "Don't struggle",
+                                "Farewell"
                         };
                         Gui gui = Minecraft.getInstance().gui;
                         gui.setTimes(3, 70, 20);
@@ -159,7 +149,7 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
                 .add(Attributes.ATTACK_DAMAGE, 5);
     }
 
-    private static String getName(RandomSource random) {
+    public static String getName(RandomSource random) {
         int length = 4 + random.nextInt(7); // [4, 10]
         StringBuilder nameBuilder = new StringBuilder(length + 4);
         nameBuilder.append("§k");

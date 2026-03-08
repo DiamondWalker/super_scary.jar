@@ -1,5 +1,6 @@
 package diamondwalker.sscary.data.client;
 
+import com.google.common.collect.ImmutableList;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.registry.CustomRegistries;
 import diamondwalker.sscary.script.Script;
@@ -10,6 +11,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NewScriptsClientData {
     private final ArrayList<Script> scripts = new ArrayList<>();
@@ -38,5 +41,9 @@ public class NewScriptsClientData {
                 i++;
             }
         }
+    }
+
+    public List<Script> getScripts() {
+        return scripts.stream().toList();
     }
 }

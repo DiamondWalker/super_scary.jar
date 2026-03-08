@@ -2,6 +2,7 @@ package diamondwalker.sscary.handler.internal;
 
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.server.WorldData;
+import diamondwalker.sscary.script.Script;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,6 +42,6 @@ public class ScriptHandler {
     private static void handlePlayerChat(ServerChatEvent event) {
         WorldData data = WorldData.get(event.getPlayer().server);
 
-        data.newScripts.handleChat(event.getPlayer(), event.getMessage().getString());
+        for (Script script : data.newScripts.getScripts()) script.handleChatInput(event.getPlayer(), event.getMessage().getString());
     }
 }

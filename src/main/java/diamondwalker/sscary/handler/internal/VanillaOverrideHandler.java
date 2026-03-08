@@ -3,6 +3,7 @@ package diamondwalker.sscary.handler.internal;
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.gui.screen.ImmediatelyFastDisclaimerScreen;
+import diamondwalker.sscary.script.Script;
 import diamondwalker.sscary.sky.OverworldSpecialEffects;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.gui.screen.ConsoleScreen;
@@ -11,6 +12,7 @@ import diamondwalker.sscary.registry.SScaryMusic;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.sounds.Music;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -82,6 +84,14 @@ public class VanillaOverrideHandler {
         if (data.friedSteve != null && data.friedSteve.isChasing()) {
             event.overrideMusic(SScaryMusic.FRIED_STEVE);
             return;
+        }
+
+        for (Script script : ClientData.get().scripts.getScripts()) {
+            Music music = script.getMusic();
+            if (music != null) {
+                event.overrideMusic(music);
+                return;
+            }
         }
 
         if (data.wackyColors) {

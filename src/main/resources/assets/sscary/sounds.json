@@ -47,6 +47,14 @@
       }
     ]
   },
+  "fried_steve_prelude": {
+    "sounds": [
+      {
+        "name": "sscary:music/fried_steve_prelude",
+        "stream": true
+      }
+    ]
+  },
   "static": {
     "sounds": [
       {

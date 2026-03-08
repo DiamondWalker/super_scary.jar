@@ -21,6 +21,7 @@ public class SScarySounds {
     public static final Holder<SoundEvent> PARTY = SOUNDS.register("party", SoundEvent::createVariableRangeEvent);
 
     public static final Holder<SoundEvent> FRIED_STEVE_MUSIC = SOUNDS.register("fried_steve_music", SoundEvent::createVariableRangeEvent);
+    public static final Holder<SoundEvent> FRIED_STEVE_PRELUDE = SOUNDS.register("fried_steve_prelude", SoundEvent::createVariableRangeEvent);
 
     public static final Holder<SoundEvent> CORRUPTED_JUMPSCARE = SOUNDS.register("corrupted_jumpscare", SoundEvent::createVariableRangeEvent);
 

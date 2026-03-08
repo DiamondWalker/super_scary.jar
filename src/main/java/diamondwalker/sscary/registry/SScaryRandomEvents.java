@@ -34,6 +34,7 @@ public class SScaryRandomEvents {
     public static final Supplier<RandomEvent> ITEM_DROP = RANDOM_EVENTS.register("item_drop", ItemDropEvent::new);
     public static final Supplier<RandomEvent> STATIC_TELEPORT = RANDOM_EVENTS.register("static_teleport", StaticTeleportEvent::new);
     public static final Supplier<RandomEvent> TOSSED_AROUND = RANDOM_EVENTS.register("tossed_around", TossedAroundEvent::new);
+    public static final Supplier<RandomEvent> FRIED_STEVE = RANDOM_EVENTS.register("fried_steve", FriedSteveEvent::new);
     public static final Supplier<RandomEvent> DARK_WORLD = RANDOM_EVENTS.register("dark_world", DarkWorldEvent::new);
     public static final Supplier<RandomEvent> JOIN_AND_LEAVE = RANDOM_EVENTS.register("join_and_leave", JoinAndLeaveEvent::new);
     public static final Supplier<RandomEvent> TOUCH_GRASS = RANDOM_EVENTS.register("touch_grass", TouchGrassEvent::new);

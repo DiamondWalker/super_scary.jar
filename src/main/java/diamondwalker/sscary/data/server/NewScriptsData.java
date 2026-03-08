@@ -58,6 +58,10 @@ public class NewScriptsData extends PersistentWorldData {
         }
     }
 
+    public List<Script> getScripts() {
+        return scripts.stream().toList();
+    }
+
     public void addNewPlayer(ServerPlayer player) {
         for (Script script : scripts) {
             if (script.type.shouldSendToClient()) {
@@ -68,10 +72,6 @@ public class NewScriptsData extends PersistentWorldData {
                 ));
             }
         }
-    }
-
-    public void handleChat(ServerPlayer sender, String message) {
-        for (Script script : scripts) script.handleChatInput(sender, message);
     }
 
     @Override

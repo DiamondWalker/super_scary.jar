@@ -46,7 +46,6 @@ public class RandomEventsHandler {
             refreshEventTime(data, random, false);
         }
 
-        System.out.println(data.randomEvents.timeForNextEvent - data.randomEvents.timeSinceLastEvent);
         if (data.randomEvents.timeSinceLastEvent >= data.randomEvents.timeForNextEvent) {
             // if visage spawn is ready, it might happen instead of the event
             if (data.visage.spawnTicks >= 20 * 60 * 8 && random.nextBoolean()) { // after 8 minutes, the visage can spawn

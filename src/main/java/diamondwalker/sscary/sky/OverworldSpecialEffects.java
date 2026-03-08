@@ -2,6 +2,7 @@ package diamondwalker.sscary.sky;
 
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.handler.feature.FriedSteveHandler;
+import diamondwalker.sscary.script.Script;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import org.joml.Vector3f;
@@ -21,6 +22,10 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
             Vector3f fadeTo = new Vector3f(1.0f, 0.20f, 0.05f);
             float f = (((data.friedSteve != null && data.friedSteve.isChasing()) ? partialTicks : -partialTicks) + data.friedSteveChaseTint) / FriedSteveHandler.COLOR_FADE_TIME; // FIXME: can go over 1 or under 0 due to partial ticks
             colors.set(colors.lerp(fadeTo, f));
+        }
+
+        for (Script script : ClientData.get().scripts.getScripts()) {
+            script.modifyLightmap(level, partialTicks, skyDarken, blockLightRedFlicker, skyLight, pixelX, pixelY, colors);
         }
 
         if (data.wackyColors) {

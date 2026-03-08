@@ -83,10 +83,6 @@ public class WorldUtil {
         return null;
     }
 
-    public static BlockPos toBlockPos(Vec3 pos) {
-        return new BlockPos(Mth.floor(pos.x), Mth.floor(pos.y), Mth.floor(pos.z));
-    }
-
     public static class SignWriter {
         private final SignBlockEntity sign;
         private SignText frontText;

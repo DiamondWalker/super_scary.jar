@@ -45,7 +45,7 @@ public class BizarroDudeHandler {
                     dir = new Vec3(dir.x, 0, dir.z).normalize();
                     if (dir.lengthSqr() > 0) { // in case you're looking straight up. idk if it's possible but just to be safe
                         Vec3 spawn = player.position().add(dir.scale(2.3));
-                        BlockPos spawnPos = WorldUtil.toBlockPos(spawn);
+                        BlockPos spawnPos = BlockPos.containing(spawn);
                         Level level = player.level();
                         if (level.getBlockState(spawnPos.below()).isSolid()) {
                             EntityBizarroDude entity = SScaryEntities.BIZZARO_DUDE.get().create(level);//.spawn((ServerLevel)player.level(), spawnPos, MobSpawnType.MOB_SUMMONED);
@@ -118,7 +118,7 @@ public class BizarroDudeHandler {
                             dir = new Vec3(dir.x, 0, dir.z).normalize();
                             if (dir.lengthSqr() > 0) { // in case you're looking straight up. idk if it's possible but just to be safe
                                 Vec3 placePos = player.position().add(dir.scale(3));
-                                BlockPos placeBlock = WorldUtil.toBlockPos(placePos);
+                                BlockPos placeBlock = BlockPos.containing(placePos);
                                 BlockPos[] positionsToTry = new BlockPos[] {placeBlock, placeBlock.above(), placeBlock.below()};
 
                                 for (BlockPos placementPos : positionsToTry) {
