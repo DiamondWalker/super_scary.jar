@@ -1,5 +1,6 @@
 package diamondwalker.sscary.mobspawner;
 
+import diamondwalker.sscary.data.server.WorldData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,6 +35,8 @@ public class SurfaceEntitySpawner implements CustomSpawner {
 
     @Override
     public int tick(ServerLevel level, boolean spawnEnemies, boolean spawnFriendlies) {
+        if (!WorldData.get(level.getServer()).progression.hasBeenAngered()) return 0;
+
         if (level.isDay() ? spawnsAtDay : spawnsAtNight) {
             if (type.getCategory().isFriendly() ? spawnFriendlies : spawnEnemies) {
                 if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
