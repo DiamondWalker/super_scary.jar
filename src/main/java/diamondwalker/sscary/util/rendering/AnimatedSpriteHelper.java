@@ -143,6 +143,14 @@ public class AnimatedSpriteHelper {
         private AnimationFrame getFrame(int index) {
             return frames[index];
         }
+
+        public int getTotalAnimationTicks() {
+            int total = 0;
+            for (AnimationFrame frame : frames) {
+                total += frame.time;
+            }
+            return total;
+        }
     }
 
     private record AnimationFrame(int frameX, int frameY, int time) { }

@@ -82,7 +82,7 @@ public class EntityConstruct extends Monster {
                 if (tickCount % 3 == 0) ClientData.get().colorOverlay = new ColorOverlayData(1.0f, 0.0f, 0.0f, random.nextFloat() * 0.5f, 20) {
                     @Override
                     public boolean shouldContinue() {
-                        return super.shouldContinue() && !ref.isRemoved();
+                        return super.shouldContinue() && !ref.isRemoved() && ref.showAngeryEffects();
                     }
                 };
             }

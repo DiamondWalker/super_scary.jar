@@ -19,6 +19,7 @@ import diamondwalker.sscary.entity.entity.taker.TakerRenderer;
 import diamondwalker.sscary.entity.entity.visage.EntityVisage;
 import diamondwalker.sscary.entity.entity.visage.VisageRenderer;
 import diamondwalker.sscary.entity.projectile.pepperspray.EntityPepperSpray;
+import diamondwalker.sscary.mobspawner.SurfaceEntitySpawner;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
@@ -31,6 +32,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.level.ModifyCustomSpawnersEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -89,7 +91,7 @@ public class SScaryEntities {
             EntityWatchtower::new,
             MobCategory.CREATURE
             )
-            .sized(4.25f, 37.5f)
+            .sized(1.5f, 37.5f)
             .eyeHeight(47.3f)
             .clientTrackingRange(300)
             .build("watchtower")
@@ -150,6 +152,15 @@ public class SScaryEntities {
     private static void registerEntityRenders(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ModelTaker.LAYER_LOCATION, ModelTaker::createBodyLayer);
         event.registerLayerDefinition(ModelWatchtower.LAYER_LOCATION, ModelWatchtower::createBodyLayer);
+    }
+
+    @SubscribeEvent
+    private static void registerEntitySpawners(ModifyCustomSpawnersEvent event) {
+        if (event.getLevel().dimension() == Level.OVERWORLD) {
+            event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.WATCHTOWER.get(), 6000, false, true, 60, 100));
+            event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.CONSTRUCT.get(), 8000, false, true, 40, 80));
+
+        }
     }
 
     public static void register(IEventBus bus) {

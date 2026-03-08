@@ -1,6 +1,5 @@
 package diamondwalker.sscary.entity.entity.watchtower;
 
-import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.util.EntityUtil;
 import diamondwalker.sscary.util.rendering.AnimatedSpriteHelper;
@@ -11,22 +10,24 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.entity.PartEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class EntityWatchtower extends Monster { // TODO: maybe the eye stunning thing?
+public class EntityWatchtower extends Monster {
+    private static final EntityDataAccessor<Integer> SPAWN_TICKS = SynchedEntityData.defineId(EntityWatchtower.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DESPAWN_TICKS = SynchedEntityData.defineId(EntityWatchtower.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> WINCE_TICKS = SynchedEntityData.defineId(EntityWatchtower.class, EntityDataSerializers.INT);
 
     protected final Queue<TowerDust> dusts = new LinkedList<>();
     protected final AnimatedSpriteHelper eyeAnimationHelper = new AnimatedSpriteHelper(1, 6);
@@ -44,12 +45,31 @@ public class EntityWatchtower extends Monster { // TODO: maybe the eye stunning 
             .addFrame(0, 1, 2)
             .build();
 
-    private final AnimatedSpriteHelper.SpriteAnimation winceAnimation = eyeAnimationHelper.defineAnimation()
-            .addFrame(0, 4, 1)
+    private final AnimatedSpriteHelper.SpriteAnimation spawnAnimation = eyeAnimationHelper.defineAnimation()
+            .addFrame(0, 5, 8)
+            .addFrame(0, 4, 8)
+            .addFrame(0, 3, 8)
+            .addFrame(0, 2, 8)
+            .addFrame(0, 1, 8)
+            .nextAnimation(blinkAnimation)
             .build();
+
+    private final AnimatedSpriteHelper.SpriteAnimation winceAnimation = eyeAnimationHelper.defineAnimation()
+            .addFrame(0, 3, 1)
+            .build();
+
+    private final AnimatedSpriteHelper.SpriteAnimation winceRecoveryAnimation = eyeAnimationHelper.defineAnimation()
+            .addFrame(0, 3, 8)
+            .addFrame(0, 2, 8)
+            .addFrame(0, 1, 8)
+            .nextAnimation(blinkAnimation)
+            .build();
+
+    private final EntityWatchtowerEye eye;
 
     public EntityWatchtower(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
+        eye = new EntityWatchtowerEye(this, getBbWidth() * 4, getBbWidth() * 4);
     }
 
     @Override
@@ -70,6 +90,11 @@ public class EntityWatchtower extends Monster { // TODO: maybe the eye stunning 
 
     @Override
     public void aiStep() {
+        eye.setPos(this.position().add(0, getEyeHeight() - eye.getBbHeight() / 2, 0));
+        eye.xo = eye.xOld = eye.getX();
+        eye.yo = eye.yOld = eye.getY();
+        eye.zo = eye.zOld = eye.getZ();
+
         if (!level().isClientSide()) {
             if (isAlive() && (level().isDay() || isDespawning())) {
                 setDespawnTicks(getDespawnTicks() + 1);
@@ -111,19 +136,73 @@ public class EntityWatchtower extends Monster { // TODO: maybe the eye stunning 
         super.aiStep();
 
         if (!isDespawning()) { // not despawning
-            if (eyeAnimationHelper.getCurrentAnimation() != blinkAnimation) eyeAnimationHelper.setAnimation(blinkAnimation);
 
-            for (Player player : level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(128))) {
-                if (EntityUtil.hasLongLineOfSight(this, player, 128) && canAttack(player)) {
+            if (getSpawnTicks() < spawnAnimation.getTotalAnimationTicks()) {
+                setSpawnTicks(getSpawnTicks() + 1);
+                if (eyeAnimationHelper.getCurrentAnimation() != spawnAnimation) eyeAnimationHelper.setAnimation(spawnAnimation);
+                return;
+            }
+
+            if (getWinceTicks() > 0) {
+                if (getWinceTicks() <= winceRecoveryAnimation.getTotalAnimationTicks()) {
+                    if (eyeAnimationHelper.getCurrentAnimation() == winceAnimation) {
+                        eyeAnimationHelper.setAnimation(winceRecoveryAnimation);
+                    }
+                } else {
+                    if (eyeAnimationHelper.getCurrentAnimation() != winceAnimation) eyeAnimationHelper.setAnimation(winceAnimation);
+                }
+                setWinceTicks(getWinceTicks() - 1);
+                return;
+            }
+
+            if (eyeAnimationHelper.getCurrentAnimation() != winceRecoveryAnimation && eyeAnimationHelper.getCurrentAnimation() != blinkAnimation) {
+                eyeAnimationHelper.setAnimation(blinkAnimation);
+            }
+
+            for (Player player : level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(160))) {
+                if (EntityUtil.hasLongLineOfSight(this, player, 160) && canAttack(player)) {
                     if (!level().isClientSide()) {
                         player.hurt(SScaryDamageTypes.migraine(player, this), 3); // custom source
                     } else {
-                        eyeAnimationHelper.setAnimation(null);
+                        eyeAnimationHelper.setAnimation(blinkAnimation);
+                        eyeAnimationHelper.setFrame(0, 0);
                         player.lookAt(EntityAnchorArgument.Anchor.EYES, this.getEyePosition());
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isMultipartEntity() {
+        return true;
+    }
+
+    @Override
+    public @Nullable PartEntity<?>[] getParts() {
+        return new PartEntity[] {eye};
+    }
+
+    protected void attackEye(float damage) {
+        setWinceTicks(Math.round(damage * 10));
+    }
+
+    @Override
+    public AABB getBoundingBoxForCulling() {
+        AABB boundingBox = super.getBoundingBoxForCulling();
+        double eyeY = getEyeY();
+        if (boundingBox.maxY < eyeY) {
+            boundingBox = boundingBox.setMaxY(eyeY + (eyeY - boundingBox.maxY));
+        }
+        return boundingBox;
+    }
+
+    public void setSpawnTicks(int ticks) {
+        this.entityData.set(SPAWN_TICKS, ticks);
+    }
+
+    public int getSpawnTicks() {
+        return this.entityData.get(SPAWN_TICKS);
     }
 
     public void setDespawnTicks(int ticks) {
@@ -138,27 +217,44 @@ public class EntityWatchtower extends Monster { // TODO: maybe the eye stunning 
         return getDespawnTicks() > 0;
     }
 
+    public void setWinceTicks(int ticks) {
+        entityData.set(WINCE_TICKS, ticks);
+    }
+
+    public int getWinceTicks() {
+        return entityData.get(WINCE_TICKS);
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
+        builder.define(SPAWN_TICKS, 0);
         builder.define(DESPAWN_TICKS, 0);
+        builder.define(WINCE_TICKS, 0);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putInt("spawnTicks", getSpawnTicks());
         compound.putInt("dayDespawnTicks", getDespawnTicks());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        setSpawnTicks(compound.getInt("spawnTicks"));
         setDespawnTicks(compound.getInt("dayDespawnTicks"));
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
         return false;
+    }
+
+    @Override
+    public void setYRot(float yRot) {
+        super.setYRot(0.0f);
     }
 
     @Override
