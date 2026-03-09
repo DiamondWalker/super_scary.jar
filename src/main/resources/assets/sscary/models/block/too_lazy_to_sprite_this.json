@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "sscary:too_lazy_to_sprite_this"
+  }
+}

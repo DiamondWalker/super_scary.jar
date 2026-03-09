@@ -1,22 +1,26 @@
 {
   "block.sscary.bed.scare": "You may not rest now; there are monsters behind you",
+  "block.sscary.too_lazy_to_sprite_this": "too lazy to sprite this",
+
   "death.attack.calculation": "%1$s failed Math class",
   "death.attack.migraine": "%1$s had a killer headache",
-  "item.sscary.inventory_bug": "Inventory Bug",
-  "item.sscary.pepper_spray": "Metaphysical Pepper Spray",
+
   "entity.sscary.corrupted": "c0rrup1e3_en1i1y",
 
-  "sscary.configuration.title": "The Working-As-Intended Script Configs",
-  "sscary.configuration.displayAmbientScreenEffect": "Display Ambient Screen Effect",
+  "item.sscary.inventory_bug": "Inventory Bug",
+  "item.sscary.pepper_spray": "Metaphysical Pepper Spray",
+
   "sscary.configuration.allowVanillaMusic": "Allow Vanilla Music",
+  "sscary.configuration.commonEventChance": "Common Event Chance",
+  "sscary.configuration.displayAmbientScreenEffect": "Display Ambient Screen Effect",
+  "sscary.configuration.extraRareEventChance": "Extra-Rare Event Chance",
   "sscary.configuration.maxEventInterval": "Maximum Event Interval",
   "sscary.configuration.medEventInterval": "Median Event Interval",
   "sscary.configuration.minEventInterval": "Minimum Event Interval",
-  "sscary.configuration.commonEventChance": "Common Event Chance",
-  "sscary.configuration.uncommonEventChance": "Uncommon Event Chance",
   "sscary.configuration.rareEventChance": "Rare Event Chance",
-  "sscary.configuration.extraRareEventChance": "Extra-Rare Event Chance",
-  "sscary.configuration.ultraScaryMode": "ultra_scary mode",
   "sscary.configuration.section.twais.common.toml": "The Working-As-Intended Script Configs",
-  "sscary.configuration.section.twais.common.toml.title": "The Working-As-Intended Script Configs"
+  "sscary.configuration.section.twais.common.toml.title": "The Working-As-Intended Script Configs",
+  "sscary.configuration.title": "The Working-As-Intended Script Configs",
+  "sscary.configuration.ultraScaryMode": "ultra_scary mode",
+  "sscary.configuration.uncommonEventChance": "Uncommon Event Chance"
 }

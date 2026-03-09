@@ -2,6 +2,7 @@ package diamondwalker.sscary.randomevent.common;
 
 import diamondwalker.sscary.randomevent.EnumEventRarity;
 import diamondwalker.sscary.randomevent.RandomEvent;
+import diamondwalker.sscary.registry.SScaryBlocks;
 import diamondwalker.sscary.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +31,7 @@ public class StructureSpawnEvent extends RandomEvent {
         if (chunks.isEmpty()) return false;
 
         RandomSource random = level.getRandom();
-        int selection = random.nextInt(2); // 0 = """tower""", 1 = hole, 2 = under construction
+        int selection = random.nextInt(8);
         for (int i = 0; i < 10; i++) {
             LevelChunk selectedChunk = chunks.get(random.nextInt(chunks.size()));
             switch (selection) {
@@ -42,11 +43,37 @@ public class StructureSpawnEvent extends RandomEvent {
                     if (buildScaffold(level, selectedChunk, random)) return true;
                     break;
                 }
+                case 2: {
+                    if (buildPyramid(level, selectedChunk, random)) return true;
+                    break;
+                }
+                case 3: {
+                    if (buildCross(level, selectedChunk, random)) return true;
+                    break;
+                }
+                case 4: {
+                    if (buildTooLazy(level, selectedChunk, random)) return true;
+                    break;
+                }
+                case 5: {
+                    //if (buildHeadOnPike(level, selectedChunk, random)) return true;
+                    //break;
+                }
+                case 6: {
+                    //if (buildIlunati(level, selectedChunk, random)) return true;
+                    //break;
+                }
+                case 7: {
+                    //if (buildSmallHole(level, selectedChunk, random)) return true;
+                    //break;
+                }
             }
         }
 
         return false;
     }
+
+
 
     @Override
     public EnumEventRarity getRarity() {
@@ -251,7 +278,7 @@ public class StructureSpawnEvent extends RandomEvent {
             }
         }
 
-        HashMap<Direction, BlockPos> idealDirections = new HashMap<>();
+        /*HashMap<Direction, BlockPos> idealDirections = new HashMap<>();
         for (Direction dir : Direction.values()) {
             if (dir.getNormal().getY() == 0) { // only horizontal values
                 BlockPos pos = new BlockPos(startX + 5, 0, startZ + 5).offset(dir.getNormal().multiply(9));
@@ -286,22 +313,66 @@ public class StructureSpawnEvent extends RandomEvent {
         WorldUtil.placeSign(level, pos, dirval)
                 .setFrontLine(1, "Under")
                 .setFrontLine(2, "Construction")
-                .write();
+                .write();*/
 
         return true;
     }
 
-    private static boolean buildGrave(ServerLevel level, LevelChunk chunk, RandomSource random) {
+    private boolean buildPyramid(ServerLevel level, LevelChunk selectedChunk, RandomSource random) {
         return false;
     }
 
-    private static boolean buildHeadOnPike(ServerLevel level, LevelChunk chunk) {
-        level.setBlock(
-                new BlockPos(chunk.getPos().getMinBlockX(), 200, chunk.getPos().getMinBlockZ()),
-                Blocks.PLAYER_HEAD.defaultBlockState(),
-                2
-        );
+    private boolean buildCross(ServerLevel level, LevelChunk chunk, RandomSource random) {
+        int x = chunk.getPos().getMinBlockX() + random.nextInt(16);
+        int z = chunk.getPos().getMinBlockZ() + random.nextInt(16);
+        int y = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
+        int minY = y + 64;
+        int maxY = Math.min(y + 128, chunk.getMaxBuildHeight());
+        if (maxY >= minY) {
+            y = minY + random.nextInt((maxY - minY) + 1);
 
-        return true;
+            BlockState block;
+            int crossY;
+            if (random.nextBoolean()) {
+                // holy
+                block = Blocks.GLOWSTONE.defaultBlockState();
+                crossY = y - 1;
+            } else {
+                // unholy
+                block = Blocks.NETHERRACK.defaultBlockState();
+                crossY = y - 2;
+            }
+            for (int i = 0; i < 4; i++) {
+                level.setBlock(new BlockPos(x, y - i, z), block, 2);
+            }
+            if (random.nextBoolean()) {
+                level.setBlock(new BlockPos(x + 1, crossY, z), block, 2);
+                level.setBlock(new BlockPos(x - 1, crossY, z), block, 2);
+            } else {
+                level.setBlock(new BlockPos(x, crossY, z + 1), block, 2);
+                level.setBlock(new BlockPos(x, crossY, z - 1), block, 2);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean buildTooLazy(ServerLevel level, LevelChunk chunk, RandomSource random) {
+        int x = chunk.getPos().getMinBlockX() + random.nextInt(16);
+        int z = chunk.getPos().getMinBlockZ() + random.nextInt(16);
+        int y = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
+        int minY = y + 64;
+        int maxY = Math.min(y + 128, chunk.getMaxBuildHeight());
+        if (maxY >= minY) {
+            y = minY + random.nextInt((maxY - minY) + 1);
+
+            level.setBlock(new BlockPos(x, y, z), SScaryBlocks.TOO_LAZY_TO_SPRITE_THIS.get().defaultBlockState(), 2);
+
+            return true;
+        }
+
+        return false;
     }
 }

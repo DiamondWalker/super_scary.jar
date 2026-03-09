@@ -45,7 +45,7 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        return super.hurt(source, amount);//return false;
+        return false;
     }
 
     @Override

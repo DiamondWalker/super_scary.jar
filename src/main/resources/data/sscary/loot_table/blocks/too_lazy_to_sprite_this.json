@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "sscary:too_lazy_to_sprite_this"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "sscary:blocks/too_lazy_to_sprite_this"
+}
