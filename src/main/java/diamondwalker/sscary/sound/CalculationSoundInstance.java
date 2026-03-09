@@ -19,9 +19,4 @@ public class CalculationSoundInstance extends LoopingSoundInstance {
     protected boolean shouldContinue() {
         return !script.hasEnded() && script.state.get() == CalculationScript.CalculationState.PUNISHMENT;
     }
-
-    @Override
-    public void tick() {
-        super.tick();
-    }
 }

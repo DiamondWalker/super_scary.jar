@@ -3,16 +3,22 @@ package diamondwalker.sscary.entity.entity.friedsteve;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.handler.internal.ShaderHandler;
+import diamondwalker.sscary.registry.SScarySounds;
+import diamondwalker.sscary.sound.FriedSteveJumpscareSoundInstance;
 import diamondwalker.sscary.util.shader.EnumShaderLayer;
 import diamondwalker.sscary.util.shader.PostProcessingShader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.sounds.AbstractSoundInstance;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -54,6 +60,21 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
             darknessShader = new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "shaders/post/color.json"), EnumShaderLayer.NO_GUI, true);
             darknessShader.activate();
             darknessShader.setUniform("ColorScale", 0.0f, 0.0f, 0.0f);
+
+            Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance( // TODO: this is ugly :(
+                    SScarySounds.FRIED_STEVE_SPAWN.value().getLocation(),
+                    getSoundSource(),
+                    3.0f,
+                    0.65f,
+                    SoundInstance.createUnseededRandom(),
+                    false,
+                    0,
+                    SoundInstance.Attenuation.LINEAR,
+                    0.0,
+                    0.0,
+                    0.0,
+                    true
+            ));
         }
     }
 
@@ -75,6 +96,7 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
             if (!level().isClientSide()) {
                 setJumpscareTime(getJumpscareTime() - 1);
             } else {
+                if (getJumpscareTime() == 140) Minecraft.getInstance().getSoundManager().queueTickingSound(new FriedSteveJumpscareSoundInstance());
                 if (getJumpscareTime() <= 100) {
                     darknessShader.deactivate();
                     jumpscareShader.activate();
@@ -113,6 +135,8 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
             }
         }
     }
+
+
 
     private void setJumpscareTime(int time) {
         this.entityData.set(JUMPSCARE, time);

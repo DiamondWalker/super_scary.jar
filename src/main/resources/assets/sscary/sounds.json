@@ -55,6 +55,22 @@
       }
     ]
   },
+  "fried_steve_spawn": {
+    "sounds": [
+      {
+        "name": "sscary:entity/fried_steve/fried_steve_spawn",
+        "stream": false
+      }
+    ]
+  },
+  "fried_steve_jumpscare": {
+    "sounds": [
+      {
+        "name": "sscary:entity/fried_steve/fried_steve_jumpscare",
+        "stream": false
+      }
+    ]
+  },
   "static": {
     "sounds": [
       {

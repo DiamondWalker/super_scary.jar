@@ -108,7 +108,7 @@ public class FriedSteveScript extends Script {
 
     @Override
     public Music getMusic() {
-        if (timeElapsed.get() > timeToSummon.get() / 4) return SScaryMusic.FRIED_STEVE_PRELUDE;
+        if (timeElapsed.get() > timeToSummon.get() / 3) return SScaryMusic.FRIED_STEVE_PRELUDE;
         return null;
     }
 }
