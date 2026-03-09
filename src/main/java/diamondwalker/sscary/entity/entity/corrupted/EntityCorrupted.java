@@ -1,5 +1,6 @@
 package diamondwalker.sscary.entity.entity.corrupted;
 
+import diamondwalker.sscary.ai.LookAtFarawayPlayerGoal;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.util.ChatUtil;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class EntityCorrupted extends Mob {
-    private static final TargetingConditions LOOK_CONDITION = TargetingConditions.forNonCombat().ignoreLineOfSight();
+    private LookAtFarawayPlayerGoal lookAtPlayer;
 
     public EntityCorrupted(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
@@ -28,14 +29,19 @@ public class EntityCorrupted extends Mob {
     int delay = 0;
 
     @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, lookAtPlayer = new LookAtFarawayPlayerGoal(this));
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
 
         if (!level().isClientSide()) {
             if (tickCount > 20 * 60 * 4) this.discard();
 
-            Player player = level().getNearestPlayer(LOOK_CONDITION, this);
-            if (player != null && player.isAlive()) {
+            if (lookAtPlayer.getLookingAt() != null) {
+                Player player = lookAtPlayer.getLookingAt();
                 if (delay > 0) {
                     delay--;
                     if (delay == 0) {

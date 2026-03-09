@@ -44,6 +44,11 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
     }
 
     @Override
+    protected void registerGoals() {
+        super.registerGoals();
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         return false;
     }
@@ -94,6 +99,7 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
 
         if (getJumpscareTime() > 0) {
             if (!level().isClientSide()) {
+
                 setJumpscareTime(getJumpscareTime() - 1);
             } else {
                 if (getJumpscareTime() == 140) Minecraft.getInstance().getSoundManager().queueTickingSound(new FriedSteveJumpscareSoundInstance()); // FIXME: this just blows up your eardrums
