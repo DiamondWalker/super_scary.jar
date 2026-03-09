@@ -1,18 +1,17 @@
 package diamondwalker.sscary.ai;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 
-public class LookAtFarawayPlayerGoal extends Goal {
+public class StareAtDistantPlayerGoal extends Goal {
     private static final TargetingConditions LOOK_CONDITION = TargetingConditions.forNonCombat().ignoreLineOfSight();
 
     private Player lookingAt = null;
     private final Mob owner;
 
-    public LookAtFarawayPlayerGoal(Mob owner) {
+    public StareAtDistantPlayerGoal(Mob owner) {
         this.owner = owner;
     }
 

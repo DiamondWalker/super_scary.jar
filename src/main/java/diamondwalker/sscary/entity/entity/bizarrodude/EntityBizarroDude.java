@@ -1,6 +1,6 @@
 package diamondwalker.sscary.entity.entity.bizarrodude;
 
-import diamondwalker.sscary.ai.LookAtFarawayPlayerGoal;
+import diamondwalker.sscary.ai.StareAtDistantPlayerGoal;
 import diamondwalker.sscary.util.ChatUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -11,9 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public class EntityBizarroDude extends Mob {
@@ -28,7 +26,7 @@ public class EntityBizarroDude extends Mob {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new LookAtFarawayPlayerGoal(this));
+        this.goalSelector.addGoal(1, new StareAtDistantPlayerGoal(this));
     }
 
     @Override
