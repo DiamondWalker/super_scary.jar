@@ -56,8 +56,8 @@ public class RandomEventsHandler {
                 RandomEvent eventPick;
                 do {
                 /*
-                   Common - 69%
-                   Uncommon - 25%
+                   Common - 84%
+                   Uncommon - 10%
                    Rare - 5%
                    Extra Rare - 1%
                     */
@@ -67,11 +67,20 @@ public class RandomEventsHandler {
                         type = EnumEventRarity.EXTRA_RARE;
                     } else if (typeF < 0.06f) {
                         type = EnumEventRarity.RARE;
-                    } else if (typeF < 0.31f) {
+                    } else if (typeF < 0.16f) {
                         type = EnumEventRarity.UNCOMMON;
                     } else {
                         type = EnumEventRarity.COMMON;
                     }
+                    /*if (typeF < 0.005f) {
+                        type = EnumEventRarity.EXTRA_RARE;
+                    } else if (typeF < 0.06f) {
+                        type = EnumEventRarity.RARE;
+                    } else if (typeF < 0.31f) {
+                        type = EnumEventRarity.UNCOMMON;
+                    } else {
+                        type = EnumEventRarity.COMMON;
+                    }*/
 
                     RandomEvent[] eventsForRarity = CustomRegistries.RANDOM_EVENT_REGISTRY.stream().filter((randomEvent) -> randomEvent.getRarity() == type).toArray(RandomEvent[]::new);
                     eventPick = eventsForRarity[random.nextInt(eventsForRarity.length)];
