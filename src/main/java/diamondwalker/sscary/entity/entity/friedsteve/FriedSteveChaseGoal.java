@@ -6,13 +6,13 @@ import net.minecraft.world.entity.PathfinderMob;
 public class FriedSteveChaseGoal extends ImprovedMeleeAttackGoal {
     private final EntityFriedSteve steve;
 
-    public FriedSteveChaseGoal(PathfinderMob mob, double speedModifier) {
+    public FriedSteveChaseGoal(EntityFriedSteve mob, double speedModifier) {
         super(mob, speedModifier, true);
-        steve = (EntityFriedSteve) mob;
+        steve = mob;
     }
 
     @Override
     public boolean canUse() {
-        return steve.isChasing() && super.canUse();
+        return steve.getState() == EnumFriedSteveState.CHASING && super.canUse();
     }
 }

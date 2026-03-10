@@ -1,6 +1,7 @@
 package diamondwalker.sscary.sky;
 
 import diamondwalker.sscary.data.client.ClientData;
+import diamondwalker.sscary.entity.entity.friedsteve.EnumFriedSteveState;
 import diamondwalker.sscary.handler.feature.FriedSteveHandler;
 import diamondwalker.sscary.script.Script;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -20,7 +21,7 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
 
         if (data.friedSteveChaseTint > 0) {
             Vector3f fadeTo = new Vector3f(1.0f, 0.20f, 0.05f);
-            float f = (((data.friedSteve != null && data.friedSteve.isChasing()) ? partialTicks : -partialTicks) + data.friedSteveChaseTint) / FriedSteveHandler.COLOR_FADE_TIME; // FIXME: can go over 1 or under 0 due to partial ticks
+            float f = (((data.friedSteve != null && data.friedSteve.getState() == EnumFriedSteveState.CHASING) ? partialTicks : -partialTicks) + data.friedSteveChaseTint) / FriedSteveHandler.COLOR_FADE_TIME; // FIXME: can go over 1 or under 0 due to partial ticks
             colors.set(colors.lerp(fadeTo, f));
         }
 

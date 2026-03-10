@@ -2,6 +2,7 @@ package diamondwalker.sscary.handler.internal;
 
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
+import diamondwalker.sscary.entity.entity.friedsteve.EnumFriedSteveState;
 import diamondwalker.sscary.gui.screen.ImmediatelyFastDisclaimerScreen;
 import diamondwalker.sscary.script.Script;
 import diamondwalker.sscary.sky.OverworldSpecialEffects;
@@ -81,7 +82,7 @@ public class VanillaOverrideHandler {
     private static void stopMusic(SelectMusicEvent event) {
         ClientData data = ClientData.get();
 
-        if (data.friedSteve != null && data.friedSteve.isChasing()) {
+        if (data.friedSteve != null && data.friedSteve.getState() == EnumFriedSteveState.CHASING) {
             event.overrideMusic(SScaryMusic.FRIED_STEVE);
             return;
         }

@@ -1,6 +1,7 @@
 package diamondwalker.sscary.handler.feature;
 
 import diamondwalker.sscary.data.client.ClientData;
+import diamondwalker.sscary.entity.entity.friedsteve.EnumFriedSteveState;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -20,7 +21,7 @@ public class FriedSteveHandler {
 
         if (data.friedSteve != null && data.friedSteve.isRemoved()) data.friedSteve = null;
 
-        if (data.friedSteve != null && data.friedSteve.isChasing()) {
+        if (data.friedSteve != null && data.friedSteve.getState() == EnumFriedSteveState.CHASING) {
             if (data.friedSteveChaseTint < COLOR_FADE_TIME) data.friedSteveChaseTint++;
         } else {
             if (data.friedSteveChaseTint > 0) data.friedSteveChaseTint--;
@@ -31,7 +32,7 @@ public class FriedSteveHandler {
     private static void handleJumpscareFOV(ComputeFovModifierEvent event) {
         ClientData data = ClientData.get();
 
-        if (data.friedSteve != null && data.friedSteve.getJumpscareTime() > 0) {
+        if (data.friedSteve != null && data.friedSteve.getState() == EnumFriedSteveState.JUMPSCARE) {
             event.setNewFovModifier(event.getNewFovModifier() * (data.friedSteve.getRandom().nextFloat() * 0.4f + 0.8f));
         }
     }

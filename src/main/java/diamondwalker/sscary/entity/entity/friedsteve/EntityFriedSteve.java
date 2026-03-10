@@ -2,14 +2,12 @@ package diamondwalker.sscary.entity.entity.friedsteve;
 
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
-import diamondwalker.sscary.handler.internal.ShaderHandler;
 import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.sound.FriedSteveJumpscareSoundInstance;
 import diamondwalker.sscary.util.shader.EnumShaderLayer;
 import diamondwalker.sscary.util.shader.PostProcessingShader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.resources.sounds.AbstractSoundInstance;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -18,13 +16,11 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
@@ -33,11 +29,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class EntityFriedSteve extends Monster { // TODO: this guy should pause events
-    private PostProcessingShader darknessShader;
-    private PostProcessingShader jumpscareShader;
-
-    public static final EntityDataAccessor<Integer> JUMPSCARE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Boolean> CHASING = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
+    private int timeInState = 0;
 
     public EntityFriedSteve(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -60,12 +53,7 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
         if (level().isClientSide()) {
             ClientData.get().friedSteve = this;
 
-            jumpscareShader = new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "shaders/post/color.json"), EnumShaderLayer.EVERYTHING, true);
-
-            darknessShader = new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "shaders/post/color.json"), EnumShaderLayer.NO_GUI, true);
-            darknessShader.activate();
-            darknessShader.setUniform("ColorScale", 0.0f, 0.0f, 0.0f);
-
+            getState().activateShader();
             Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance( // TODO: this is ugly :(
                     SScarySounds.FRIED_STEVE_SPAWN.value().getLocation(),
                     getSoundSource(),
@@ -88,8 +76,7 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
         super.onRemovedFromLevel();
 
         if (level().isClientSide()) {
-            darknessShader.deactivate();
-            jumpscareShader.deactivate();
+            getState().deactivateShader();
         }
     }
 
@@ -97,19 +84,19 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
     public void aiStep() {
         super.aiStep();
 
-        if (getJumpscareTime() > 0) {
-            if (!level().isClientSide()) {
 
-                setJumpscareTime(getJumpscareTime() - 1);
-            } else {
-                if (getJumpscareTime() == 140) Minecraft.getInstance().getSoundManager().queueTickingSound(new FriedSteveJumpscareSoundInstance()); // FIXME: this just blows up your eardrums
-                if (getJumpscareTime() <= 100) {
-                    darknessShader.deactivate();
-                    jumpscareShader.activate();
-                    jumpscareShader.setUniform("ColorScale", 1.5f, 0.0f, 0.0f);
-                    jumpscareShader.setUniform("Saturation", 1.5f);
-
-                    if (tickCount % 4 == 0) {
+        timeInState++;
+        switch (getState()) {
+            case DARKNESS -> {
+                if (level().isClientSide()) {
+                    if (timeInState == 10) Minecraft.getInstance().getSoundManager().queueTickingSound(new FriedSteveJumpscareSoundInstance()); // FIXME: this just blows up your eardrums
+                } else {
+                    if (timeInState >= 50) setState(EnumFriedSteveState.JUMPSCARE);
+                }
+            }
+            case JUMPSCARE -> {
+                if (level().isClientSide()) {
+                    if (timeInState % 4 == 0) {
                         String[] scareLines = new String[] {
                                 "Nowhere to run",
                                 "Your time is up",
@@ -124,9 +111,24 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
                         gui.setTimes(3, 70, 20);
                         gui.setTitle(Component.literal(scareLines[random.nextInt(scareLines.length)]));
                     }
+                } else {
+                    if (timeInState >= 100) {
+                        // TODO: kill
+                    }
                 }
             }
+            case ANGRY -> {
+                // TODO: yap
+                if (!level().isClientSide() && timeInState >= 100) {
+                    setState(EnumFriedSteveState.CHASING);
+                }
+            }
+            case CHASING -> {
+                // TODO: chase yapping
+            }
+        }
 
+        if (getState().isPartOfJumpscare) {
             for (Entity entity : level().getEntities(this, this.getBoundingBox().inflate(50))) {
                 if (entity instanceof Player player) {
                     player.setPos(new Vec3(player.xOld, player.yOld, player.zOld));
@@ -134,42 +136,40 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
                     player.lookAt(EntityAnchorArgument.Anchor.EYES, this.getEyePosition());
                 }
             }
-        } else {
-            if (level().isClientSide()) {
-                darknessShader.deactivate();
-                jumpscareShader.deactivate();
-            }
         }
     }
 
-
-
-    private void setJumpscareTime(int time) {
-        this.entityData.set(JUMPSCARE, time);
+    public void setState(EnumFriedSteveState state) {
+        this.entityData.set(STATE, state.ordinal());
+        timeInState = 0;
     }
 
-    public int getJumpscareTime() {
-        return this.entityData.get(JUMPSCARE);
+    public EnumFriedSteveState getState() {
+        return EnumFriedSteveState.values()[this.entityData.get(STATE)];
     }
 
-    private void setChaseMode(boolean chasing) {
-        this.entityData.set(CHASING, chasing);
-    }
+    private EnumFriedSteveState oldState;
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
 
-    public boolean isChasing() {
-        return this.entityData.get(CHASING);
+        if (key.equals(STATE) && level().isClientSide()) {
+            EnumFriedSteveState newState = getState();
+            if (oldState != null) oldState.deactivateShader();
+            newState.activateShader();
+            oldState = getState();
+        }
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(JUMPSCARE, 150);
-        builder.define(CHASING, false);
+        builder.define(STATE, EnumFriedSteveState.DARKNESS.ordinal());
+        oldState = EnumFriedSteveState.DARKNESS; // default
     }
 
     public void pepperSpray() {
-        setJumpscareTime(0);
-        setChaseMode(true);
+        setState(EnumFriedSteveState.ANGRY);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
