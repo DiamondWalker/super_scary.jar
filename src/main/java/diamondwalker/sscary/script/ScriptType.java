@@ -8,6 +8,8 @@ public class ScriptType <T extends Script> {
     private final Function<MinecraftServer, T> provider;
     private final Function<Integer, T> clientProvider;
 
+    private boolean noSave = false;
+
     public ScriptType(Function<MinecraftServer, T> provider) {
         this(provider, null);
     }
@@ -15,6 +17,11 @@ public class ScriptType <T extends Script> {
     public ScriptType(Function<MinecraftServer, T> serverProvider, Function<Integer, T> clientProvider) {
         this.provider = serverProvider;
         this.clientProvider = clientProvider;
+    }
+
+    public ScriptType<T> noSave() {
+        noSave = true;
+        return this;
     }
 
     public T buildForServer(MinecraftServer server) {
@@ -28,5 +35,9 @@ public class ScriptType <T extends Script> {
 
     public boolean shouldSendToClient() {
         return clientProvider != null;
+    }
+
+    public boolean shouldSave() {
+        return !noSave;
     }
 }

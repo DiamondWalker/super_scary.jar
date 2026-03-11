@@ -14,7 +14,7 @@ public class ImprovedMeleeAttackGoal extends Goal {
     protected final PathfinderMob mob;
     private final double speedModifier;
     private final boolean followingTargetEvenIfNotSeen;
-    private Path path;
+    protected Path path;
     private double pathedTargetX;
     private double pathedTargetY;
     private double pathedTargetZ;

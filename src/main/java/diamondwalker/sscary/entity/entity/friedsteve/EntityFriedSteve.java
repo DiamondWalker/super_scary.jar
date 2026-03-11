@@ -1,9 +1,13 @@
 package diamondwalker.sscary.entity.entity.friedsteve;
 
 import diamondwalker.sscary.SScary;
+import diamondwalker.sscary.ai.StareAtDistantPlayerGoal;
 import diamondwalker.sscary.data.client.ClientData;
+import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.registry.SScarySounds;
+import diamondwalker.sscary.script.BoatExplosionScript;
 import diamondwalker.sscary.sound.FriedSteveJumpscareSoundInstance;
+import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.shader.EnumShaderLayer;
 import diamondwalker.sscary.util.shader.PostProcessingShader;
 import net.minecraft.client.Minecraft;
@@ -16,6 +20,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -23,10 +28,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.Minecart;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.w3c.dom.Attr;
 
 public class EntityFriedSteve extends Monster { // TODO: this guy should pause events
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
@@ -38,11 +48,42 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
 
     @Override
     protected void registerGoals() {
-        super.registerGoals();
+        this.goalSelector.addGoal(1, new FriedSteveChaseGoal(this, 1.0f));
+        this.goalSelector.addGoal(2, new StareAtDistantPlayerGoal(this));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, false));
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        return false;
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return false;
+    }
+
+    @Override
+    public boolean startRiding(Entity entity) {
+        if (getState() == EnumFriedSteveState.CHASING && getTarget() != null && entity instanceof VehicleEntity vehicle) {
+            MinecraftServer server = getServer();
+            LivingEntity target = getTarget();
+            Vec3 vel = target.position().add(0, target.getBbHeight() / 2, 0).subtract(vehicle.position());
+            vel = new Vec3(vel.x, 0, vel.z).normalize().scale(5);
+            vehicle.setDeltaMovement(vel.x, 0.5, vel.z);
+            vehicle.hurtMarked = true;
+            vehicle.noPhysics = true;
+            WorldData.get(server).newScripts.startScript(new BoatExplosionScript(this, vehicle, server));
+            String whatIsIt;
+            if (vehicle instanceof Boat) {
+                whatIsIt = "BOAT";
+            } else if (vehicle instanceof Minecart cart) {
+                whatIsIt = "CART";
+            } else {
+                whatIsIt = vehicle.getName().getString().toUpperCase();
+            }
+            server.getPlayerList().broadcastSystemMessage(ChatUtil.getEntityChatMessage(EntityFriedSteve.getName(random), "GET THAT GODDAMN " + whatIsIt + " OUT OF THE WAY!"), false);
+        }
         return false;
     }
 
@@ -84,8 +125,6 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
     public void aiStep() {
         super.aiStep();
 
-
-        timeInState++;
         switch (getState()) {
             case DARKNESS -> {
                 if (level().isClientSide()) {
@@ -137,6 +176,8 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
                 }
             }
         }
+
+        timeInState++;
     }
 
     public void setState(EnumFriedSteveState state) {
@@ -175,8 +216,11 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
     public static AttributeSupplier.Builder createAttributes() {
         return LivingEntity.createLivingAttributes()
                 //.add(Attributes.MAX_HEALTH, 20)
-                .add(Attributes.FOLLOW_RANGE, 20)
-                .add(Attributes.ATTACK_DAMAGE, 5);
+                .add(Attributes.FOLLOW_RANGE, 666)
+                .add(Attributes.ATTACK_DAMAGE, 5)
+                .add(Attributes.MOVEMENT_SPEED, 0.5f)
+                .add(Attributes.STEP_HEIGHT, 1.5f)
+                .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 1.0f);
     }
 
     public static String getName(RandomSource random) {

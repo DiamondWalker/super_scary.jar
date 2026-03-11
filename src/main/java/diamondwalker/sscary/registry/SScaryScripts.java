@@ -1,10 +1,8 @@
 package diamondwalker.sscary.registry;
 
 import diamondwalker.sscary.SScary;
-import diamondwalker.sscary.script.CalculationScript;
-import diamondwalker.sscary.script.FriedSteveScript;
-import diamondwalker.sscary.script.Script;
-import diamondwalker.sscary.script.ScriptType;
+import diamondwalker.sscary.script.*;
+import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -21,6 +19,11 @@ public class SScaryScripts {
     public static final Supplier<ScriptType<FriedSteveScript>> FRIED_STEVE = SCRIPTS.register(
             "fried_steve",
             () -> new ScriptType<>(FriedSteveScript::new, FriedSteveScript::new)
+    );
+
+    public static final Supplier<ScriptType<BoatExplosionScript>> BOAT_EXPLOSION = SCRIPTS.register(
+            "boat_explosion",
+            () -> new ScriptType<>((server) -> new BoatExplosionScript(null, null, server)).noSave()
     );
 
     public static void register(IEventBus bus) {

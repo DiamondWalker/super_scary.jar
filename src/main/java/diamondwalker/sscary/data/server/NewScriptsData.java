@@ -86,10 +86,12 @@ public class NewScriptsData extends PersistentWorldData {
 
         ListTag listTag = new ListTag();
         for (Script script : scripts) {
-            CompoundTag compound = new CompoundTag();
-            compound.putInt(TYPE_NBT_KEY, CustomRegistries.SCRIPT_REGISTRY.getId(script.type));
-            script.variableManager.writeToNBT(compound);
-            listTag.add(compound);
+            if (script.type.shouldSave()) {
+                CompoundTag compound = new CompoundTag();
+                compound.putInt(TYPE_NBT_KEY, CustomRegistries.SCRIPT_REGISTRY.getId(script.type));
+                script.variableManager.writeToNBT(compound);
+                listTag.add(compound);
+            }
         }
         tag.put("scripts", listTag);
     }
