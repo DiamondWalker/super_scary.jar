@@ -68,7 +68,12 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
         if (getState() == EnumFriedSteveState.CHASING && getTarget() != null && entity instanceof VehicleEntity vehicle) {
             MinecraftServer server = getServer();
             LivingEntity target = getTarget();
-            Vec3 vel = target.position().add(0, target.getBbHeight() / 2, 0).subtract(vehicle.position());
+            Vec3 vel;
+            if (target != null) {
+                vel = target.position().add(0, target.getBbHeight() / 2, 0).subtract(vehicle.position());
+            } else {
+                vel = vehicle.position().add(0, vehicle.getBbHeight() / 2, 0).subtract(this.position());
+            }
             vel = new Vec3(vel.x, 0, vel.z).normalize().scale(5);
             vehicle.setDeltaMovement(vel.x, 0.5, vel.z);
             vehicle.hurtMarked = true;
