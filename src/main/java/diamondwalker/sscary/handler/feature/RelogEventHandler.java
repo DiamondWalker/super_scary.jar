@@ -27,7 +27,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 @EventBusSubscriber
-public class BizarroDudeHandler {
+public class RelogEventHandler {
     @SubscribeEvent
     private static void handlePlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
