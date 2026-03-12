@@ -11,17 +11,13 @@
   "item.sscary.pepper_spray": "Metaphysical Pepper Spray",
 
   "sscary.configuration.allowVanillaMusic": "Allow Vanilla Music",
-  "sscary.configuration.commonEventChance": "Common Event Chance",
   "sscary.configuration.displayAmbientScreenEffect": "Display Ambient Screen Effect",
-  "sscary.configuration.extraRareEventChance": "Extra-Rare Event Chance",
   "sscary.configuration.maxEventInterval": "Maximum Event Interval",
   "sscary.configuration.medEventInterval": "Median Event Interval",
   "sscary.configuration.minEventInterval": "Minimum Event Interval",
   "sscary.configuration.quickStartup": "Quick Startup",
-  "sscary.configuration.rareEventChance": "Rare Event Chance",
-  "sscary.configuration.section.twais.common.toml": "The Working-As-Intended Script Configs",
-  "sscary.configuration.section.twais.common.toml.title": "The Working-As-Intended Script Configs",
-  "sscary.configuration.title": "The Working-As-Intended Script Configs",
-  "sscary.configuration.ultraScaryMode": "ultra_scary mode",
-  "sscary.configuration.uncommonEventChance": "Uncommon Event Chance"
+  "sscary.configuration.section.twais.common.toml": "super_scary.jar Configs",
+  "sscary.configuration.section.twais.common.toml.title": "super_scary.jar Configs",
+  "sscary.configuration.title": "super_scary.jar Configs",
+  "sscary.configuration.ultraScaryMode": "ultra_scary mode"
 }
