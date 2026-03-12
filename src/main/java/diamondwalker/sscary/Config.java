@@ -32,6 +32,10 @@ public class Config {
             .comment("Enable this if you hate yourself.")
             .define("ultraScaryMode", false);
 
+    public static final ModConfigSpec.BooleanValue QUICK_STARTUP = BUILDER
+            .comment("When true, loading times in the Phantom OS are five times shorter.")
+            .define("quickStartup", false);
+
     /*public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
             .comment("What you want the introduction message to be for the magic number")
             .define("magicNumberIntroduction", "The magic number is... ");

@@ -1,6 +1,7 @@
 package diamondwalker.sscary.gui.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.PermanentSaveData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -236,6 +237,7 @@ public class ConsoleScreen extends Screen {
     }
 
     private void queueEvent(int ticks, Runnable event) {
+        if (Config.QUICK_STARTUP.get()) ticks /= 5;
         events.add(new QueuedEvent(ticks, event));
     }
 

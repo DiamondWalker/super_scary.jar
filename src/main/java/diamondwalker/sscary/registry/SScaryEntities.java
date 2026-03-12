@@ -157,7 +157,7 @@ public class SScaryEntities {
     @SubscribeEvent
     private static void registerEntitySpawners(ModifyCustomSpawnersEvent event) {
         if (event.getLevel().dimension() == Level.OVERWORLD) {
-            event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.WATCHTOWER.get(), 6000, false, true, 60, 100));
+            event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.WATCHTOWER.get(), 18000, false, true, 60, 100));
             event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.CONSTRUCT.get(), 8000, false, true, 40, 80));
 
         }

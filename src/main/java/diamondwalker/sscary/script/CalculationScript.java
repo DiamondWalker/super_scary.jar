@@ -145,8 +145,8 @@ public class CalculationScript extends Script {
             } else if (state.get() == CalculationState.GRADUATION) {
                 int grade = WorldData.get(server).calculation.grade;
                 if (ticks.get() == 0) {
+                    say("Congratulations, you just graduated from §e" + getGradeName(grade - 1) + "§r!");
                     for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                        say("Congratulations, you just graduated from §e" + getGradeName(grade - 1) + "§r!");
                         player.sendSystemMessage(Component.literal(player.getName().getString() + " is now in §e" + getGradeName(grade) + "§r")); // TODO: this should be per player
                     }
                 } else if (random.nextInt(3) == 0) {

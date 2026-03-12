@@ -17,6 +17,7 @@
   "sscary.configuration.maxEventInterval": "Maximum Event Interval",
   "sscary.configuration.medEventInterval": "Median Event Interval",
   "sscary.configuration.minEventInterval": "Minimum Event Interval",
+  "sscary.configuration.quickStartup": "Quick Startup",
   "sscary.configuration.rareEventChance": "Rare Event Chance",
   "sscary.configuration.section.twais.common.toml": "The Working-As-Intended Script Configs",
   "sscary.configuration.section.twais.common.toml.title": "The Working-As-Intended Script Configs",

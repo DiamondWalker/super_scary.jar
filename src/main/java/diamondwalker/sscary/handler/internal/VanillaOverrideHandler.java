@@ -52,7 +52,7 @@ public class VanillaOverrideHandler {
                 }
             }
 
-            if (!changed && !SScary.DEV_MODE) {
+            if (!changed /*&& !SScary.DEV_MODE*/) {
                 changed = true;
                 event.setNewScreen(new ConsoleScreen(title));
                 return;
