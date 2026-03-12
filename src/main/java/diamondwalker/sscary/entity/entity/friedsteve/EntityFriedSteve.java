@@ -38,9 +38,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.w3c.dom.Attr;
 
-public class EntityFriedSteve extends Monster { // TODO: this guy should pause events
+public class EntityFriedSteve extends Monster {
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
-    private int timeInState = 0;
+    private static final EntityDataAccessor<Integer> TIME_IN_STATE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
 
     public EntityFriedSteve(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -130,17 +130,21 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
     public void aiStep() {
         super.aiStep();
 
+        if (!level().isClientSide()) {
+            WorldData.get(getServer()).randomEvents.timeSinceLastEvent = 0; // pause events
+        }
+
         switch (getState()) {
             case DARKNESS -> {
                 if (level().isClientSide()) {
-                    if (timeInState == 10) Minecraft.getInstance().getSoundManager().queueTickingSound(new FriedSteveJumpscareSoundInstance()); // FIXME: this just blows up your eardrums
+                    if (getTimeInState() == 10) Minecraft.getInstance().getSoundManager().queueTickingSound(new FriedSteveJumpscareSoundInstance()); // FIXME: this just blows up your eardrums
                 } else {
-                    if (timeInState >= 50) setState(EnumFriedSteveState.JUMPSCARE);
+                    if (getTimeInState() >= 50) setState(EnumFriedSteveState.JUMPSCARE);
                 }
             }
             case JUMPSCARE -> {
                 if (level().isClientSide()) {
-                    if (timeInState % 4 == 0) {
+                    if (getTimeInState() % 4 == 0) {
                         String[] scareLines = new String[] {
                                 "Nowhere to run",
                                 "Your time is up",
@@ -156,15 +160,40 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
                         gui.setTitle(Component.literal(scareLines[random.nextInt(scareLines.length)]));
                     }
                 } else {
-                    if (timeInState >= 100) {
+                    if (getTimeInState() >= 100) {
                         // TODO: kill
                     }
                 }
             }
             case ANGRY -> {
                 // TODO: yap
-                if (!level().isClientSide() && timeInState >= 100) {
-                    setState(EnumFriedSteveState.CHASING);
+                if (!level().isClientSide()) {
+                    if (getTimeInState() >= 170) setState(EnumFriedSteveState.CHASING);
+                } else {
+                    Gui gui = Minecraft.getInstance().gui;
+
+                    switch (getTimeInState()) {
+                        case 0: {
+                            gui.resetTitleTimes();
+                            gui.setTitle(Component.literal("AAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHH"));
+                            break;
+                        }
+                        case 60: {
+                            gui.resetTitleTimes();
+                            gui.setTitle(Component.literal("MY EYESSS!!!!!!"));
+                            break;
+                        }
+                        case 110: {
+                            gui.resetTitleTimes();
+                            gui.setTitle(Component.literal("You bastard!"));
+                            break;
+                        }
+                        case 160: {
+                            gui.resetTitleTimes();
+                            gui.setTitle(Component.literal("I'LL KILL YOU!!!"));
+                            break;
+                        }
+                    }
                 }
             }
             case CHASING -> {
@@ -182,16 +211,24 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
             }
         }
 
-        timeInState++;
+        setTimeInState(getTimeInState() + 1);
     }
 
     public void setState(EnumFriedSteveState state) {
         this.entityData.set(STATE, state.ordinal());
-        timeInState = 0;
+        setTimeInState(0);
     }
 
     public EnumFriedSteveState getState() {
         return EnumFriedSteveState.values()[this.entityData.get(STATE)];
+    }
+
+    public void setTimeInState(int ticks) {
+        this.entityData.set(TIME_IN_STATE, ticks);
+    }
+
+    public int getTimeInState() {
+        return this.entityData.get(TIME_IN_STATE);
     }
 
     private EnumFriedSteveState oldState;
@@ -211,11 +248,12 @@ public class EntityFriedSteve extends Monster { // TODO: this guy should pause e
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(STATE, EnumFriedSteveState.DARKNESS.ordinal());
+        builder.define(TIME_IN_STATE, 0);
         oldState = EnumFriedSteveState.DARKNESS; // default
     }
 
     public void pepperSpray() {
-        setState(EnumFriedSteveState.ANGRY);
+        if (getState() == EnumFriedSteveState.JUMPSCARE) setState(EnumFriedSteveState.ANGRY);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
