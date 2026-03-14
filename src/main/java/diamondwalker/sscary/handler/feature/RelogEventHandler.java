@@ -185,7 +185,6 @@ public class RelogEventHandler {
         WorldData data = WorldData.get(event.getServer());
         if (data.bizarro.cooldown > 0) {
             data.bizarro.cooldown--;
-            System.out.println(data.bizarro.cooldown);
         }
     }
 }

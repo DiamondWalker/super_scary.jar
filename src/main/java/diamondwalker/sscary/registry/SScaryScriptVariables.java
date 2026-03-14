@@ -15,6 +15,11 @@ public class SScaryScriptVariables {
     public static final Supplier<ScriptVariableType> STRING = SCRIPT_VARIABLE_TYPES.register("string", () -> StringVariable.Update::new);
     public static final Supplier<ScriptVariableType> ENUM = SCRIPT_VARIABLE_TYPES.register("enum", () -> EnumVariable.Update::new);
 
+    public static final Supplier<ScriptVariableType> RESOURCE_LOCATION = SCRIPT_VARIABLE_TYPES.register("resource_location", () -> ResourceLocationVariable.Update::new);
+    public static final Supplier<ScriptVariableType> BLOCK_POS = SCRIPT_VARIABLE_TYPES.register("block_pos", () -> BlockPosVariable.Update::new);
+
+    public static final Supplier<ScriptVariableType> ITEM = SCRIPT_VARIABLE_TYPES.register("item", () -> BlockPosVariable.Update::new);
+
     public static void register(IEventBus bus) {
         SCRIPT_VARIABLE_TYPES.register(bus);
     }

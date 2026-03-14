@@ -15,6 +15,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -250,6 +251,20 @@ public class EntityFriedSteve extends Monster {
         builder.define(STATE, EnumFriedSteveState.DARKNESS.ordinal());
         builder.define(TIME_IN_STATE, 0);
         oldState = EnumFriedSteveState.DARKNESS; // default
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("state", entityData.get(STATE));
+        compound.putInt("stateTime", entityData.get(TIME_IN_STATE));
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        entityData.set(STATE, compound.getInt("state"));
+        entityData.set(TIME_IN_STATE, compound.getInt("stateTime"));
     }
 
     public void pepperSpray() {

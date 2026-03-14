@@ -26,6 +26,11 @@ public class SScaryScripts {
             () -> new ScriptType<>((server) -> new BoatExplosionScript(null, null, server)).noSave()
     );
 
+    public static final Supplier<ScriptType<CorruptedMusicDiscScript>> CORRUPTED_MUSIC_DISC = SCRIPTS.register(
+            "corrupted_music_disc",
+            () -> new ScriptType<>(CorruptedMusicDiscScript::new) // TODO: when I implement locks/tags this hould be listed under corrupted_entity's
+    );
+
     public static void register(IEventBus bus) {
         SCRIPTS.register(bus);
     }

@@ -12,6 +12,7 @@
     "MixinGameRenderer"
   ],
   "mixins": [
+    "MixinJukeboxBlockEntity",
     "MixinSheep"
   ]
 }

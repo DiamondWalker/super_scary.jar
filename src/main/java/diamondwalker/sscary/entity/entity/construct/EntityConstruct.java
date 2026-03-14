@@ -40,6 +40,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -47,6 +48,7 @@ import java.util.UUID;
 public class EntityConstruct extends Monster {
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(2, new ImprovedMeleeAttackGoal(this, 2.0, false));
@@ -125,6 +127,7 @@ public class EntityConstruct extends Monster {
                 .add(Attributes.MAX_HEALTH, 100)
                 .add(Attributes.MOVEMENT_SPEED, 0.3f)
                 .add(Attributes.FOLLOW_RANGE, 15)
-                .add(Attributes.ATTACK_DAMAGE, 7);
+                .add(Attributes.ATTACK_DAMAGE, 7)
+                .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 1.0f);
     }
 }
