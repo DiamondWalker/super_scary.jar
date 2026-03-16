@@ -27,7 +27,7 @@ public class BoatExplosionScript extends Script {
         if (boat == null || boat.isRemoved()) {
             end();
         } else {
-            Vec3 vec32 = new Vec3(boat.xOld, boat.yOld, boat.zOld);
+            Vec3 vec32 = new Vec3(boat.xo, boat.yo, boat.zo);
             Vec3 vec33 = boat.position();
             HitResult hitresult = boat.level().clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, boat));
             if (hitresult.getType() != HitResult.Type.MISS) {

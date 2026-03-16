@@ -2,11 +2,13 @@ package diamondwalker.sscary.data.client;
 
 import diamondwalker.sscary.entity.entity.construct.EntityConstruct;
 import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
+import diamondwalker.sscary.entity.entity.watchtower.EntityWatchtower;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ClientData {
     public boolean slience = false;
@@ -31,6 +33,8 @@ public class ClientData {
 
     public EntityFriedSteve friedSteve = null;
     public int friedSteveChaseTint = 0;
+
+    public EntityWatchtower tower = null;
 
     public void setVisageActive(boolean active) {
         isVisageActive = active;

@@ -15,6 +15,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -43,12 +45,17 @@ public class EntityFriedSteve extends Monster {
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TIME_IN_STATE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
 
+    private static final EntityDataAccessor<BlockPos> TELEPORT_TO = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.BLOCK_POS);
+    private static final EntityDataAccessor<Boolean> TELEPORTING = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.BOOLEAN);
+
     public EntityFriedSteve(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
     }
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(1, new FriedSteveTeleportGoal(this, 20, 20, 4));
+        this.goalSelector.addGoal(1, new FriedSteveTeleportGoal(this, 60, 20, 1));
         this.goalSelector.addGoal(1, new FriedSteveChaseGoal(this, 1.0f));
         this.goalSelector.addGoal(2, new StareAtDistantPlayerGoal(this));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, false));
@@ -133,6 +140,23 @@ public class EntityFriedSteve extends Monster {
 
         if (!level().isClientSide()) {
             WorldData.get(getServer()).randomEvents.timeSinceLastEvent = 0; // pause events
+        } else {
+            // the teleport particle effects
+            BlockPos teleportPos = getTeleportingTo();
+            if (teleportPos != null) {
+                for (int i = 0; i < 3; i++) {
+                    Vec3 particlePos = teleportPos.getBottomCenter().add(random.nextDouble() - 0.5, 0, random.nextDouble() - 0.5);
+                    level().addParticle(
+                            ParticleTypes.FLAME,
+                            particlePos.x,
+                            particlePos.y,
+                            particlePos.z,
+                            0,
+                            random.nextDouble() * 0.125 + 0.1875,
+                            0
+                    );
+                }
+            }
         }
 
         switch (getState()) {
@@ -232,6 +256,27 @@ public class EntityFriedSteve extends Monster {
         return this.entityData.get(TIME_IN_STATE);
     }
 
+    public void setTeleportingTo(BlockPos pos) {
+        if (pos != null) {
+            entityData.set(TELEPORTING, true);
+            entityData.set(TELEPORT_TO, pos);
+        } else {
+            entityData.set(TELEPORTING, false);
+        }
+    }
+
+    public BlockPos getTeleportingTo() {
+        if (isTeleporting()) {
+            return entityData.get(TELEPORT_TO);
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isTeleporting() {
+        return entityData.get(TELEPORTING);
+    }
+
     private EnumFriedSteveState oldState;
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
@@ -250,6 +295,10 @@ public class EntityFriedSteve extends Monster {
         super.defineSynchedData(builder);
         builder.define(STATE, EnumFriedSteveState.DARKNESS.ordinal());
         builder.define(TIME_IN_STATE, 0);
+
+        builder.define(TELEPORT_TO, BlockPos.ZERO);
+        builder.define(TELEPORTING, false);
+
         oldState = EnumFriedSteveState.DARKNESS; // default
     }
 

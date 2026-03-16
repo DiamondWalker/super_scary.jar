@@ -1,16 +1,23 @@
 package diamondwalker.sscary.util;
 
+import diamondwalker.sscary.data.client.ClientData;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.function.Supplier;
 
 public class EntityUtil {
     public static Vec3 getEntityCenter(Entity entity) {
@@ -57,5 +64,41 @@ public class EntityUtil {
 
     public static boolean isFalling(LivingEntity entity) {
         return !entity.onGround() && !entity.isInWater() && !entity.onClimbable();
+    }
+
+    public static void forcePlayerToLookAt(Player player, LivingEntity lookAt, float multiplier) {
+        double d0 = lookAt.getX() - player.getX();
+        double d1 = lookAt.getEyeY() - player.getEyeY();
+        double d2 = lookAt.getZ() - player.getZ();
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        float newXRot = Mth.wrapDegrees((float)(-(Mth.atan2(d1, d3) * 180.0F / (float)Math.PI)));
+        float newYRot = Mth.wrapDegrees((float)(Mth.atan2(d2, d0) * 180.0F / (float)Math.PI) - 90.0F);
+
+        player.turn((newYRot - player.getYRot()) * multiplier / 0.15f, (newXRot - player.getXRot()) * multiplier / 0.15f);
+    }
+
+    public static double lookingAtEye(Player player, LivingEntity lookingAt) {
+        Vec3 eyeVector = lookingAt.getEyePosition().subtract(player.getEyePosition()).normalize();
+        Vec3 lookVector = player.getLookAngle();
+        return lookVector.dot(eyeVector);
+    }
+
+    public static boolean hasPathTo(Mob entity, LivingEntity target, int testAccuracy) {
+        Path path = entity.getNavigation().getPath();
+        if (path != null) {
+            Node node = path.getEndNode();
+            if (node != null) {
+                BlockPos pathEndPos = node.asBlockPos();
+                BlockPos targetPos = target.blockPosition();
+                if (
+                        Math.abs(pathEndPos.getX() - targetPos.getX()) <= testAccuracy &&
+                        Math.abs(pathEndPos.getY() - targetPos.getY()) <= testAccuracy &&
+                        Math.abs(pathEndPos.getZ() - targetPos.getZ()) <= testAccuracy
+                ) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

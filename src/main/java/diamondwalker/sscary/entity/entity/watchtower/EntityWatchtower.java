@@ -1,5 +1,6 @@
 package diamondwalker.sscary.entity.entity.watchtower;
 
+import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.util.EntityUtil;
 import diamondwalker.sscary.util.rendering.AnimatedSpriteHelper;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.Supplier;
 
 public class EntityWatchtower extends Monster {
     private static final EntityDataAccessor<Integer> SPAWN_TICKS = SynchedEntityData.defineId(EntityWatchtower.class, EntityDataSerializers.INT);
@@ -160,17 +162,26 @@ public class EntityWatchtower extends Monster {
             }
 
             for (Player player : level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(160))) {
-                if (EntityUtil.hasLongLineOfSight(this, player, 160) && canAttack(player)) {
+                if (canSee(player)) {
                     if (!level().isClientSide()) {
-                        player.hurt(SScaryDamageTypes.migraine(player, this), 3); // custom source
+                        if (EntityUtil.lookingAtEye(player, this) > 0.95) {
+                            player.hurt(SScaryDamageTypes.migraine(player, this), 3); // custom source
+                        }
                     } else {
                         eyeAnimationHelper.setAnimation(blinkAnimation);
                         eyeAnimationHelper.setFrame(0, 0);
-                        player.lookAt(EntityAnchorArgument.Anchor.EYES, this.getEyePosition());
+                        //player.lookAt(EntityAnchorArgument.Anchor.EYES, this.getEyePosition());
+
+                        EntityUtil.forcePlayerToLookAt(player, this, 0.15f);
+                        ClientData.get().tower = this;
                     }
                 }
             }
         }
+    }
+
+    public boolean canSee(Player player) {
+        return EntityUtil.hasLongLineOfSight(this, player, 160) && canAttack(player);
     }
 
     @Override
