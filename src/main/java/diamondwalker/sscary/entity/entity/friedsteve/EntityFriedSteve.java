@@ -2,6 +2,7 @@ package diamondwalker.sscary.entity.entity.friedsteve;
 
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.ai.StareAtDistantPlayerGoal;
+import diamondwalker.sscary.ai.TargetPlayerAnywhereGoal;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.registry.SScarySounds;
@@ -58,7 +59,8 @@ public class EntityFriedSteve extends Monster {
         this.goalSelector.addGoal(1, new FriedSteveTeleportGoal(this, 60, 20, 1));
         this.goalSelector.addGoal(1, new FriedSteveChaseGoal(this, 1.0f));
         this.goalSelector.addGoal(2, new StareAtDistantPlayerGoal(this));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, false));
+        this.targetSelector.addGoal(1, new TargetPlayerAnywhereGoal(this));
+        //this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, false));
     }
 
     @Override
@@ -108,7 +110,7 @@ public class EntityFriedSteve extends Monster {
             ClientData.get().friedSteve = this;
 
             getState().activateShader();
-            Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance( // TODO: this is ugly :(
+            Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance( // TODO: this is ugly (and also it plays whenever he gets reloaded)
                     SScarySounds.FRIED_STEVE_SPAWN.value().getLocation(),
                     getSoundSource(),
                     3.0f,

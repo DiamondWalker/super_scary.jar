@@ -28,7 +28,7 @@ public class FriedSteveTeleportGoal extends Goal {
             // if he's already teleporting, we don't start it
             // this is to prevent conflicts if we're running multiple of the tasks (which we are, for accuracy levels)
             if (!steve.isTeleporting()) {
-                if (!EntityUtil.hasPathTo(steve, steve.getTarget(), testAccuracy)) {
+                if (!EntityUtil.hasPathTo(steve, EntityUtil.findSolidGroundUnder(steve.getTarget()), testAccuracy)) {
                     if (noPathTicks++ >= triggerTime) {
                         return true;
                     } else {
@@ -45,7 +45,7 @@ public class FriedSteveTeleportGoal extends Goal {
     @Override
     public void start() {
         teleportTicks = teleportTime;
-        steve.setTeleportingTo(steve.getTarget().blockPosition());
+        steve.setTeleportingTo(EntityUtil.findSolidGroundUnder(steve.getTarget()));
     }
 
     @Override

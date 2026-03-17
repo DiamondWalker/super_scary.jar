@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
@@ -84,21 +85,37 @@ public class EntityUtil {
     }
 
     public static boolean hasPathTo(Mob entity, LivingEntity target, int testAccuracy) {
+        return hasPathTo(entity, target.blockPosition(), testAccuracy);
+    }
+
+    public static boolean hasPathTo(Mob entity, BlockPos targetPos, int testAccuracy) {
         Path path = entity.getNavigation().getPath();
         if (path != null) {
             Node node = path.getEndNode();
             if (node != null) {
                 BlockPos pathEndPos = node.asBlockPos();
-                BlockPos targetPos = target.blockPosition();
                 if (
                         Math.abs(pathEndPos.getX() - targetPos.getX()) <= testAccuracy &&
-                        Math.abs(pathEndPos.getY() - targetPos.getY()) <= testAccuracy &&
-                        Math.abs(pathEndPos.getZ() - targetPos.getZ()) <= testAccuracy
+                                Math.abs(pathEndPos.getY() - targetPos.getY()) <= testAccuracy &&
+                                Math.abs(pathEndPos.getZ() - targetPos.getZ()) <= testAccuracy
                 ) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public static BlockPos findSolidGroundUnder(Entity entity) {
+        if (entity.mainSupportingBlockPos.isPresent()) return entity.mainSupportingBlockPos.get();
+
+        Level level = entity.level();
+        BlockPos pos = entity.blockPosition();
+
+        while (pos.getY() >= level.getMinBuildHeight() && !level.getBlockState(pos).blocksMotion()) {
+            pos = pos.below();
+        }
+
+        return pos.above();
     }
 }
