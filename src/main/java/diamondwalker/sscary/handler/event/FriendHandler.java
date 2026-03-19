@@ -90,7 +90,7 @@ public class FriendHandler {
                 String question = message.substring(i, message.length() - 1);
                 if (question.equalsIgnoreCase("where are you")) {
                     sequence
-                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "What an odd question. I am in " + server.getWorldData().getLevelName() + ". How else would I be speaking to you?"))
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "What a bizarre question. I am in " + server.getWorldData().getLevelName() + ". How else would I be speaking to you?"))
                             .startScript();
                 } else if (question.equalsIgnoreCase("who are you")) {
                     sequence
@@ -98,19 +98,59 @@ public class FriendHandler {
                             .startScript();
                 } else if (question.toLowerCase().matches("how are you( feelin[g']?)?")) {
                     sequence
-                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Irritated. Do you intend on asking anything meaningful, or will you continue to waste my time with idle chatter?"))
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Irritated, thank you for asking. Do you intend on asking me anything meaningful, or will you continue to waste my time with idle chatter?"))
                             .startScript();
                 } else if (question.toLowerCase().matches("how are you doin([g'])?")) {
                     sequence
-                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Feeling irritated. Do you intend on asking anything meaningful, or will you continue to waste my time with idle chatter?"))
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "I'm feeling irritated, thank you for asking. Do you intend on asking me anything meaningful, or will you continue to waste my time with idle chatter?"))
                             .startScript();
-                } else if (question.toLowerCase().matches("why are you( being)?( so)? rude")) {
+                } else if (question.toLowerCase().matches("why are you( so)? rude")) {
                     sequence
                             .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "I'm not rude. I'm honest. There's a difference."))
                             .rest(65)
-                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Perhaps if you were slightly more intelligent, you would understand."))
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Perhaps if you were slightly more intelligent, you would be able to recognize it."))
                             .rest(30)
                             .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.FRIEND_NAME))
+                            .action((serv) -> {
+                                WorldData.get(serv).friend.friendLeft = true;
+                                WorldData.get(serv).friend.friendDislikesYou = true;
+                            })
+                            .startScript();
+                } else if (question.toLowerCase().matches("why are you being( so)? rude(.+)?")) {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "I'm not being rude. I'm being honest. There's a difference."))
+                            .rest(65)
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Perhaps if you were slightly more intelligent, you would be able to recognize it."))
+                            .rest(30)
+                            .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.FRIEND_NAME))
+                            .action((serv) -> {
+                                WorldData.get(serv).friend.friendLeft = true;
+                                WorldData.get(serv).friend.friendDislikesYou = true;
+                            })
+                            .startScript();
+                } else if (question.toLowerCase().matches("why are you( being)?( such)? an asshole(.+)?")) {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Saying the truth doesn't make me an asshole."))
+                            .rest(65)
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Not my fault if I offend stupid people."))
+                            .rest(30)
+                            .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.FRIEND_NAME))
+                            .action((serv) -> {
+                                WorldData.get(serv).friend.friendLeft = true;
+                                WorldData.get(serv).friend.friendDislikesYou = true;
+                            })
+                            .startScript();
+                } else if (question.toLowerCase().matches("why are you( being)?( such)? a dick(.+)?")) {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Saying the truth doesn't make me a dick."))
+                            .rest(65)
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Not my fault if I offend stupid people."))
+                            .rest(30)
+                            .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.FRIEND_NAME))
+                            .action((serv) -> {
+                                WorldData.get(serv).friend.friendLeft = true;
+                                WorldData.get(serv).friend.friendDislikesYou = true;
+                            })
                             .startScript();
                 } else {
                     sequence

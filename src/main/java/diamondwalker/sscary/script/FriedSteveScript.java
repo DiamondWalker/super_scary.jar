@@ -30,6 +30,8 @@ public class FriedSteveScript extends Script {
             "You skin is so soft. I can't wait to see it rip.",
             "I'll make this quick.",
             "I'm coming for you.",
+            "You shouldn't have come here.",
+            "Tonight I will be bathing in your blood."
     };
 
     private final IntegerVariable timeElapsed = IntegerVariable.create().save("ticks").sync().define(this);

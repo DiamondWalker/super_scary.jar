@@ -15,6 +15,8 @@ public class WorldData extends SavedData {
     public final ScriptData scripts = new ScriptData();
     public final FriendData friend = new FriendData(this);
 
+    public final NaNData nan = new NaNData(this);
+
     public final NewScriptsData newScripts = new NewScriptsData(this);
     public final CalculationData calculation = new CalculationData(this);
 

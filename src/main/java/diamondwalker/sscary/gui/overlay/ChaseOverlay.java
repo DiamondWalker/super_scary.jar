@@ -32,11 +32,12 @@ public class ChaseOverlay implements LayeredDraw.Layer {
             dist = Math.clamp((dist - 2) / 32, 0, 1);
             int steveX = (int)Math.round(Mth.lerp(1 - dist, startX, endX));
             guiGraphics.blit(TEXTURE, xMin, y - 5, 0, 0, 201, 10, 201, 10);
+
             guiGraphics.blit(player.getSkin().texture(), endX - 6, y - 6, 12, 12, 8, 8, 8, 8, 64, 64);
+            guiGraphics.blit(player.getSkin().texture(), endX - 6, y - 6, 12, 12, 40, 8, 8, 8, 64, 64);
+
             guiGraphics.blit(FRIED_STEVE_TEXTURE, steveX - 6, y - 6, 12, 12, 8, 8, 8, 8, 64, 64);
-            //guiGraphics.blit(player.getSkin().texture(), 64, 64, 8, 8, endX - 4, y - 4, 8, 8);
-            //guiGraphics.fill(steveX - 4, y - 4, steveX + 4, y + 4, FastColor.ARGB32.color(250, 100, 0));
-            //guiGraphics.fill(endX - 4, y - 4, endX + 4, y + 4, FastColor.ARGB32.color(255, 255, 255));
+            guiGraphics.blit(FRIED_STEVE_TEXTURE, steveX - 6, y - 6, 12, 12, 40, 8, 8, 8, 64, 64);
         }
     }
 }

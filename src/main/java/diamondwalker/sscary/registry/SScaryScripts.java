@@ -31,6 +31,11 @@ public class SScaryScripts {
             () -> new ScriptType<>(CorruptedMusicDiscScript::new) // TODO: when I implement locks/tags this hould be listed under corrupted_entity's
     );
 
+    public static final Supplier<ScriptType<NaNOffendedScript>> NAN_OFFENDED = SCRIPTS.register(
+            "nan_offended",
+            () -> new ScriptType<>(NaNOffendedScript::new)
+    );
+
     public static void register(IEventBus bus) {
         SCRIPTS.register(bus);
     }
