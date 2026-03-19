@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundSource;
 public class FriedSteveJumpscareSoundInstance extends LoopingSoundInstance {
     public FriedSteveJumpscareSoundInstance() {
         super(SScarySounds.FRIED_STEVE_JUMPSCARE.value(), SoundSource.HOSTILE);
-        volume = 0.1f;
+        volume = 0.2f;
     }
 
     @Override

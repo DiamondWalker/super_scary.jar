@@ -19,7 +19,7 @@ public class FriendHandler {
         if (!data.friend.friendJoined && data.progression.getTimeInWorld() == 9_600L && !data.progression.hasBeenAngered()) {
             new ScriptBuilder(server, "friend")
                     .action((serv) -> WorldData.get(serv).friend.friendJoined = true)
-                    .chatMessageForAll(ChatUtil.getJoinMessage("Friend"))
+                    .chatMessageForAll(ChatUtil.getJoinMessage(ChatUtil.FRIEND_NAME))
                     .rest(100)
                     .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Hello! I am your §efriend§r! I am here to help you in any way I can."))
                     .rest(60)
@@ -73,16 +73,56 @@ public class FriendHandler {
                         .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Friend, §lCOMMA§r, and §othen§r ask your question. I refuse to help people who type like neanderthals."))
                         .action((serv) -> WorldData.get(serv).friend.friendDislikesYou = true)
                         .startScript();
-            } else {
+            } else if (!message.matches(", ?([a-z]|I ).+")) {
                 sequence
-                        .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "How the hell am I supposed to know?!"))
-                        .rest(30)
-                        .chatMessageForAll(ChatUtil.getLeaveMessage("Friend"))
-                        .action((serv) -> {
-                            WorldData.get(serv).friend.friendLeft = true;
-                            WorldData.get(serv).friend.friendDislikesYou = true;
-                        })
+                        .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "You do not capitalize after a comma. Good god..."))
+                        .action((serv) -> WorldData.get(serv).friend.friendDislikesYou = true)
                         .startScript();
+            } else {
+                int i = 0;
+                while (i < message.length()) {
+                    if (Character.isLetter(message.charAt(i))) {
+                        break;
+                    }
+                    i++;
+                }
+                // the "...what?" response already verifies we have characters so we don't have to check
+                String question = message.substring(i, message.length() - 1);
+                if (question.equalsIgnoreCase("where are you")) {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "What an odd question. I am in " + server.getWorldData().getLevelName() + ". How else would I be speaking to you?"))
+                            .startScript();
+                } else if (question.equalsIgnoreCase("who are you")) {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Are you illiterate? I already introduced myself."))
+                            .startScript();
+                } else if (question.toLowerCase().matches("how are you( feelin[g']?)?")) {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Irritated. Do you intend on asking anything meaningful, or will you continue to waste my time with idle chatter?"))
+                            .startScript();
+                } else if (question.toLowerCase().matches("how are you doin([g'])?")) {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Feeling irritated. Do you intend on asking anything meaningful, or will you continue to waste my time with idle chatter?"))
+                            .startScript();
+                } else if (question.toLowerCase().matches("why are you( being)?( so)? rude")) {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "I'm not rude. I'm honest. There's a difference."))
+                            .rest(65)
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Perhaps if you were slightly more intelligent, you would understand."))
+                            .rest(30)
+                            .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.FRIEND_NAME))
+                            .startScript();
+                } else {
+                    sequence
+                            .chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "How the hell am I supposed to know?!"))
+                            .rest(30)
+                            .chatMessageForAll(ChatUtil.getLeaveMessage(ChatUtil.FRIEND_NAME))
+                            .action((serv) -> {
+                                WorldData.get(serv).friend.friendLeft = true;
+                                WorldData.get(serv).friend.friendDislikesYou = true;
+                            })
+                            .startScript();
+                }
             }
         }
     }

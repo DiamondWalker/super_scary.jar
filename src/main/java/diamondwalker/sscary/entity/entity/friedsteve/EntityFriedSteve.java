@@ -1,6 +1,5 @@
 package diamondwalker.sscary.entity.entity.friedsteve;
 
-import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.ai.StareAtDistantPlayerGoal;
 import diamondwalker.sscary.ai.TargetPlayerAnywhereGoal;
 import diamondwalker.sscary.data.client.ClientData;
@@ -9,8 +8,6 @@ import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.script.BoatExplosionScript;
 import diamondwalker.sscary.sound.FriedSteveJumpscareSoundInstance;
 import diamondwalker.sscary.util.ChatUtil;
-import diamondwalker.sscary.util.shader.EnumShaderLayer;
-import diamondwalker.sscary.util.shader.PostProcessingShader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -23,7 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,7 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -40,7 +36,6 @@ import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.w3c.dom.Attr;
 
 public class EntityFriedSteve extends Monster {
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.INT);
@@ -58,7 +53,23 @@ public class EntityFriedSteve extends Monster {
         this.goalSelector.addGoal(1, new FriedSteveTeleportGoal(this, 20, 20, 4));
         this.goalSelector.addGoal(1, new FriedSteveTeleportGoal(this, 60, 20, 1));
         this.goalSelector.addGoal(1, new FriedSteveChaseGoal(this, 1.0f));
-        this.goalSelector.addGoal(2, new StareAtDistantPlayerGoal(this));
+        this.goalSelector.addGoal(2, new StareAtDistantPlayerGoal(this) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && getState() != EnumFriedSteveState.SPRAYED;
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && getState() != EnumFriedSteveState.SPRAYED;
+            }
+        });
+        this.goalSelector.addGoal(3, new FloatGoal(this) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && getState() != EnumFriedSteveState.CHASING;
+            }
+        });
         this.targetSelector.addGoal(1, new TargetPlayerAnywhereGoal(this));
         //this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, false));
     }
@@ -92,7 +103,7 @@ public class EntityFriedSteve extends Monster {
             String whatIsIt;
             if (vehicle instanceof Boat) {
                 whatIsIt = "BOAT";
-            } else if (vehicle instanceof Minecart cart) {
+            } else if (vehicle instanceof Minecart) {
                 whatIsIt = "CART";
             } else {
                 whatIsIt = vehicle.getName().getString().toUpperCase();
@@ -164,7 +175,7 @@ public class EntityFriedSteve extends Monster {
         switch (getState()) {
             case DARKNESS -> {
                 if (level().isClientSide()) {
-                    if (getTimeInState() == 10) Minecraft.getInstance().getSoundManager().queueTickingSound(new FriedSteveJumpscareSoundInstance()); // FIXME: this just blows up your eardrums
+                    if (getTimeInState() == 10) Minecraft.getInstance().getSoundManager().queueTickingSound(new FriedSteveJumpscareSoundInstance());
                 } else {
                     if (getTimeInState() >= 50) setState(EnumFriedSteveState.JUMPSCARE);
                 }
@@ -187,13 +198,14 @@ public class EntityFriedSteve extends Monster {
                         gui.setTitle(Component.literal(scareLines[random.nextInt(scareLines.length)]));
                     }
                 } else {
-                    if (getTimeInState() >= 100) {
-                        // TODO: kill
+                    if (getTimeInState() == 50) {
+                        if (getTarget() != null) getTarget().kill(); // TODO: custom damage
+                    } else if (getTimeInState() >= 70) {
+                        this.discard();
                     }
                 }
             }
-            case ANGRY -> {
-                // TODO: yap
+            case SPRAYED -> {
                 if (!level().isClientSide()) {
                     if (getTimeInState() >= 170) setState(EnumFriedSteveState.CHASING);
                 } else {
@@ -224,7 +236,35 @@ public class EntityFriedSteve extends Monster {
                 }
             }
             case CHASING -> {
-                // TODO: chase yapping
+                if (!level().isClientSide()) {
+                    if (getTarget() instanceof Player player) {
+                        if (getTimeInState() == 600) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "Where do you plan on going, " + ChatUtil.getPlayerNickname(player) + "?!"
+                                    ), false
+                            );
+                        }
+                    } else {
+                        discard();
+                    }
+                }
+            }
+            case CAUGHT -> {
+                if (!level().isClientSide()) {
+                    if (getTimeInState() == 20) {
+                        if (getTarget() != null) {
+                            getTarget().kill(); // TODO: custom damage
+                        }
+                    } else if (getTimeInState() >= 40) {
+                        this.discard();
+                    }
+                } else {
+                    Gui gui = Minecraft.getInstance().gui;
+                    gui.setTimes(0, 5, 0);
+                    gui.setTitle(Component.literal("GOT YOU"));
+                }
             }
         }
 
@@ -319,7 +359,7 @@ public class EntityFriedSteve extends Monster {
     }
 
     public void pepperSpray() {
-        if (getState() == EnumFriedSteveState.JUMPSCARE) setState(EnumFriedSteveState.ANGRY);
+        if (getState() == EnumFriedSteveState.JUMPSCARE) setState(EnumFriedSteveState.SPRAYED);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -327,7 +367,7 @@ public class EntityFriedSteve extends Monster {
                 //.add(Attributes.MAX_HEALTH, 20)
                 .add(Attributes.FOLLOW_RANGE, 666)
                 .add(Attributes.ATTACK_DAMAGE, 5)
-                .add(Attributes.MOVEMENT_SPEED, 0.5f)
+                .add(Attributes.MOVEMENT_SPEED, 0.4f)
                 .add(Attributes.STEP_HEIGHT, 1.5f)
                 .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 1.0f);
     }

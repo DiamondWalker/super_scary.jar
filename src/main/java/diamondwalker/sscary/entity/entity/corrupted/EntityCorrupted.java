@@ -1,6 +1,7 @@
 package diamondwalker.sscary.entity.entity.corrupted;
 
 import diamondwalker.sscary.ai.StareAtDistantPlayerGoal;
+import diamondwalker.sscary.ai.TargetPlayerAnywhereGoal;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.registry.SScarySounds;
 import diamondwalker.sscary.util.ChatUtil;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class EntityCorrupted extends Mob {
-    private StareAtDistantPlayerGoal lookAtPlayer;
 
     public EntityCorrupted(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
@@ -29,7 +29,8 @@ public class EntityCorrupted extends Mob {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, lookAtPlayer = new StareAtDistantPlayerGoal(this));
+        this.goalSelector.addGoal(1, new StareAtDistantPlayerGoal(this));
+        this.targetSelector.addGoal(1, new TargetPlayerAnywhereGoal(this));
     }
 
     @Override
@@ -39,8 +40,7 @@ public class EntityCorrupted extends Mob {
         if (!level().isClientSide()) {
             if (tickCount > 20 * 60 * 4) this.discard();
 
-            if (lookAtPlayer.getLookingAt() != null) {
-                Player player = lookAtPlayer.getLookingAt();
+            if (getTarget() instanceof Player player) {
                 if (delay > 0) {
                     delay--;
                     if (delay == 0) {

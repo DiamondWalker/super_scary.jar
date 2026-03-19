@@ -1,6 +1,7 @@
 package diamondwalker.sscary;
 
 import diamondwalker.sscary.registry.*;
+import diamondwalker.sscary.util.ChatUtil;
 import net.neoforged.fml.loading.FMLLoader;
 import org.slf4j.Logger;
 

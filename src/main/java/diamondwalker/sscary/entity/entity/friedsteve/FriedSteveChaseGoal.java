@@ -26,6 +26,11 @@ public class FriedSteveChaseGoal extends ImprovedMeleeAttackGoal {
     }
 
     @Override
+    public boolean canContinueToUse() {
+        return super.canContinueToUse() && steve.getState() == EnumFriedSteveState.CHASING;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -51,6 +56,13 @@ public class FriedSteveChaseGoal extends ImprovedMeleeAttackGoal {
                 }
             }
             if (boiled) level.playSound(null, steve.blockPosition(), SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 3.0f, 1.0f);
+        }
+    }
+
+    @Override
+    protected void checkAndPerformAttack(LivingEntity target) {
+        if (canPerformAttack(target)) {
+            steve.setState(EnumFriedSteveState.CAUGHT);
         }
     }
 }

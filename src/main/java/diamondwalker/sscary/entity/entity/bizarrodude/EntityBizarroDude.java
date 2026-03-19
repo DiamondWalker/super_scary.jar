@@ -1,6 +1,7 @@
 package diamondwalker.sscary.entity.entity.bizarrodude;
 
 import diamondwalker.sscary.ai.StareAtDistantPlayerGoal;
+import diamondwalker.sscary.ai.TargetPlayerAnywhereGoal;
 import diamondwalker.sscary.util.ChatUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -15,8 +16,6 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.level.Level;
 
 public class EntityBizarroDude extends Mob {
-    private static final TargetingConditions LOOK_CONDITION = TargetingConditions.forNonCombat().ignoreLineOfSight();
-
     private int time;
 
     public EntityBizarroDude(EntityType<? extends Mob> entityType, Level level) {

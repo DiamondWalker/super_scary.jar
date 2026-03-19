@@ -15,8 +15,12 @@ public enum EnumFriedSteveState {
         shader.setUniform("ColorScale", 1.5f, 0.0f, 0.0f);
         shader.setUniform("Saturation", 1.5f);
     }),
-    ANGRY(false),
-    CHASING(false);
+    SPRAYED(false),
+    CHASING(false),
+    CAUGHT(true, new PostProcessingShader(ResourceLocation.fromNamespaceAndPath(SScary.MODID, "shaders/post/color.json"), EnumShaderLayer.EVERYTHING, true), (shader) -> {
+        shader.setUniform("ColorScale", 1.5f, 0.0f, 0.0f);
+        shader.setUniform("Saturation", 1.5f);
+    });
 
     private final PostProcessingShader shader;
     private final Consumer<PostProcessingShader> shaderAction;
