@@ -27,6 +27,6 @@ public class FriendData extends PersistentWorldData {
     public void load(CompoundTag tag) {
         friendJoined = tag.getBoolean("joined");
         friendDislikesYou = tag.getBoolean("dislikes");
-        friendLeft = false;//tag.getBoolean("left");
+        friendLeft = tag.getBoolean("left");
     }
 }
