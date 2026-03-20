@@ -21,7 +21,9 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
 
         if (data.friedSteveChaseTint > 0) {
             Vector3f fadeTo = new Vector3f(1.0f, 0.20f, 0.05f);
-            float f = (((data.friedSteve != null && data.friedSteve.getState() == EnumFriedSteveState.CHASING) ? partialTicks : -partialTicks) + data.friedSteveChaseTint) / FriedSteveHandler.COLOR_FADE_TIME; // FIXME: can go over 1 or under 0 due to partial ticks
+            boolean active = data.friedSteve != null && data.friedSteve.getState() == EnumFriedSteveState.CHASING;
+            float f = ((active ? partialTicks : -partialTicks) + data.friedSteveChaseTint) / FriedSteveHandler.COLOR_FADE_TIME;
+            f = Math.clamp(f, 0.0f, 1.0f);
             colors.set(colors.lerp(fadeTo, f));
         }
 

@@ -20,12 +20,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -43,6 +46,8 @@ public class EntityFriedSteve extends Monster {
 
     private static final EntityDataAccessor<BlockPos> TELEPORT_TO = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.BLOCK_POS);
     private static final EntityDataAccessor<Boolean> TELEPORTING = SynchedEntityData.defineId(EntityFriedSteve.class, EntityDataSerializers.BOOLEAN);
+
+    private static final ResourceLocation EXHAUSTION_MODIFIER_ID = ResourceLocation.withDefaultNamespace("steve_exhaustion");
 
     public EntityFriedSteve(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -238,13 +243,78 @@ public class EntityFriedSteve extends Monster {
             case CHASING -> {
                 if (!level().isClientSide()) {
                     if (getTarget() instanceof Player player) {
-                        if (getTimeInState() == 600) {
+                        if (getTimeInState() == 410) {
                             getServer().getPlayerList().broadcastSystemMessage(
                                     ChatUtil.getEntityChatMessage(
                                             EntityFriedSteve.getName(random),
                                             "Where do you plan on going, " + ChatUtil.getPlayerNickname(player) + "?!"
                                     ), false
                             );
+                        } else if (getTimeInState() == 510) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "There's no place on earth where I won't find you!"
+                                    ), false
+                            );
+                        } else if (getTimeInState() == 610) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "No matter what you do, you're dying " + (level().isDay() ? "today." : "tonight.")
+                                    ), false
+                            );
+                        } else if (getTimeInState() == 710) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "So stop being a coward and GET BACK HERE!!!"
+                                    ), false
+                            );
+                        } else if (getTimeInState() == 1200) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "You're just... you're just making things worse for yourself..."
+                                    ), false
+                            );
+                        } else if (getTimeInState() == 1300) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "...when I get you, I'm gonna..."
+                                    ), false
+                            );
+                        } else if (getTimeInState() == 1400) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "...i'm gonna..."
+                                    ), false
+                            );
+                        } else if (getTimeInState() == 1500) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "...i..."
+                                    ), false
+                            );
+                        } else if (getTimeInState() == 1600) {
+                            getServer().getPlayerList().broadcastSystemMessage(
+                                    ChatUtil.getEntityChatMessage(
+                                            EntityFriedSteve.getName(random),
+                                            "...damn it..."
+                                    ), false
+                            );
+                            discard();
+                        }
+
+                        if (getTimeInState() >= 1200) {
+                            double f = (double)(getTimeInState() - 1200) / (1600 - 1200);
+                            f = Math.clamp(f, 0, 1);
+                            AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+                            attributeinstance.removeModifier(EXHAUSTION_MODIFIER_ID);
+                            attributeinstance.addTransientModifier(new AttributeModifier(EXHAUSTION_MODIFIER_ID, -f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
                         }
                     } else {
                         discard();

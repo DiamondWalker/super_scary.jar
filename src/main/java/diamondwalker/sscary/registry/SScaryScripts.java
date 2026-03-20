@@ -28,7 +28,7 @@ public class SScaryScripts {
 
     public static final Supplier<ScriptType<CorruptedMusicDiscScript>> CORRUPTED_MUSIC_DISC = SCRIPTS.register(
             "corrupted_music_disc",
-            () -> new ScriptType<>(CorruptedMusicDiscScript::new) // TODO: when I implement locks/tags this hould be listed under corrupted_entity's
+            () -> new ScriptType<>(CorruptedMusicDiscScript::new) // TODO: when I implement locks/tags this should be listed under corrupted_entity's
     );
 
     public static final Supplier<ScriptType<NaNOffendedScript>> NAN_OFFENDED = SCRIPTS.register(
