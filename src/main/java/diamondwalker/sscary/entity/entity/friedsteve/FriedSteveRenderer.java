@@ -12,7 +12,7 @@ public class FriedSteveRenderer extends HumanoidMobRenderer<EntityFriedSteve, Hu
     private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/entity/fried_steve.png");
 
     public FriedSteveRenderer(EntityRendererProvider.Context context) {
-        super(context, new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5f);
+        super(context, new ModelFriedSteve(context.bakeLayer(ModelLayers.PLAYER), false), 0.5f);
     }
 
     @Override

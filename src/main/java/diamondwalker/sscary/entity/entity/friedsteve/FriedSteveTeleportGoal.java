@@ -60,6 +60,7 @@ public class FriedSteveTeleportGoal extends Goal {
         if (steve.isInWall()) {
             steve.level().explode(steve, steve.getX(), steve.getY(0.5), steve.getZ(), 5, Level.ExplosionInteraction.MOB);
         }
+        steve.particles();
     }
 
     @Override

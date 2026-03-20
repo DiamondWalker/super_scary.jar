@@ -62,12 +62,16 @@ public class PepperSprayItem extends Item {
                 .withColor(FastColor.ARGB32.color(224, 150, 0))
                 .withStyle(ChatFormatting.ITALIC));
 
-        String[] lines = new String[] {
-                "INSTRUCTIONS:",
-                "Aim at assailant's face. Spray from ear to ear, across the eyes.",
-                "Flee immediately and call the authorities." // TODO: check this writing
-        };
-        for (String line : lines) tooltipComponents.add(Component.literal(line).withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-        tooltipComponents.add(Component.literal("Uses: " + (stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()).withStyle(ChatFormatting.GRAY));
+        tooltipComponents.add(Component.translatable("item.sscary.pepper_spray.description_0").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+        tooltipComponents.add(Component.translatable("item.sscary.pepper_spray.description_1").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+        tooltipComponents.add(Component.translatable("item.sscary.pepper_spray.description_2").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+
+        //String[] lines = new String[] {
+        //        "INSTRUCTIONS:",
+        //        "Aim at assailant's face. Spray from ear to ear, across the eyes.",
+        //        "Flee immediately and call the authorities." // TODO: check this writing
+        //};
+        //for (String line : lines) tooltipComponents.add(Component.literal(line).withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+        //tooltipComponents.add(Component.literal("Uses: " + (stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()).withStyle(ChatFormatting.GRAY));
     }
 }

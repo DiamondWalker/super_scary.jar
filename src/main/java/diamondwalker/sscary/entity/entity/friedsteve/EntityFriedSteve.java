@@ -22,6 +22,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -212,7 +215,9 @@ public class EntityFriedSteve extends Monster {
             }
             case SPRAYED -> {
                 if (!level().isClientSide()) {
-                    if (getTimeInState() >= 170) setState(EnumFriedSteveState.CHASING);
+                    if (getTimeInState() >= 170) {
+                        setState(EnumFriedSteveState.CHASING);
+                    }
                 } else {
                     Gui gui = Minecraft.getInstance().gui;
 
@@ -306,11 +311,12 @@ public class EntityFriedSteve extends Monster {
                                             "...damn it..."
                                     ), false
                             );
+                            particles();
                             discard();
                         }
 
-                        if (getTimeInState() >= 1200) {
-                            double f = (double)(getTimeInState() - 1200) / (1600 - 1200);
+                        if (getTimeInState() >= 1400) {
+                            double f = (double)(getTimeInState() - 1400) / (1600 - 1400);
                             f = Math.clamp(f, 0, 1);
                             AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
                             attributeinstance.removeModifier(EXHAUSTION_MODIFIER_ID);
@@ -349,6 +355,10 @@ public class EntityFriedSteve extends Monster {
         }
 
         setTimeInState(getTimeInState() + 1);
+    }
+
+    protected void particles() {
+        ((ServerLevel)level()).sendParticles(ParticleTypes.FLAME, getX(), getY(0.5), getZ(), 60, getBbWidth() / 2, getBbHeight() / 2, getBbWidth() / 2, 0.15);
     }
 
     public void setState(EnumFriedSteveState state) {
