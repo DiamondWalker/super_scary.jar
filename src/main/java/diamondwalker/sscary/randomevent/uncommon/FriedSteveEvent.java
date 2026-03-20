@@ -12,12 +12,8 @@ import net.minecraft.server.level.ServerPlayer;
 public class FriedSteveEvent extends RandomEvent {
     @Override
     public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
-        if (SScary.DEV_MODE) { // TOOD: enable this normally when don testing!
-            WorldData.get(server).newScripts.startScript(new FriedSteveScript(server));
-            return true;
-        }
-
-        return false;
+        WorldData.get(server).newScripts.startScript(new FriedSteveScript(server));
+        return true;
     }
 
     @Override
