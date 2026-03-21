@@ -2,6 +2,7 @@ package diamondwalker.sscary.handler.event;
 
 import diamondwalker.sscary.data.PermanentSaveData;
 import diamondwalker.sscary.data.server.WorldData;
+import diamondwalker.sscary.script.CorruptedIntroScript;
 import diamondwalker.sscary.util.ChatUtil;
 import diamondwalker.sscary.util.ScriptBuilder;
 import diamondwalker.sscary.util.WorldUtil;
@@ -99,36 +100,9 @@ public class CorruptedEntityStartPhaseHandler {
                         }
                     }
 
-                    WorldData.get(server).corruptedEntityBuilds.addBuild(new BlockPos(x, y, z));
+                    WorldData.get(server).newScripts.startScript(new CorruptedIntroScript(server, new BlockPos(x, y, z)));
                     for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                         player.connection.send(new ClientboundSoundPacket(SoundEvents.AMBIENT_CAVE, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 64.0F, 1.0F, server.overworld().getRandom().nextLong()));
-                    }
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    private static void handlePlayerBlockBreak(BlockEvent.BreakEvent event) {
-        if (event.getState().is(Blocks.COBBLESTONE) && event.getPlayer() instanceof ServerPlayer player) {
-            WorldData data = WorldData.get(player.getServer());
-
-            if (PermanentSaveData.getOrCreateInstance().getCorruptedAngered()) {
-                data.corruptedEntityBuilds.flush();
-                return;
-            }
-
-            if (data.corruptedEntityBuilds.isBuildAt(event.getPos())) {
-                if (data.corruptedEntityBuilds.anger++ >= 7) {
-                    if (data.friend.friendJoined && !data.friend.friendLeft) {
-                        /*if (!data.friend.friendDislikesYou) {
-                            buildFriendLoveCutsceneSequence(player);
-                        } else {
-                            buildFriendDislikeCutsceneSequence(player);
-                        }*/
-                        buildFriendDislikeCutsceneSequence(player);
-                    } else {
-                        buildNoFriendCutsceneSequence(player);
                     }
                 }
             }

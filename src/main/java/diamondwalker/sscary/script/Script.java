@@ -4,12 +4,15 @@ import diamondwalker.sscary.script.variable.ScriptVariable;
 import diamondwalker.sscary.script.variable.ScriptVariableManager;
 import diamondwalker.sscary.util.ChatUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.Music;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
 
 public abstract class Script {
@@ -48,6 +51,10 @@ public abstract class Script {
     public abstract void tick();
 
     public void handleChatInput(ServerPlayer sender, String message) {
+
+    }
+
+    public void handleBlockBreak(ServerPlayer breaker, BlockState state, BlockPos blockPos) {
 
     }
 

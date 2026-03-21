@@ -58,6 +58,10 @@ public class NewScriptsData extends PersistentWorldData {
         }
     }
 
+    public boolean isScriptActive(ScriptType<?> type) {
+        return scripts.stream().anyMatch(script -> script.type == type);
+    }
+
     public List<Script> getScripts() {
         return scripts.stream().toList();
     }

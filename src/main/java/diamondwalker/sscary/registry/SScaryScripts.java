@@ -11,6 +11,11 @@ import java.util.function.Supplier;
 public class SScaryScripts {
     public static final DeferredRegister<ScriptType<?>> SCRIPTS = DeferredRegister.create(CustomRegistries.SCRIPT_REGISTRY, SScary.MODID);
 
+    public static final Supplier<ScriptType<CorruptedIntroScript>> CORRUPTED_INTRO = SCRIPTS.register(
+            "corrupted_intro",
+            () -> new ScriptType<>(CorruptedIntroScript::new, CorruptedIntroScript::new)
+    );
+
     public static final Supplier<ScriptType<CalculationScript>> CALCULATION = SCRIPTS.register(
             "calculation",
             () -> new ScriptType<>(CalculationScript::new, CalculationScript::new)

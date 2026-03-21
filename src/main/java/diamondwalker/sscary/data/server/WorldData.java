@@ -20,8 +20,6 @@ public class WorldData extends SavedData {
     public final NewScriptsData newScripts = new NewScriptsData(this);
     public final CalculationData calculation = new CalculationData(this);
 
-    public final CorruptedEntityBuildData corruptedEntityBuilds = new CorruptedEntityBuildData(this);
-
     public final ProgressionData progression = new ProgressionData(this);
 
     public final RandomEventData randomEvents = new RandomEventData(this);
