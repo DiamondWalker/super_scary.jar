@@ -26,6 +26,9 @@ public class CorruptedIntroScript extends Script {
     private final BooleanVariable friendIntervened = BooleanVariable.create().save("friendIntervention").define(this);
     private final StringVariable playerName = StringVariable.create().save("playerName").define(this);
 
+    private final IntegerVariable friendShutUp = IntegerVariable.create().save("friendShutUp").define(this);
+    private final StringVariable friendShutUpPlayerName = StringVariable.create().save("friendShutUpPlayerName").define(this);
+
     private final IntegerVariable blocksBroken = IntegerVariable.create().save("blocksBroken").define(this);
 
     public CorruptedIntroScript(MinecraftServer server, BlockPos origin) {
@@ -56,6 +59,15 @@ public class CorruptedIntroScript extends Script {
         }
 
         if (triggered.get()) {
+            if (friendShutUp.get() > 0) {
+                if (friendShutUp.get() == 40) {
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Quiet, " + friendShutUpPlayerName.get() + ". The adults are speaking."));
+                    silenced.set(true);
+                }
+                friendShutUp.set(friendShutUp.get() - 1);
+                return;
+            }
+
             if (friendIntervened.get()) {
                 handleCorruptedFriendMonologue(time.get());
             } else {
@@ -82,6 +94,16 @@ public class CorruptedIntroScript extends Script {
                     }
                 }
                 blocksBroken.set(blocksBroken.get() + 1);
+            }
+        }
+    }
+
+    @Override
+    public void handleChatInput(ServerPlayer sender, String message) {
+        if (friendIntervened.get() && friendShutUp.get() <= 0) {
+            if (time.get() >= 1510 && time.get() <= 1740) {
+                friendShutUp.set(80);
+                friendShutUpPlayerName.set(sender.getGameProfile().getName());
             }
         }
     }
