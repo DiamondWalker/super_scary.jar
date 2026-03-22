@@ -61,7 +61,8 @@ public class FakePauseScreen extends PauseScreen {
     public void tick() {
         super.tick();
 
-        if (titleWidget != null) {
+        System.out.println(Minecraft.getInstance().isWindowActive());
+        if (titleWidget != null && Minecraft.getInstance().isWindowActive()) {
             if (ticks <= 0) {
                 if (close) {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SScarySounds.VISAGE_TELEPORT.value(), 1.0f, 1.0f));

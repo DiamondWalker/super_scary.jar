@@ -1,6 +1,7 @@
 {
   "entries": [
-    "sscary:pepper_spray"
+    "sscary:pepper_spray_chest_loot",
+    "sscary:pepper_spray_fishing_loot"
   ],
   "replace": false
 }

@@ -119,22 +119,8 @@
           ]
         },
         {
-          "condition": "minecraft:all_of",
-          "terms": [
-            {
-              "condition": "minecraft:any_of",
-              "terms": [
-                {
-                  "condition": "neoforge:loot_table_id",
-                  "loot_table_id": "minecraft:chests/spawn_bonus_chest"
-                }
-              ]
-            },
-            {
-              "chance": 1.0,
-              "condition": "minecraft:random_chance"
-            }
-          ]
+          "condition": "neoforge:loot_table_id",
+          "loot_table_id": "minecraft:chests/spawn_bonus_chest"
         }
       ]
     }
