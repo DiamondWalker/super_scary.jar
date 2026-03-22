@@ -54,6 +54,10 @@ public abstract class Script {
 
     }
 
+    public void handleBlockPlace(ServerPlayer breaker, BlockState state, BlockPos blockPos) {
+
+    }
+
     public void handleBlockBreak(ServerPlayer breaker, BlockState state, BlockPos blockPos) {
 
     }

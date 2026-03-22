@@ -49,6 +49,15 @@ public class ScriptHandler {
     }
 
     @SubscribeEvent
+    private static void handlePlayerBlockPlace(BlockEvent.EntityPlaceEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            WorldData data = WorldData.get(player.getServer());
+
+            for (Script script : data.newScripts.getScripts()) script.handleBlockPlace(player, event.getState(), event.getPos());
+        }
+    }
+
+    @SubscribeEvent
     private static void handlePlayerBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getPlayer() instanceof ServerPlayer player) {
             WorldData data = WorldData.get(player.getServer());

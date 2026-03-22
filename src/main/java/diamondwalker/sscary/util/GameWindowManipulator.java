@@ -6,14 +6,14 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.lwjgl.glfw.GLFW;
 
 public class GameWindowManipulator {
-    private final Window window = Minecraft.getInstance().getWindow();
+    private static final Window WINDOW = Minecraft.getInstance().getWindow();
 
-    public void moveWindow(int x, int y) {
-        GLFW.glfwSetWindowPos(window.getWindow(), window.getX() + x, window.getY() + y);
+    public static void moveWindow(int x, int y) {
+        GLFW.glfwSetWindowPos(WINDOW.getWindow(), WINDOW.getX() + x, WINDOW.getY() + y);
         clampWindowToScreenSize();
     }
 
-    private void clampWindowToScreenSize() {
+    private static void clampWindowToScreenSize() {
         throw new NotImplementedException();
     }
 }

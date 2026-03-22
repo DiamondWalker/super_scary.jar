@@ -20,16 +20,28 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class CorruptedIntroScript extends Script {
     private final BlockPosVariable origin = BlockPosVariable.create().save("origin").define(this);
-    private final BooleanVariable silenced = BooleanVariable.create().save("silenced").sync().define(this);
-    private final IntegerVariable time = IntegerVariable.create().save("time").define(this);
+    private final IntegerVariable blocksBroken = IntegerVariable.create().save("blocksBroken").define(this);
     private final BooleanVariable triggered = BooleanVariable.create().save("triggered").define(this);
+
     private final BooleanVariable friendIntervened = BooleanVariable.create().save("friendIntervention").define(this);
+    private final IntegerVariable time = IntegerVariable.create().save("time").define(this);
+    private final BooleanVariable silenced = BooleanVariable.create().save("silenced").sync().define(this);
     private final StringVariable playerName = StringVariable.create().save("playerName").define(this);
+
+    private final BooleanVariable hello = BooleanVariable.create().save("hello").define(this);
+
+    private final BooleanVariable sorry = BooleanVariable.create().save("sorry").define(this);
+    private final IntegerVariable sorryTime = IntegerVariable.create().save("sorryTime").define(this);
+
+    private final BooleanVariable calledOutForRepairing = BooleanVariable.create().save("calledOutForRepairing").define(this);
+    private final IntegerVariable repairCalloutTime = IntegerVariable.create().save("repairCalloutTime").define(this);
+
+    private final IntegerVariable talkCount = IntegerVariable.create().save("talkCount").define(this);
+
+    private final IntegerVariable normalShutUp = IntegerVariable.create().save("normalShutUp").define(this);
 
     private final IntegerVariable friendShutUp = IntegerVariable.create().save("friendShutUp").define(this);
     private final StringVariable friendShutUpPlayerName = StringVariable.create().save("friendShutUpPlayerName").define(this);
-
-    private final IntegerVariable blocksBroken = IntegerVariable.create().save("blocksBroken").define(this);
 
     public CorruptedIntroScript(MinecraftServer server, BlockPos origin) {
         this(server);
@@ -59,22 +71,65 @@ public class CorruptedIntroScript extends Script {
         }
 
         if (triggered.get()) {
-            if (friendShutUp.get() > 0) {
-                if (friendShutUp.get() == 40) {
-                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Quiet, " + friendShutUpPlayerName.get() + ". The adults are speaking."));
-                    silenced.set(true);
-                }
-                friendShutUp.set(friendShutUp.get() - 1);
-                return;
-            }
-
             if (friendIntervened.get()) {
+                if (friendShutUp.get() > 0) {
+                    if (friendShutUp.get() == 40) {
+                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.FRIEND_NAME, "Quiet, " + friendShutUpPlayerName.get() + ". The adults are speaking."));
+                        silenced.set(true);
+                    }
+                    friendShutUp.set(friendShutUp.get() - 1);
+                    return;
+                }
+
                 handleCorruptedFriendMonologue(time.get());
             } else {
+                if (sorryTime.get() > 0) {
+                    if (sorryTime.get() == 40) {
+                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "yeah well sorry aint gonna cut it pal"));
+                    }
+                    sorryTime.set(sorryTime.get() - 1);
+                    return;
+                }
+
+                if (normalShutUp.get() > 0) {
+                    if (normalShutUp.get() == 40) {
+                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "shut"));
+                        silenced.set(true);
+                    }
+                    normalShutUp.set(normalShutUp.get() - 1);
+                    return;
+                }
+
+                if (repairCalloutTime.get() > 0) {
+                    if (repairCalloutTime.get() == 80) {
+                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "nonononono dont just put it back and pretend nothing happened"));
+                    } else if (repairCalloutTime.get() == 40) {
+                        chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "You know what you did"));
+                    }
+                    repairCalloutTime.set(repairCalloutTime.get() - 1);
+                    return;
+                }
+
                 handleCorruptedMonologue(time.get());
             }
 
             time.set(time.get() + 1);
+        }
+    }
+
+    @Override
+    public void handleBlockPlace(ServerPlayer breaker, BlockState state, BlockPos blockPos) {
+        if (state.is(Blocks.COBBLESTONE) && triggered.get()) {
+            if (isBuildAt(blockPos)) {
+                blocksBroken.set(blocksBroken.get() - 1);
+                if (blocksBroken.get() <= 1) {
+                    if (!calledOutForRepairing.get()) {
+                        calledOutForRepairing.set(true);
+                        repairCalloutTime.set(120);
+                        time.set(391);
+                    }
+                }
+            }
         }
     }
 
@@ -100,10 +155,30 @@ public class CorruptedIntroScript extends Script {
 
     @Override
     public void handleChatInput(ServerPlayer sender, String message) {
-        if (friendIntervened.get() && friendShutUp.get() <= 0) {
-            if (time.get() >= 1510 && time.get() <= 1740) {
-                friendShutUp.set(80);
-                friendShutUpPlayerName.set(sender.getGameProfile().getName());
+        if (time.get() < 250 && !hello.get()) { // between yo and wtf
+            if (message.toLowerCase().matches("(.+)?(hi|hey|hello)(.+)?")) {
+                hello.set(true);
+                time.set(151); // this both ensures we skip the first "yo" if the player spoke first
+            }
+        }
+
+        if (friendIntervened.get()) {
+            if (friendShutUp.get() <= 0) {
+                if (time.get() >= 1510 && time.get() <= 1740) {
+                    friendShutUp.set(80);
+                    friendShutUpPlayerName.set(sender.getGameProfile().getName());
+                }
+            }
+        } else {
+            if (time.get() > 390 && message.toLowerCase().matches("(.+)?(sorry|apologies|apologize)(.+)?") && !sorry.get()) {
+                sorry.set(true);
+                sorryTime.set(80);
+            } else {
+                talkCount.set(talkCount.get() + 1);
+                if (talkCount.get() >= 3) {
+                    normalShutUp.set(80);
+                    sorryTime.set(0); // just in case sorry was still ongoing
+                }
             }
         }
     }
@@ -135,7 +210,11 @@ public class CorruptedIntroScript extends Script {
                 break;
             }
             case 250: {
-                chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "wtf do you think youre doing?"));
+                if (hello.get()) {
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "yes hi wtf are you doing?"));
+                } else {
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "wtf do you think youre doing?"));
+                }
                 break;
             }
             case 330: {
@@ -221,7 +300,11 @@ public class CorruptedIntroScript extends Script {
                 break;
             }
             case 250: {
-                chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "wtf do you think youre doing?"));
+                if (hello.get()) {
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "yes hi wtf are you doing?"));
+                } else {
+                    chatMessageForAll(ChatUtil.getEntityChatMessage(ChatUtil.CORRUPTED_ENTITY_NAME, "wtf do you think youre doing?"));
+                }
                 break;
             }
             case 330: {
