@@ -19,6 +19,11 @@ public class ImmediatelyFastDisclaimerScreen extends Screen {
     }
 
     @Override
+    public boolean shouldCloseOnEsc() {
+        return false;
+    }
+
+    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.fill(0, 0, width, height, FastColor.ARGB32.color(0, 0, 0));
 

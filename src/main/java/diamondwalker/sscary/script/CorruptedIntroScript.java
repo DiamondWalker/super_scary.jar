@@ -57,6 +57,11 @@ public class CorruptedIntroScript extends Script {
     }
 
     @Override
+    public boolean isCompatibleWith(Script other) {
+        return true;
+    }
+
+    @Override
     public void tick() {
         if (clientSide) {
             if (silenced.get() && Minecraft.getInstance().screen instanceof ChatScreen) {
@@ -68,6 +73,7 @@ public class CorruptedIntroScript extends Script {
 
         if (WorldData.get(server).progression.hasBeenAngered()) {
             end();
+            return;
         }
 
         if (triggered.get()) {
@@ -119,10 +125,10 @@ public class CorruptedIntroScript extends Script {
 
     @Override
     public void handleBlockPlace(ServerPlayer breaker, BlockState state, BlockPos blockPos) {
-        if (state.is(Blocks.COBBLESTONE) && triggered.get()) {
+        if (state.is(Blocks.COBBLESTONE)) {
             if (isBuildAt(blockPos)) {
                 blocksBroken.set(blocksBroken.get() - 1);
-                if (blocksBroken.get() <= 1) {
+                if (triggered.get() && blocksBroken.get() <= 1) {
                     if (!calledOutForRepairing.get()) {
                         calledOutForRepairing.set(true);
                         repairCalloutTime.set(120);
@@ -137,7 +143,7 @@ public class CorruptedIntroScript extends Script {
     public void handleBlockBreak(ServerPlayer breaker, BlockState state, BlockPos blockPos) {
         if (state.is(Blocks.COBBLESTONE)) {
             if (isBuildAt(blockPos)) {
-                if (!triggered.get() && blocksBroken.get() >= 7) {
+                if (blocksBroken.get() >= 7) {
                     WorldData data = WorldData.get(server);
 
                     if (data.newScripts.getScripts().stream().noneMatch(s -> (s instanceof CorruptedIntroScript c && c.triggered.get()))) { // make sure the event isn't already active
@@ -155,10 +161,13 @@ public class CorruptedIntroScript extends Script {
 
     @Override
     public void handleChatInput(ServerPlayer sender, String message) {
+        if (!triggered.get()) return;
+
         if (time.get() < 250 && !hello.get()) { // between yo and wtf
             if (message.toLowerCase().matches("(.+)?(hi|hey|hello)(.+)?")) {
                 hello.set(true);
                 time.set(151); // this both ensures we skip the first "yo" if the player spoke first
+                return;
             }
         }
 
@@ -170,14 +179,16 @@ public class CorruptedIntroScript extends Script {
                 }
             }
         } else {
-            if (time.get() > 390 && message.toLowerCase().matches("(.+)?(sorry|apologies|apologize)(.+)?") && !sorry.get()) {
-                sorry.set(true);
-                sorryTime.set(80);
-            } else {
-                talkCount.set(talkCount.get() + 1);
-                if (talkCount.get() >= 3) {
-                    normalShutUp.set(80);
-                    sorryTime.set(0); // just in case sorry was still ongoing
+            if (time.get() > 390) {
+                if (message.toLowerCase().matches("(.+)?(sorry|apologies|apologize)(.+)?") && !sorry.get()) {
+                    sorry.set(true);
+                    sorryTime.set(80);
+                } else {
+                    talkCount.set(talkCount.get() + 1);
+                    if (talkCount.get() >= 3) {
+                        normalShutUp.set(80);
+                        sorryTime.set(0); // just in case sorry was still ongoing
+                    }
                 }
             }
         }
