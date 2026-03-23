@@ -1,5 +1,6 @@
 package diamondwalker.sscary.item;
 
+import diamondwalker.sscary.util.TooltipFiller;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
@@ -17,6 +18,8 @@ public class InventoryBugItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        tooltipComponents.add(Component.literal("It has infected your inventory!").withColor(FastColor.ARGB32.color(0, 255, 0)).withStyle(ChatFormatting.ITALIC));
+        new TooltipFiller(this, tooltipComponents).addLine(c -> c
+                .withColor(FastColor.ARGB32.color(0, 255, 0))
+                .withStyle(ChatFormatting.ITALIC));
     }
 }

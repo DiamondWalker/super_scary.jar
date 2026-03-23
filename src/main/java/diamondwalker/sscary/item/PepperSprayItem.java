@@ -1,9 +1,9 @@
 package diamondwalker.sscary.item;
 
 import diamondwalker.sscary.entity.projectile.pepperspray.EntityPepperSpray;
+import diamondwalker.sscary.util.TooltipFiller;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.FastColor;
@@ -15,8 +15,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -58,20 +56,15 @@ public class PepperSprayItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        tooltipComponents.add(Component.literal("Protect yourself from otherworldly assailants") // TODO: assailants twice? That's weird
+        TooltipFiller tooltip = new TooltipFiller(this, tooltipComponents);
+
+        tooltip.addLine((component -> component
                 .withColor(FastColor.ARGB32.color(224, 150, 0))
-                .withStyle(ChatFormatting.ITALIC));
+                .withStyle(ChatFormatting.ITALIC)));
 
-        tooltipComponents.add(Component.translatable("item.sscary.pepper_spray.description_0").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-        tooltipComponents.add(Component.translatable("item.sscary.pepper_spray.description_1").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-        tooltipComponents.add(Component.translatable("item.sscary.pepper_spray.description_2").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+        tooltip.addLines(3, component -> component
+                .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
 
-        //String[] lines = new String[] {
-        //        "INSTRUCTIONS:",
-        //        "Aim at assailant's face. Spray from ear to ear, across the eyes.",
-        //        "Flee immediately and call the authorities." // TODO: check this writing
-        //};
-        //for (String line : lines) tooltipComponents.add(Component.literal(line).withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-        //tooltipComponents.add(Component.literal("Uses: " + (stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()).withStyle(ChatFormatting.GRAY));
+        tooltip.addLineWithArguments(component -> component.withStyle(ChatFormatting.GRAY), stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage());
     }
 }
