@@ -126,7 +126,7 @@ public class CorruptedIntroScript extends Script {
                     if (!calledOutForRepairing.get()) {
                         calledOutForRepairing.set(true);
                         repairCalloutTime.set(120);
-                        time.set(391);
+                        time.set(Math.max(391, time.get()));
                     }
                 }
             }
