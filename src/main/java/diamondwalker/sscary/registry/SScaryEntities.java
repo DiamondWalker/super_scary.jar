@@ -9,6 +9,8 @@ import diamondwalker.sscary.entity.entity.corrupted.CorruptedRenderer;
 import diamondwalker.sscary.entity.entity.corrupted.EntityCorrupted;
 import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
 import diamondwalker.sscary.entity.entity.friedsteve.FriedSteveRenderer;
+import diamondwalker.sscary.entity.entity.unauthorized.EntityUnauthorized;
+import diamondwalker.sscary.entity.entity.unauthorized.UnauthorizedRenderer;
 import diamondwalker.sscary.entity.entity.watchtower.EntityWatchtower;
 import diamondwalker.sscary.entity.entity.watchtower.ModelWatchtower;
 import diamondwalker.sscary.entity.entity.watchtower.WatchtowerRenderer;
@@ -106,6 +108,14 @@ public class SScaryEntities {
                     .build("construct")
     );
 
+    public static final Supplier<EntityType<EntityUnauthorized>> UNAUTHORIZED = ENTITY_TYPES.register("unauthorized", () -> EntityType.Builder.of(
+            EntityUnauthorized::new,
+            MobCategory.CREATURE
+    )
+            .sized(1.0f, 3.0f)
+            .eyeHeight(2.75f)
+            .build("unauthorized"));
+
     public static final Supplier<EntityType<EntityPepperSpray>> PEPPER_SPRAY = ENTITY_TYPES.register("pepper_spray", () -> EntityType.Builder.of(
                 (EntityType<EntityPepperSpray> type, Level level) -> new EntityPepperSpray(type, level), MobCategory.MISC
             )
@@ -132,6 +142,7 @@ public class SScaryEntities {
         event.put(SScaryEntities.FRIED_STEVE.get(), EntityFriedSteve.createAttributes().build());
         event.put(SScaryEntities.WATCHTOWER.get(), EntityWatchtower.createAttributes().build());
         event.put(SScaryEntities.CONSTRUCT.get(), EntityConstruct.createAttributes().build());
+        event.put(SScaryEntities.UNAUTHORIZED.get(), EntityUnauthorized.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -144,6 +155,7 @@ public class SScaryEntities {
         event.registerEntityRenderer(SScaryEntities.WATCHTOWER.get(), WatchtowerRenderer::new);
         event.registerEntityRenderer(SScaryEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
         event.registerEntityRenderer(SScaryEntities.CONSTRUCT.get(), ConstructRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.UNAUTHORIZED.get(), UnauthorizedRenderer::new);
 
         event.registerEntityRenderer(SScaryEntities.PEPPER_SPRAY.get(), NoopRenderer<EntityPepperSpray>::new);
     }

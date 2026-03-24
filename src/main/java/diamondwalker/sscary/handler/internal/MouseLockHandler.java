@@ -15,7 +15,7 @@ public class MouseLockHandler {
     private static void handleMouseLocking(CalculatePlayerTurnEvent event) {
         EntityWatchtower tower = ClientData.get().tower;
         if (tower != null) {
-            if (!tower.isRemoved() && tower.canSee(Minecraft.getInstance().player)) {
+            if (!tower.isRemoved() && tower.canSee(Minecraft.getInstance().player) && !tower.isDespawning()) {
                 event.setMouseSensitivity(0);
             } else {
                 ClientData.get().tower = null;
