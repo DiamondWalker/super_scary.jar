@@ -41,7 +41,6 @@ public class VisageHandler {
     private static boolean DELETE_WORLD = false;
     private static final int FOG_FADE_TIME = 160;
 
-    private static boolean scareHappening = false;
     private static boolean readyToClose = false;
     private static SoundInstance scareSound;
 
@@ -185,25 +184,5 @@ public class VisageHandler {
                 SScary.LOGGER.warn("Visage level delete failed.", ioexception);
             }
         }
-    }
-
-    @SubscribeEvent
-    private static void handleScareTick(ClientTickEvent.Pre event) {
-        if (scareHappening) {
-            if (readyToClose && scareSound != null) { // the sound has started
-                if (!Minecraft.getInstance().getSoundManager().isActive(scareSound)) Minecraft.getInstance().stop(); // the sound is over, close the game
-            } else {
-                if (scareSound != null && Minecraft.getInstance().getSoundManager().isActive(scareSound)) { // the sound is playing, so we're ready
-                    readyToClose = true;
-                } else { // the sound hasn't started
-                    scareSound = SimpleSoundInstance.forUI(SScarySounds.VISAGE_SCARE.value(), 1.0f, 15.0f); // TODO: make this louder i think
-                    Minecraft.getInstance().getSoundManager().play(scareSound);
-                }
-            }
-        }
-    }
-
-    public static void doMenuScare() {
-        scareHappening = true;
     }
 }
