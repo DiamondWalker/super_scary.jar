@@ -18,15 +18,15 @@ public class Config {
 
     public static final ModConfigSpec.IntValue MAX_EVENT_INTERVAL = BUILDER
             .comment("The maximum time, in ticks, that will pass between random events.")
-            .defineInRange("maxEventInterval", 20 * 60 * 8, 20 * 30, Integer.MAX_VALUE); // 15 minutes
+            .defineInRange("maximumEventInterval", 20 * 60 * 8, 20 * 30, Integer.MAX_VALUE); // 15 minutes
 
     public static final ModConfigSpec.IntValue MED_EVENT_INTERVAL = BUILDER
             .comment("The number of ticks between random events will be under this value approximately 50% of the time.")
-            .defineInRange("medEventInterval", 20 * 150,  20 * 30, Integer.MAX_VALUE); // 4 minutes
+            .defineInRange("medianEventInterval", 20 * 150,  20 * 30, Integer.MAX_VALUE); // 4 minutes
 
     public static final ModConfigSpec.IntValue MIN_EVENT_INTERVAL = BUILDER
             .comment("The minimum time, in ticks, that will pass between random events.")
-            .defineInRange("minEventInterval", 20 * 60,  20 * 30, Integer.MAX_VALUE); // 1.5 minutes
+            .defineInRange("minimumEventInterval", 20 * 60,  20 * 30, Integer.MAX_VALUE); // 1.5 minutes
 
     public static final ModConfigSpec.BooleanValue ULTRA_SCARY_MODE = BUILDER
             .comment("Enable this if you hate yourself.")

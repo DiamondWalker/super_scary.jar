@@ -26,9 +26,9 @@
 
   "sscary.configuration.allowVanillaMusic": "Allow Vanilla Music",
   "sscary.configuration.displayAmbientScreenEffect": "Display Ambient Screen Effect",
-  "sscary.configuration.maxEventInterval": "Maximum Event Interval",
-  "sscary.configuration.medEventInterval": "Median Event Interval",
-  "sscary.configuration.minEventInterval": "Minimum Event Interval",
+  "sscary.configuration.maximumEventInterval": "Maximum Event Interval",
+  "sscary.configuration.medianEventInterval": "Median Event Interval",
+  "sscary.configuration.minimumEventInterval": "Minimum Event Interval",
   "sscary.configuration.quickStartup": "Quick Startup",
   "sscary.configuration.section.twais.common.toml": "super_scary.jar Configs",
   "sscary.configuration.section.twais.common.toml.title": "super_scary.jar Configs",
