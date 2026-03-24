@@ -7,15 +7,19 @@ import com.mojang.blaze3d.platform.Window;
 import diamondwalker.sscary.SScary;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import org.apache.commons.lang3.NotImplementedException;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -30,29 +34,43 @@ public class WindowUtil {
         Minecraft.getInstance().updateTitle();
     }
 
-    public static void moveWindow(int x, int y) {
-        GLFW.glfwSetWindowPos(WINDOW.getWindow(), WINDOW.getX() + x, WINDOW.getY() + y);
+    public static void setWindowPos(int x, int y) {
+        GLFW.glfwSetWindowPos(WINDOW.getWindow(), x, y);
     }
 
-    public static void setIcon(Supplier<NativeImage> supplier) {
+    public static void moveWindow(int x, int y) {
+        setWindowPos(WINDOW.getX() + x, WINDOW.getY() + y);
+    }
+
+    public static void setWindowSize(int width, int height) {
+        WINDOW.setWindowed(width, height);
+    }
+
+    public static void setIcon(ResourceLocation location) {
         if (GLFW.glfwGetPlatform() == 393218) {
             SScary.LOGGER.warn("Window icon change is not currently supported on MacOS"); // TODO: Mac support someday?
         }
 
-        try (NativeImage image = supplier.get()) {
-            ByteBuffer bytebuffer = null;
-            try (MemoryStack memorystack = MemoryStack.stackPush()) {
-                GLFWImage.Buffer buffer = GLFWImage.malloc(1, memorystack);
+        Optional<Resource> resource = Minecraft.getInstance().getResourceManager().getResource(location);
+        if (resource.isPresent()) {
+            try (NativeImage image = NativeImage.read(resource.get().open())) {
+                ByteBuffer bytebuffer = null;
+                try (MemoryStack memorystack = MemoryStack.stackPush()) {
+                    GLFWImage.Buffer buffer = GLFWImage.malloc(1, memorystack);
 
-                bytebuffer = MemoryUtil.memAlloc(image.getWidth() * image.getHeight() * 4);
-                bytebuffer.asIntBuffer().put(image.getPixelsRGBA());
-                buffer.position(0);
-                buffer.width(image.getWidth());
-                buffer.height(image.getHeight());
+                    bytebuffer = MemoryUtil.memAlloc(image.getWidth() * image.getHeight() * 4);
+                    bytebuffer.asIntBuffer().put(image.getPixelsRGBA());
+                    buffer.position(0);
+                    buffer.width(image.getWidth());
+                    buffer.height(image.getHeight());
+                    buffer.pixels(bytebuffer);
 
-                GLFW.glfwSetWindowIcon(WINDOW.getWindow(), buffer.position(0));
-            } finally {
-                if (bytebuffer != null) MemoryUtil.memFree(bytebuffer);
+                    GLFW.glfwSetWindowIcon(WINDOW.getWindow(), buffer.position(0));
+                } finally {
+                    if (bytebuffer != null) MemoryUtil.memFree(bytebuffer);
+                }
+            } catch (IOException exception) {
+                SScary.LOGGER.error("Couldn't set window icon", exception);
             }
         }
     }
@@ -65,25 +83,38 @@ public class WindowUtil {
         }
     }
 
-    public static void clampWindowToScreenSize() {
-        VideoMode mode = WINDOW.findBestMonitor().getCurrentMode();
-        int width = mode.getWidth();
-        int height = mode.getHeight();
+    public static int getWindowWidth() {
+        return WINDOW.getWidth();
+    }
 
-        int[] top = new int[1];
-        int[] left = new int[1];
-        int[] right = new int[1];
-        int[] bottom = new int[1];
-        GLFW.glfwGetWindowFrameSize(WINDOW.getWindow(), left, top, right, bottom);
+    public static int getWindowHeight() {
+        return WINDOW.getHeight();
+    }
+
+    public static Dimension getDesktopDimensions() {
+        VideoMode mode = WINDOW.findBestMonitor().getCurrentMode();
+        return new Dimension(mode.getWidth(), mode.getHeight());
+    }
+
+    public static void clampWindowToScreenSize() {
+        Dimension desktop = getDesktopDimensions();
+
+        int header = getWindowHeaderWidth();
 
         if (WINDOW.getX() < 0) GLFW.glfwSetWindowPos(WINDOW.getWindow(), 0, WINDOW.getY());
-        if (WINDOW.getY() - top[0] < 0) GLFW.glfwSetWindowPos(WINDOW.getWindow(), WINDOW.getX(), top[0]);
+        if (WINDOW.getY() - header < 0) GLFW.glfwSetWindowPos(WINDOW.getWindow(), WINDOW.getX(), header);
 
-        if (WINDOW.getX() + WINDOW.getWidth() >= width) {
-            GLFW.glfwSetWindowPos(WINDOW.getWindow(), width - WINDOW.getWidth(), WINDOW.getY());
+        if (WINDOW.getX() + WINDOW.getWidth() >= desktop.width) {
+            GLFW.glfwSetWindowPos(WINDOW.getWindow(), desktop.width - WINDOW.getWidth(), WINDOW.getY());
         }
-        if (WINDOW.getY() + WINDOW.getHeight() >= height) {
-            GLFW.glfwSetWindowPos(WINDOW.getWindow(), WINDOW.getX(), height - WINDOW.getHeight());
+        if (WINDOW.getY() + WINDOW.getHeight() >= desktop.height) {
+            GLFW.glfwSetWindowPos(WINDOW.getWindow(), WINDOW.getX(), desktop.height - WINDOW.getHeight());
         }
+    }
+
+    public static int getWindowHeaderWidth() {
+        int[] top = new int[1];
+        GLFW.glfwGetWindowFrameSize(WINDOW.getWindow(), new int[1], top, new int[1], new int[1]); // we don't care about the others so we just use dummy arrays
+        return top[0];
     }
 }

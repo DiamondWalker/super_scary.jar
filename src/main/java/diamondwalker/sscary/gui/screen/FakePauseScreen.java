@@ -61,7 +61,6 @@ public class FakePauseScreen extends PauseScreen {
     public void tick() {
         super.tick();
 
-        System.out.println(Minecraft.getInstance().isWindowActive());
         if (titleWidget != null && Minecraft.getInstance().isWindowActive()) {
             if (ticks <= 0) {
                 if (close) {

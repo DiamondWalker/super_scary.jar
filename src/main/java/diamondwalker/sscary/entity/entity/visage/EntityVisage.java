@@ -102,7 +102,7 @@ public class EntityVisage extends Entity {
                 player.getData(SScaryDataAttachments.PLAYER).visageHealDisable = true;
 
                 if (player.isDeadOrDying()) {
-                    PacketDistributor.sendToPlayer((ServerPlayer) player, new VisageDisconnectPacket("You still aren't running."));
+                    PacketDistributor.sendToPlayer((ServerPlayer) player, VisageDisconnectPacket.INSTANCE);
                     VisageHandler.eraseWorld(getServer());
                 } else {
                     PacketDistributor.sendToPlayer((ServerPlayer)player, new StaticScreenPacket(15));
