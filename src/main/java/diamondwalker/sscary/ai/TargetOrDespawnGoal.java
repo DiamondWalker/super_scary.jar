@@ -8,20 +8,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class TargetOrDespawnGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
-    public TargetOrDespawnGoal(Mob mob, Class<T> targetType, boolean mustSee) {
-        super(mob, targetType, mustSee);
+    public TargetOrDespawnGoal(Mob mob, Class<T> targetType, boolean mustSeeToStart, boolean mustSeeToContinue) {
+        super(mob, targetType, mustSeeToContinue);
+        if (!mustSeeToStart) targetConditions.ignoreLineOfSight();
     }
 
-    public TargetOrDespawnGoal(Mob mob, Class<T> targetType, boolean mustSee, Predicate<LivingEntity> targetPredicate) {
-        super(mob, targetType, mustSee, targetPredicate);
+    public TargetOrDespawnGoal(Mob mob, Class<T> targetType, boolean mustSeeToStart, boolean mustSeeToContinue, Predicate<LivingEntity> targetPredicate) {
+        super(mob, targetType, mustSeeToContinue, targetPredicate);
+        if (!mustSeeToStart) targetConditions.ignoreLineOfSight();
     }
 
-    public TargetOrDespawnGoal(Mob mob, Class<T> targetType, boolean mustSee, boolean mustReach) {
-        super(mob, targetType, mustSee, mustReach);
+    public TargetOrDespawnGoal(Mob mob, Class<T> targetType, boolean mustSeeToStart, boolean mustSeeToContinue, boolean mustReach) {
+        super(mob, targetType, mustSeeToContinue, mustReach);
+        if (!mustSeeToStart) targetConditions.ignoreLineOfSight();
     }
 
-    public TargetOrDespawnGoal(Mob mob, Class<T> targetType, int randomInterval, boolean mustSee, boolean mustReach, @Nullable Predicate<LivingEntity> targetPredicate) {
-        super(mob, targetType, randomInterval, mustSee, mustReach, targetPredicate);
+    public TargetOrDespawnGoal(Mob mob, Class<T> targetType, int randomInterval, boolean mustSeeToStart, boolean mustSeeToContinue, boolean mustReach, @Nullable Predicate<LivingEntity> targetPredicate) {
+        super(mob, targetType, randomInterval, mustSeeToContinue, mustReach, targetPredicate);
+        if (!mustSeeToStart) targetConditions.ignoreLineOfSight();
     }
 
     @Override
@@ -30,7 +34,7 @@ public class TargetOrDespawnGoal<T extends LivingEntity> extends NearestAttackab
         if (this.target != null) {
             return true;
         } else {
-            ///this.mob.discard();
+            this.mob.discard();
             return false;
         }
     }

@@ -3,14 +3,14 @@ package diamondwalker.sscary.registry;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.entity.entity.bizarrodude.BizarroDudeRenderer;
 import diamondwalker.sscary.entity.entity.bizarrodude.EntityBizarroDude;
+import diamondwalker.sscary.entity.entity.censored.EntityCensored;
 import diamondwalker.sscary.entity.entity.construct.ConstructRenderer;
 import diamondwalker.sscary.entity.entity.construct.EntityConstruct;
 import diamondwalker.sscary.entity.entity.corrupted.CorruptedRenderer;
 import diamondwalker.sscary.entity.entity.corrupted.EntityCorrupted;
 import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
 import diamondwalker.sscary.entity.entity.friedsteve.FriedSteveRenderer;
-import diamondwalker.sscary.entity.entity.unauthorized.EntityUnauthorized;
-import diamondwalker.sscary.entity.entity.unauthorized.UnauthorizedRenderer;
+import diamondwalker.sscary.entity.entity.censored.CensoredRenderer;
 import diamondwalker.sscary.entity.entity.watchtower.EntityWatchtower;
 import diamondwalker.sscary.entity.entity.watchtower.ModelWatchtower;
 import diamondwalker.sscary.entity.entity.watchtower.WatchtowerRenderer;
@@ -24,10 +24,8 @@ import diamondwalker.sscary.entity.projectile.pepperspray.EntityPepperSpray;
 import diamondwalker.sscary.mobspawner.SurfaceEntitySpawner;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -108,13 +106,13 @@ public class SScaryEntities {
                     .build("construct")
     );
 
-    public static final Supplier<EntityType<EntityUnauthorized>> UNAUTHORIZED = ENTITY_TYPES.register("unauthorized", () -> EntityType.Builder.of(
-            EntityUnauthorized::new,
-            MobCategory.CREATURE
-    )
-            .sized(1.0f, 3.0f)
-            .eyeHeight(2.75f)
-            .build("unauthorized"));
+    public static final Supplier<EntityType<EntityCensored>> CENSORED = ENTITY_TYPES.register("censored", () -> EntityType.Builder.of(
+                EntityCensored::new,
+                MobCategory.CREATURE
+            )
+            .sized(0.8f, 3.75f)
+            .eyeHeight(1.875f)
+            .build("censored"));
 
     public static final Supplier<EntityType<EntityPepperSpray>> PEPPER_SPRAY = ENTITY_TYPES.register("pepper_spray", () -> EntityType.Builder.of(
                 (EntityType<EntityPepperSpray> type, Level level) -> new EntityPepperSpray(type, level), MobCategory.MISC
@@ -142,7 +140,7 @@ public class SScaryEntities {
         event.put(SScaryEntities.FRIED_STEVE.get(), EntityFriedSteve.createAttributes().build());
         event.put(SScaryEntities.WATCHTOWER.get(), EntityWatchtower.createAttributes().build());
         event.put(SScaryEntities.CONSTRUCT.get(), EntityConstruct.createAttributes().build());
-        event.put(SScaryEntities.UNAUTHORIZED.get(), EntityUnauthorized.createAttributes().build());
+        event.put(SScaryEntities.CENSORED.get(), EntityCensored.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -155,7 +153,7 @@ public class SScaryEntities {
         event.registerEntityRenderer(SScaryEntities.WATCHTOWER.get(), WatchtowerRenderer::new);
         event.registerEntityRenderer(SScaryEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
         event.registerEntityRenderer(SScaryEntities.CONSTRUCT.get(), ConstructRenderer::new);
-        event.registerEntityRenderer(SScaryEntities.UNAUTHORIZED.get(), UnauthorizedRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.CENSORED.get(), CensoredRenderer::new);
 
         event.registerEntityRenderer(SScaryEntities.PEPPER_SPRAY.get(), NoopRenderer<EntityPepperSpray>::new);
     }
@@ -170,8 +168,8 @@ public class SScaryEntities {
     private static void registerEntitySpawners(ModifyCustomSpawnersEvent event) {
         if (event.getLevel().dimension() == Level.OVERWORLD) {
             event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.WATCHTOWER.get(), 18000, false, true, 60, 100));
-            event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.CONSTRUCT.get(), 8000, false, true, 40, 80));
-
+            event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.CONSTRUCT.get(), 12000, false, true, 40, 80));
+            event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.CENSORED.get(), 36000, true, true, 70, 100));
         }
     }
 
