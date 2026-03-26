@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.entity.entity.friedsteve.EnumFriedSteveState;
 import diamondwalker.sscary.handler.feature.FriedSteveHandler;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
@@ -24,18 +26,21 @@ import org.joml.Vector3f;
 import java.util.Random;
 
 public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEffects {
-    private static final int WACKY_COLOR_TICKS = 4;
-    private static final Minecraft minecraft = Minecraft.getInstance();
+    private static final Minecraft MINECRAFT = Minecraft.getInstance();
+    private static final ResourceLocation SUN_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/sun.png");
+    private static final ResourceLocation MOON_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/moon.png");
 
-    /*@Override
+    private static final int WACKY_COLOR_TICKS = 4;
+
+    @Override
     public boolean renderSky(ClientLevel level, int ticks, float partialTick, Matrix4f frustumMatrix, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable skyFogSetup) {
         skyFogSetup.run();
         if (!isFoggy) {
             FogType fogtype = camera.getFluidInCamera();
-            if (fogtype != FogType.POWDER_SNOW && fogtype != FogType.LAVA && !minecraft.levelRenderer.doesMobEffectBlockSky(camera)) {
+            if (fogtype != FogType.POWDER_SNOW && fogtype != FogType.LAVA && !MINECRAFT.levelRenderer.doesMobEffectBlockSky(camera)) {
                 PoseStack posestack = new PoseStack();
                 posestack.mulPose(frustumMatrix);
-                Vec3 vec3 = level.getSkyColor(minecraft.gameRenderer.getMainCamera().getPosition(), partialTick);
+                Vec3 vec3 = level.getSkyColor(MINECRAFT.gameRenderer.getMainCamera().getPosition(), partialTick);
                 float f = (float)vec3.x;
                 float f1 = (float)vec3.y;
                 float f2 = (float)vec3.z;
@@ -44,8 +49,8 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
                 RenderSystem.depthMask(false);
                 RenderSystem.setShaderColor(f, f1, f2, 1.0F);
                 ShaderInstance shaderinstance = RenderSystem.getShader();
-                minecraft.levelRenderer.skyBuffer.bind();
-                minecraft.levelRenderer.skyBuffer.drawWithShader(posestack.last().pose(), projectionMatrix, shaderinstance);
+                MINECRAFT.levelRenderer.skyBuffer.bind();
+                MINECRAFT.levelRenderer.skyBuffer.drawWithShader(posestack.last().pose(), projectionMatrix, shaderinstance);
                 VertexBuffer.unbind();
                 RenderSystem.enableBlend();
                 float[] afloat = level.effects().getSunriseColor(level.getTimeOfDay(partialTick), partialTick);
@@ -114,8 +119,8 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
                 if (f10 > 0.0F) {
                     RenderSystem.setShaderColor(f10, f10, f10, f10);
                     FogRenderer.setupNoFog();
-                    minecraft.levelRenderer.starBuffer.bind();
-                    minecraft.levelRenderer.starBuffer.drawWithShader(posestack.last().pose(), projectionMatrix, GameRenderer.getPositionShader());
+                    MINECRAFT.levelRenderer.starBuffer.bind();
+                    MINECRAFT.levelRenderer.starBuffer.drawWithShader(posestack.last().pose(), projectionMatrix, GameRenderer.getPositionShader());
                     VertexBuffer.unbind();
                     skyFogSetup.run();
                 }
@@ -125,12 +130,12 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
                 RenderSystem.defaultBlendFunc();
                 posestack.popPose();
                 RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
-                double d0 = this.minecraft.player.getEyePosition(partialTick).y - level.getLevelData().getHorizonHeight(level);
+                double d0 = this.MINECRAFT.player.getEyePosition(partialTick).y - level.getLevelData().getHorizonHeight(level);
                 if (d0 < 0.0) {
                     posestack.pushPose();
                     posestack.translate(0.0F, 12.0F, 0.0F);
-                    minecraft.levelRenderer.darkBuffer.bind();
-                    minecraft.levelRenderer.darkBuffer.drawWithShader(posestack.last().pose(), projectionMatrix, shaderinstance);
+                    MINECRAFT.levelRenderer.darkBuffer.bind();
+                    MINECRAFT.levelRenderer.darkBuffer.drawWithShader(posestack.last().pose(), projectionMatrix, shaderinstance);
                     VertexBuffer.unbind();
                     posestack.popPose();
                 }
@@ -141,7 +146,7 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
         }
 
         return true;
-    }*/
+    }
 
     @Override
     public void adjustLightmapColors(ClientLevel level, float partialTicks, float skyDarken, float blockLightRedFlicker, float skyLight, int pixelX, int pixelY, Vector3f colors) {
