@@ -8,6 +8,8 @@ import diamondwalker.sscary.entity.entity.construct.ConstructRenderer;
 import diamondwalker.sscary.entity.entity.construct.EntityConstruct;
 import diamondwalker.sscary.entity.entity.corrupted.CorruptedRenderer;
 import diamondwalker.sscary.entity.entity.corrupted.EntityCorrupted;
+import diamondwalker.sscary.entity.entity.deadeye.DeadeyeRenderer;
+import diamondwalker.sscary.entity.entity.deadeye.EntityDeadeye;
 import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
 import diamondwalker.sscary.entity.entity.friedsteve.FriedSteveRenderer;
 import diamondwalker.sscary.entity.entity.censored.CensoredRenderer;
@@ -114,6 +116,15 @@ public class SScaryEntities {
             .eyeHeight(1.875f)
             .build("censored"));
 
+    public static final Supplier<EntityType<EntityDeadeye>> DEADEYE = ENTITY_TYPES.register("deadeye", () -> EntityType.Builder.of(
+            EntityDeadeye::new,
+            MobCategory.CREATURE
+    )
+            .sized(0.6f, 1.8f)
+            .eyeHeight(1.62f)
+            .build("deadeye")
+    );
+
     public static final Supplier<EntityType<EntityPepperSpray>> PEPPER_SPRAY = ENTITY_TYPES.register("pepper_spray", () -> EntityType.Builder.of(
                 (EntityType<EntityPepperSpray> type, Level level) -> new EntityPepperSpray(type, level), MobCategory.MISC
             )
@@ -141,6 +152,7 @@ public class SScaryEntities {
         event.put(SScaryEntities.WATCHTOWER.get(), EntityWatchtower.createAttributes().build());
         event.put(SScaryEntities.CONSTRUCT.get(), EntityConstruct.createAttributes().build());
         event.put(SScaryEntities.CENSORED.get(), EntityCensored.createAttributes().build());
+        event.put(SScaryEntities.DEADEYE.get(), EntityDeadeye.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -154,6 +166,7 @@ public class SScaryEntities {
         event.registerEntityRenderer(SScaryEntities.FRIED_STEVE.get(), FriedSteveRenderer::new);
         event.registerEntityRenderer(SScaryEntities.CONSTRUCT.get(), ConstructRenderer::new);
         event.registerEntityRenderer(SScaryEntities.CENSORED.get(), CensoredRenderer::new);
+        event.registerEntityRenderer(SScaryEntities.DEADEYE.get(), DeadeyeRenderer::new);
 
         event.registerEntityRenderer(SScaryEntities.PEPPER_SPRAY.get(), NoopRenderer<EntityPepperSpray>::new);
     }
