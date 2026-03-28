@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class DeadeyeRenderer extends HumanoidMobRenderer<EntityDeadeye, ModelDeadeye> {
-    private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/entity/fried_steve.png");
+    private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/entity/deadeye.png");
 
     public DeadeyeRenderer(EntityRendererProvider.Context context) {
         super(context, new ModelDeadeye(context.bakeLayer(ModelLayers.PLAYER), false), 0.5f);
