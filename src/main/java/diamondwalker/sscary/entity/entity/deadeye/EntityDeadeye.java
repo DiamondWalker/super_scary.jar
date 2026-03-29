@@ -1,13 +1,16 @@
 package diamondwalker.sscary.entity.entity.deadeye;
 
 import diamondwalker.sscary.ai.TargetOrDespawnGoal;
+import diamondwalker.sscary.registry.SScaryItems;
 import diamondwalker.sscary.sound.ConstructSoundInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -16,6 +19,7 @@ import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathType;
 
@@ -29,6 +33,12 @@ public class EntityDeadeye extends Monster {
     public EntityDeadeye(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         this.setPathfindingMalus(PathType.LAVA, 8.0F);
+    }
+
+    @Override
+    public ItemStack getMainHandItem() {
+        if (getShooting()) return new ItemStack(SScaryItems.PEPPER_SPRAY.get());
+        return super.getMainHandItem();
     }
 
     @Override
