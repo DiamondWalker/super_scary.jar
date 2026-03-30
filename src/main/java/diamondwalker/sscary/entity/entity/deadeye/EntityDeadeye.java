@@ -37,7 +37,7 @@ public class EntityDeadeye extends Monster {
 
     @Override
     public ItemStack getMainHandItem() {
-        if (getShooting()) return new ItemStack(SScaryItems.PEPPER_SPRAY.get());
+        if (getShooting()) return new ItemStack(SScaryItems.GUN.get());
         return super.getMainHandItem();
     }
 
