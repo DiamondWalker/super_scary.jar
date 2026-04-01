@@ -1,5 +1,6 @@
 package diamondwalker.sscary.entity.entity.deadeye;
 
+import diamondwalker.sscary.ai.ApproachTargetGoal;
 import diamondwalker.sscary.ai.TargetOrDespawnGoal;
 import diamondwalker.sscary.registry.SScaryItems;
 import diamondwalker.sscary.sound.ConstructSoundInstance;
@@ -27,8 +28,8 @@ import java.util.List;
 
 public class EntityDeadeye extends Monster {
     private static final EntityDataAccessor<Boolean> SHOOTING = SynchedEntityData.defineId(EntityDeadeye.class, EntityDataSerializers.BOOLEAN);
-    private static final int SHOOTING_ANIM_DURATION = 15;
-    private int shootingTime = 0;
+    protected static final int SHOOTING_ANIM_DURATION = 15;
+    protected int shootingTime = 0;
 
     public EntityDeadeye(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -48,8 +49,8 @@ public class EntityDeadeye extends Monster {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new DeadeyeShootingGoal(this, 20, 10));
-        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 1.0f, Mth.sqrt(Float.MAX_VALUE) / 2));
+        this.goalSelector.addGoal(1, new DeadeyeShootingGoal(this, 10, 50, 10, 15));
+        this.goalSelector.addGoal(2, new ApproachTargetGoal(this, 1.0f));
         this.targetSelector.addGoal(1, new TargetOrDespawnGoal<>(this, Player.class, false, false));
     }
 
@@ -67,22 +68,6 @@ public class EntityDeadeye extends Monster {
         return this.entityData.get(SHOOTING);
     }
 
-    protected float getShootingAnimRotation(float partialTick) {
-        float f;
-        f = (getShooting() ? partialTick : -partialTick) + shootingTime;
-        f /= SHOOTING_ANIM_DURATION;
-
-        f = Math.clamp(f, 0, 1);
-
-        float b = (float)Math.atan(8 * (f - 0.5f));
-        float b2 = (float)Math.atan(8 * (0 - 0.5f));
-        f = b / (-b2);
-        f = f / 2 + 0.5f;
-        System.out.println(f);
-
-        return Math.clamp(f, 0, 1);
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -95,8 +80,8 @@ public class EntityDeadeye extends Monster {
 
     public static AttributeSupplier.Builder createAttributes() {
         return LivingEntity.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 20)
-                .add(Attributes.MOVEMENT_SPEED, 0.18f)
+                .add(Attributes.MAX_HEALTH, 50)
+                .add(Attributes.MOVEMENT_SPEED, 0.22f)
                 .add(Attributes.FOLLOW_RANGE, 100);
     }
 }

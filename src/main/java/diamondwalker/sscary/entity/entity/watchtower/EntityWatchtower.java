@@ -165,7 +165,7 @@ public class EntityWatchtower extends Monster {
                 if (canSee(player)) {
                     if (!level().isClientSide()) {
                         if (EntityUtil.lookingAtEye(player, this) > 0.95) {
-                            player.hurt(SScaryDamageTypes.migraine(player, this), 3); // custom source
+                            player.hurt(SScaryDamageTypes.migraine(player, this), 3);
                         }
                     } else {
                         eyeAnimationHelper.setAnimation(blinkAnimation);

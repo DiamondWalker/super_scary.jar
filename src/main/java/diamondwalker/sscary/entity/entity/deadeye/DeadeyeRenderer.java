@@ -28,7 +28,18 @@ public class DeadeyeRenderer extends HumanoidMobRenderer<EntityDeadeye, ModelDea
     protected void setupRotations(EntityDeadeye entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
         super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
 
-        model.shootingRot = entity.getShootingAnimRotation(partialTick);
+        float f;
+        f = (entity.getShooting() ? partialTick : -partialTick) + entity.shootingTime;
+        f /= EntityDeadeye.SHOOTING_ANIM_DURATION;
+
+        f = Math.clamp(f, 0, 1);
+
+        float b = (float)Math.atan(8 * (f - 0.5f));
+        float b2 = (float)Math.atan(8 * (0 - 0.5f));
+        f = b / (-b2);
+        f = f / 2 + 0.5f;
+
+        model.shootingRot = Math.clamp(f, 0, 1);
     }
 
     @Override

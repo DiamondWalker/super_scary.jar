@@ -25,6 +25,9 @@ public class SScarySounds {
     public static final Holder<SoundEvent> FRIED_STEVE_SPAWN = SOUNDS.register("fried_steve_spawn", SoundEvent::createVariableRangeEvent);
     public static final Holder<SoundEvent> FRIED_STEVE_JUMPSCARE = SOUNDS.register("fried_steve_jumpscare", SoundEvent::createVariableRangeEvent);
 
+    public static final Holder<SoundEvent> DEADEYE_LOAD = SOUNDS.register("deadeye_load", SoundEvent::createVariableRangeEvent);
+    public static final Holder<SoundEvent> DEADEYE_SHOOT = SOUNDS.register("deadeye_shoot", SoundEvent::createVariableRangeEvent);
+
     public static final Holder<SoundEvent> CORRUPTED_JUMPSCARE = SOUNDS.register("corrupted_jumpscare", SoundEvent::createVariableRangeEvent);
 
     public static final Holder<SoundEvent> CONSTRUCT = SOUNDS.register("construct", SoundEvent::createVariableRangeEvent);

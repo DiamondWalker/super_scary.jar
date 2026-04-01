@@ -3,6 +3,7 @@
   "block.sscary.too_lazy_to_sprite_this": "too lazy to sprite this",
 
   "death.attack.calculation": "%1$s failed Math class",
+  "death.attack.gun": "%1$s was shot to death",
   "death.attack.migraine": "%1$s had a killer headache",
 
   "entity.sscary.bizarro": "???",

@@ -102,15 +102,15 @@ public class FriedSteveScript extends Script {
     @Override
     public void modifyLightmap(ClientLevel level, float partialTicks, float skyDarken, float blockLightRedFlicker, float skyLight, int pixelX, int pixelY, Vector3f colors) {
         Vector3f redColor = new Vector3f(colors).mul(0.6f, 0.04f, 0.04f);
-        float f = (partialTicks + timeElapsed.get()) / /*(20 * 40)*/timeToSummon.get(); // fade lasts 40 seconds
-        f = (float)Math.pow(f, 1.0 / 3);
+        float f = (partialTicks + timeElapsed.get()) / timeToSummon.get();
+        //f = (float)Math.pow(f, 1.0 / 3);
         f = Mth.clamp(f, 0.0f, 1.0f);
         colors.lerp(redColor, f);
     }
 
     @Override
     public Music getMusic() {
-        if (timeElapsed.get() > timeToSummon.get() / 3) return SScaryMusic.FRIED_STEVE_PRELUDE;
+        if (timeElapsed.get() > timeToSummon.get() / 2) return SScaryMusic.FRIED_STEVE_PRELUDE;
         return null;
     }
 }

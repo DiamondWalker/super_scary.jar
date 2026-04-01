@@ -55,6 +55,34 @@
       }
     ]
   },
+  "deadeye_load": {
+    "sounds": [
+      {
+        "name": "sscary:entity/deadeye/load",
+        "stream": false
+      }
+    ]
+  },
+  "deadeye_shoot": {
+    "sounds": [
+      {
+        "name": "sscary:entity/deadeye/shoot1",
+        "stream": false
+      },
+      {
+        "name": "sscary:entity/deadeye/shoot2",
+        "stream": false
+      },
+      {
+        "name": "sscary:entity/deadeye/shoot3",
+        "stream": false
+      },
+      {
+        "name": "sscary:entity/deadeye/shoot4",
+        "stream": false
+      }
+    ]
+  },
   "fried_steve_spawn": {
     "sounds": [
       {
