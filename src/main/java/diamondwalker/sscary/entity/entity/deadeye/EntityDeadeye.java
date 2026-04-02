@@ -3,6 +3,7 @@ package diamondwalker.sscary.entity.entity.deadeye;
 import diamondwalker.sscary.ai.ApproachTargetGoal;
 import diamondwalker.sscary.ai.BridgeOverWaterGoal;
 import diamondwalker.sscary.ai.TargetOrDespawnGoal;
+import diamondwalker.sscary.ai.pathfinding.LadderPathNavigation;
 import diamondwalker.sscary.registry.SScaryItems;
 import diamondwalker.sscary.sound.ConstructSoundInstance;
 import net.minecraft.client.Minecraft;
@@ -80,6 +81,11 @@ public class EntityDeadeye extends Monster {
         this.goalSelector.addGoal(2, new DeadeyeShootingGoal(this, 10, 50, 10, 15));
         this.goalSelector.addGoal(3, new ApproachTargetGoal(this, 1.0f));
         this.targetSelector.addGoal(1, new TargetOrDespawnGoal<>(this, Player.class, false, false));
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new LadderPathNavigation(this, level);
     }
 
     @Override
