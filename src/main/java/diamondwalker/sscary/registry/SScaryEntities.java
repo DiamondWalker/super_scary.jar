@@ -183,6 +183,7 @@ public class SScaryEntities {
             event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.WATCHTOWER.get(), 18000, false, true, 60, 100));
             event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.CONSTRUCT.get(), 12000, false, true, 40, 80));
             event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.CENSORED.get(), 36000, true, true, 70, 100));
+            event.addCustomSpawner(new SurfaceEntitySpawner(SScaryEntities.DEADEYE.get(), 36000, true, true, 70, 100));
         }
     }
 
