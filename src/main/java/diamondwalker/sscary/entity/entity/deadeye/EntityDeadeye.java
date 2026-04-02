@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -45,6 +46,7 @@ public class EntityDeadeye extends Monster {
     public EntityDeadeye(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         this.setPathfindingMalus(PathType.LAVA, getPathfindingMalus(PathType.WATER));
+        ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
     }
 
     @Override
@@ -68,6 +70,12 @@ public class EntityDeadeye extends Monster {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new BridgeOverWaterGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new OpenDoorGoal(this, false) {
+            @Override
+            public void stop() {
+                // do nothing; we will not close the door
+            }
+        });
         this.goalSelector.addGoal(2, new DeadeyeShootingGoal(this, 10, 50, 10, 15));
         this.goalSelector.addGoal(3, new ApproachTargetGoal(this, 1.0f));
         this.targetSelector.addGoal(1, new TargetOrDespawnGoal<>(this, Player.class, false, false));
