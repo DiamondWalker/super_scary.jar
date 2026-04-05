@@ -10,6 +10,7 @@ import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
+import org.jetbrains.annotations.Nullable;
 
 public class LadderNodeEvaluator extends WalkNodeEvaluator {
     @Override
@@ -28,9 +29,17 @@ public class LadderNodeEvaluator extends WalkNodeEvaluator {
     }
 
     @Override
+    public Node getStart() {
+        if (mob.getLastClimbablePos().isPresent()) {
+            BlockPos pos = mob.getLastClimbablePos().get();
+            return this.getStartNode(pos);
+        }
+        return super.getStart();
+    }
+
+    @Override
     public int getNeighbors(Node[] outputArray, Node p_node) {
         int i = super.getNeighbors(outputArray, p_node);
-        //PathType pathtype = this.getCachedPathType(p_node.x, p_node.y + 1, p_node.z);
         PathType pathtype1 = this.getCachedPathType(p_node.x, p_node.y, p_node.z);
 
         double d0 = this.getFloorLevel(new BlockPos(p_node.x, p_node.y, p_node.z));

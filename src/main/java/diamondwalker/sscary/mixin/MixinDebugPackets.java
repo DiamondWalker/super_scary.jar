@@ -1,8 +1,10 @@
 package diamondwalker.sscary.mixin;
 
+import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.network.UpdateSyncedScriptPacket;
 import diamondwalker.sscary.network.debug.PathRenderingPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -25,9 +27,8 @@ import javax.annotation.Nullable;
 public class MixinDebugPackets {
     @Inject(method = "sendPathFindingPacket", at = @At("HEAD"))
     private static void sendPathFindingPacket(Level level, Mob mob, Path path, float maxDistanceToWaypoint, CallbackInfo ci) {
-        if (SScary.DEV_MODE) {
+        if (Config.EXTRA_DEBUG_INFO.get()) {
             if (path != null) PacketDistributor.sendToAllPlayers(new PathRenderingPacket(mob.getId(), path, maxDistanceToWaypoint));
-
         }
     }
 }

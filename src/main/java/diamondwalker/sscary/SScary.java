@@ -32,7 +32,7 @@ public class SScary {
         SScaryLootModifiers.register(modEventBus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC); // TODO: someday i might want to split this to different types
 
         if (DEV_MODE) LOGGER.info("super_scary.jar is running in a dev environment. Debug/WIP features will be active.");
     }

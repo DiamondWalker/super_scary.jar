@@ -1,5 +1,6 @@
 package diamondwalker.sscary.registry;
 
+import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.network.*;
 import diamondwalker.sscary.network.debug.PathRenderingPacket;
@@ -31,7 +32,7 @@ public class SScaryPackets {
         registrar.playToClient(UpdateSyncedScriptPacket.TYPE, UpdateSyncedScriptPacket.CODEC, UpdateSyncedScriptPacket::handle);
         registrar.playToClient(NarratorPacket.TYPE, NarratorPacket.CODEC, NarratorPacket::handle);
 
-        if (SScary.DEV_MODE) registerDebugPackets(registrar);
+        if (Config.EXTRA_DEBUG_INFO.get()) registerDebugPackets(registrar);
     }
 
     private static void registerDebugPackets(final PayloadRegistrar registrar) {

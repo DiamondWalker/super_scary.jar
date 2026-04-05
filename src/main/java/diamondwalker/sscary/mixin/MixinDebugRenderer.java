@@ -1,6 +1,8 @@
 package diamondwalker.sscary.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import diamondwalker.sscary.Config;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.renderer.debug.PathfindingRenderer;
@@ -19,6 +21,8 @@ public class MixinDebugRenderer {
 
     @Inject(method="render", at = @At("TAIL"))
     private void renderDebug(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, double camX, double camY, double camZ, CallbackInfo ci) {
-        pathfindingRenderer.render(poseStack, bufferSource, camX, camY, camZ);
+        if (Minecraft.getInstance().getDebugOverlay().showDebugScreen() && Config.EXTRA_DEBUG_INFO.get()) {
+            pathfindingRenderer.render(poseStack, bufferSource, camX, camY, camZ);
+        }
     }
 }

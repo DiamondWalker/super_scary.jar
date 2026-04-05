@@ -36,6 +36,11 @@ public class Config {
             .comment("When true, loading times in the Phantom OS are five times shorter.")
             .define("quickStartup", false);
 
+    public static final ModConfigSpec.BooleanValue EXTRA_DEBUG_INFO = BUILDER // TODO: this should be server side
+            .comment("When true, extra debug info will be enabled, such as entity pathfinding")
+            .gameRestart()
+            .define("extraDebugInfo", false);
+
     /*public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
             .comment("What you want the introduction message to be for the magic number")
             .define("magicNumberIntroduction", "The magic number is... ");
