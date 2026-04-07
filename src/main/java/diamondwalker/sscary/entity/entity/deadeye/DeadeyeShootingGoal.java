@@ -34,8 +34,7 @@ public class DeadeyeShootingGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        // FIXME: he can't shoot you if you're underwater
-        return owner.getTarget() != null && owner.distanceToSqr(owner.getTarget()) < startDistSqr && owner.hasLineOfSight(owner.getTarget());
+        return owner.getTarget() != null && owner.distanceToSqr(owner.getTarget()) < startDistSqr && owner.hasLineOfSight(owner.getTarget()) && owner.onGround();
     }
 
     @Override

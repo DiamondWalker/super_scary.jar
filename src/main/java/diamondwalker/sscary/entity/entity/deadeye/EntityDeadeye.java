@@ -2,7 +2,11 @@ package diamondwalker.sscary.entity.entity.deadeye;
 
 import diamondwalker.sscary.ai.ApproachTargetGoal;
 import diamondwalker.sscary.ai.BridgeOverWaterGoal;
+import diamondwalker.sscary.ai.OpenTrapdoorGoal;
 import diamondwalker.sscary.ai.TargetOrDespawnGoal;
+import diamondwalker.sscary.ai.pathfinding.InterruptibleJumpControl;
+import diamondwalker.sscary.ai.pathfinding.LadderMoveControl;
+import diamondwalker.sscary.ai.pathfinding.LadderPathNavigation;
 import diamondwalker.sscary.registry.SScaryItems;
 import diamondwalker.sscary.sound.ConstructSoundInstance;
 import net.minecraft.client.Minecraft;
@@ -19,6 +23,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
@@ -45,6 +50,8 @@ public class EntityDeadeye extends Monster {
 
     public EntityDeadeye(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
+        this.moveControl = new LadderMoveControl(this);
+        this.jumpControl = new InterruptibleJumpControl(this);
         this.setPathfindingMalus(PathType.LAVA, getPathfindingMalus(PathType.WATER));
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
     }
@@ -71,6 +78,7 @@ public class EntityDeadeye extends Monster {
         this.goalSelector.addGoal(1, new BridgeOverWaterGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
         // TODO: make him open trapdoors and maybe even go up ladders?
+        this.goalSelector.addGoal(1, new OpenTrapdoorGoal(this));
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, false) {
             @Override
             public void stop() {
@@ -80,6 +88,11 @@ public class EntityDeadeye extends Monster {
         this.goalSelector.addGoal(2, new DeadeyeShootingGoal(this, 10, 50, 10, 15));
         this.goalSelector.addGoal(3, new ApproachTargetGoal(this, 1.0f));
         this.targetSelector.addGoal(1, new TargetOrDespawnGoal<>(this, Player.class, false, false));
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new LadderPathNavigation(this, level);
     }
 
     @Override

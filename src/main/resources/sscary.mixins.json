@@ -9,10 +9,12 @@
     "requireAnnotations": true
   },
   "client": [
+    "MixinDebugRenderer",
     "MixinEntityRenderDispatcher",
     "MixinGameRenderer"
   ],
   "mixins": [
+    "MixinDebugPackets",
     "MixinJukeboxBlockEntity",
     "MixinSheep"
   ]

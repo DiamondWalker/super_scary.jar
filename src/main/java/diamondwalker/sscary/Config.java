@@ -7,13 +7,14 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
+    // TODO: tooltips need to be translated
     public static final ModConfigSpec.BooleanValue DISPLAY_AMBIENT_SCREEN_EFFECT = BUILDER
-            .comment("Whether super_scary.jar's ambient screen effects should be displayed")
+            .comment("Whether super_scary.jar's ambient screen effects should be displayed.")
             .worldRestart()
             .define("displayAmbientScreenEffect", true);
 
     public static final ModConfigSpec.BooleanValue ALLOW_VANILLA_MUSIC = BUILDER
-            .comment("If false, vanilla music will be permanently muted")
+            .comment("If false, vanilla music will be permanently muted.")
             .define("allowVanillaMusic", false);
 
     public static final ModConfigSpec.IntValue MAX_EVENT_INTERVAL = BUILDER
@@ -35,6 +36,11 @@ public class Config {
     public static final ModConfigSpec.BooleanValue QUICK_STARTUP = BUILDER
             .comment("When true, loading times in the Phantom OS are five times shorter.")
             .define("quickStartup", false);
+
+    public static final ModConfigSpec.BooleanValue EXTRA_DEBUG_INFO = BUILDER // TODO: this should be server side
+            .comment("When true, extra debug info will be enabled, such as entity pathfinding.")
+            .gameRestart()
+            .define("extraDebugInfo", false);
 
     /*public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
             .comment("What you want the introduction message to be for the magic number")
