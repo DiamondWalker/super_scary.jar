@@ -30,6 +30,7 @@
 
   "sscary.configuration.allowVanillaMusic": "Allow Vanilla Music",
   "sscary.configuration.displayAmbientScreenEffect": "Display Ambient Screen Effect",
+  "sscary.configuration.extraDebugInfo": "Extra Debug Info",
   "sscary.configuration.maximumEventInterval": "Maximum Event Interval",
   "sscary.configuration.medianEventInterval": "Median Event Interval",
   "sscary.configuration.minimumEventInterval": "Minimum Event Interval",
