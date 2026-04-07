@@ -2,6 +2,7 @@ package diamondwalker.sscary.entity.entity.deadeye;
 
 import diamondwalker.sscary.ai.ApproachTargetGoal;
 import diamondwalker.sscary.ai.BridgeOverWaterGoal;
+import diamondwalker.sscary.ai.OpenTrapdoorGoal;
 import diamondwalker.sscary.ai.TargetOrDespawnGoal;
 import diamondwalker.sscary.ai.pathfinding.InterruptibleJumpControl;
 import diamondwalker.sscary.ai.pathfinding.LadderMoveControl;
@@ -77,6 +78,7 @@ public class EntityDeadeye extends Monster {
         this.goalSelector.addGoal(1, new BridgeOverWaterGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
         // TODO: make him open trapdoors and maybe even go up ladders?
+        this.goalSelector.addGoal(1, new OpenTrapdoorGoal(this));
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, false) {
             @Override
             public void stop() {
