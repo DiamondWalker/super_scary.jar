@@ -22,7 +22,9 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.function.Supplier;
 
@@ -97,36 +99,37 @@ public class EntityWatchtower extends Monster {
         eye.yo = eye.yOld = eye.getY();
         eye.zo = eye.zOld = eye.getZ();
 
+        List<? extends Player> players = level().players()
+                .stream()
+                .filter(p -> p.distanceToSqr(this) < 160 * 160 && !p.isSpectator())
+                .toList();
+
         if (!level().isClientSide()) {
             if (isAlive() && (level().isDay() || isDespawning())) {
                 setDespawnTicks(getDespawnTicks() + 1);
 
                 if (isDespawning()) {
                     boolean despawn = true;
-                    for (Player player : getServer().getPlayerList().getPlayers()) {
-                        if (player.level() == this.level()) {
-                            if (player.distanceTo(this) > 128) continue;
+                    for (Player player : players) {
+                        double relX = this.getX() - player.getX();
+                        double relZ = this.getZ() - player.getZ();
+                        double relMag = Math.abs(relX * relX + relZ * relZ);
 
-                            double relX = this.getX() - player.getX();
-                            double relZ = this.getZ() - player.getZ();
-                            double relMag = Math.abs(relX * relX + relZ * relZ);
+                        double lookX = player.getLookAngle().x;
+                        double lookZ = player.getLookAngle().z;
+                        double lookMag = Math.abs(lookX * lookX + lookZ * lookZ);
 
-                            double lookX = player.getLookAngle().x;
-                            double lookZ = player.getLookAngle().z;
-                            double lookMag = Math.abs(lookX * lookX + lookZ * lookZ);
+                        relX /= relMag;
+                        relZ /= relMag;
 
-                            relX /= relMag;
-                            relZ /= relMag;
+                        lookX /= lookMag;
+                        lookZ /= lookMag;
 
-                            lookX /= lookMag;
-                            lookZ /= lookMag;
+                        double norm = relX * lookX + relZ * lookZ;
 
-                            double norm = relX * lookX + relZ * lookZ;
-
-                            if (norm > 0) {
-                                despawn = false;
-                                break;
-                            }
+                        if (norm > 0) {
+                            despawn = false;
+                            break;
                         }
                     }
 
@@ -138,7 +141,6 @@ public class EntityWatchtower extends Monster {
         super.aiStep();
 
         if (!isDespawning()) { // not despawning
-
             if (getSpawnTicks() < spawnAnimation.getTotalAnimationTicks()) {
                 setSpawnTicks(getSpawnTicks() + 1);
                 if (eyeAnimationHelper.getCurrentAnimation() != spawnAnimation) eyeAnimationHelper.setAnimation(spawnAnimation);
@@ -161,16 +163,15 @@ public class EntityWatchtower extends Monster {
                 eyeAnimationHelper.setAnimation(blinkAnimation);
             }
 
-            for (Player player : level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(160))) {
+            for (Player player : players) {
                 if (canSee(player)) {
                     if (!level().isClientSide()) {
-                        if (EntityUtil.lookingAtEye(player, this) > 0.95) {
-                            player.hurt(SScaryDamageTypes.migraine(player, this), 3);
+                        if (player.tickCount % 15 == 0 && EntityUtil.lookingAtEye(player, this) > 0.95) {
+                            player.hurt(SScaryDamageTypes.migraine(player, this), 2);
                         }
                     } else {
                         eyeAnimationHelper.setAnimation(blinkAnimation);
                         eyeAnimationHelper.setFrame(0, 0);
-                        //player.lookAt(EntityAnchorArgument.Anchor.EYES, this.getEyePosition());
 
                         EntityUtil.forcePlayerToLookAt(player, this, 0.15f);
                         ClientData.get().tower = this;
