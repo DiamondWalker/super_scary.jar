@@ -19,7 +19,7 @@ public class InventoryBugItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         new TooltipFiller(this, tooltipComponents).addLine(c -> c
-                .withColor(FastColor.ARGB32.color(0, 255, 0))
-                .withStyle(ChatFormatting.ITALIC));
+                .withColor(FastColor.ARGB32.color(0, 255, 0));
+                //.withStyle(ChatFormatting.ITALIC));
     }
 }
