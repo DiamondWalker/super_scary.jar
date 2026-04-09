@@ -38,5 +38,8 @@
   "sscary.configuration.section.twais.common.toml": "super_scary.jar Configs",
   "sscary.configuration.section.twais.common.toml.title": "super_scary.jar Configs",
   "sscary.configuration.title": "super_scary.jar Configs",
-  "sscary.configuration.ultraScaryMode": "ultra_scary mode"
+  "sscary.configuration.ultraScaryMode": "ultra_scary mode",
+
+  "sscary.screen.disclaimer_0": "This mod is still in alpha",
+  "sscary.screen.disclaimer_1": "Please don't use shaders as they break several effects and events"
 }

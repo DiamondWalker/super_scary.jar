@@ -41,9 +41,6 @@ public class VisageHandler {
     private static boolean DELETE_WORLD = false;
     private static final int FOG_FADE_TIME = 160;
 
-    private static boolean readyToClose = false;
-    private static SoundInstance scareSound;
-
     @SubscribeEvent
     private static void handlePlayerHeal(LivingHealEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && player.hasData(SScaryDataAttachments.PLAYER)) {

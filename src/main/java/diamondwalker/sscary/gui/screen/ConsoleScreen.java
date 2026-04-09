@@ -33,7 +33,7 @@ public class ConsoleScreen extends Screen {
     private LinkedList<QueuedEvent> events = new LinkedList<>();
 
     public ConsoleScreen(TitleScreen titleScreen) {
-        super(Component.literal(""));
+        super(Component.empty());
         this.menu = titleScreen;
 
         topMargin = bottomMargin = 10;

@@ -3,6 +3,7 @@ package diamondwalker.sscary.handler.internal;
 import diamondwalker.sscary.Config;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.entity.entity.friedsteve.EnumFriedSteveState;
+import diamondwalker.sscary.gui.screen.DisclaimerScreen;
 import diamondwalker.sscary.gui.screen.ImmediatelyFastDisclaimerScreen;
 import diamondwalker.sscary.script.Script;
 import diamondwalker.sscary.sky.OverworldSpecialEffects;
@@ -52,9 +53,9 @@ public class VanillaOverrideHandler {
                 }
             }
 
-            if (!changed /*&& !SScary.DEV_MODE*/) {
+            if (!changed) {
                 changed = true;
-                event.setNewScreen(new ConsoleScreen(title));
+                event.setNewScreen(new DisclaimerScreen(title));
                 return;
             }
         }

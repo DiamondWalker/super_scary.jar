@@ -12,7 +12,7 @@ public class SleepScareHandler {
     public static void tryToSleep(CanPlayerSleepEvent event) {
         Player player = event.getEntity();
 
-        if (player.getRandom().nextInt(10) == 0) {
+        if (event.getProblem() == null && player.getRandom().nextInt(10) == 0) {
             event.setProblem(Player.BedSleepingProblem.OTHER_PROBLEM);
             player.displayClientMessage(Component.translatable("block.sscary.bed.scare"), true);
         }
