@@ -1,6 +1,7 @@
 package diamondwalker.sscary.randomevent.uncommon;
 
 import diamondwalker.sscary.Config;
+import diamondwalker.sscary.data.CommonData;
 import diamondwalker.sscary.handler.internal.PlayerFallHandler;
 import diamondwalker.sscary.randomevent.EnumEventRarity;
 import diamondwalker.sscary.randomevent.RandomEvent;
@@ -13,7 +14,7 @@ public class DropFromSkyEvent extends RandomEvent {
     public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
         boolean executed = false;
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (player.isAlive() && !player.getAbilities().flying && (player.getY() >= player.level().getSeaLevel() || Config.ULTRA_SCARY_MODE.get())) {
+            if (player.isAlive() && !player.getAbilities().flying && (player.getY() >= player.level().getSeaLevel() || CommonData.ultraScaryMode)) {
                 new ScriptBuilder(server)
                         .action((serv) -> player.teleportTo(player.getX(), Math.max(500, player.level().getMaxBuildHeight()), player.getZ()))
                         .rest(1)

@@ -1,6 +1,7 @@
 package diamondwalker.sscary.script;
 
 import diamondwalker.sscary.Config;
+import diamondwalker.sscary.data.CommonData;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ColorOverlayData;
 import diamondwalker.sscary.data.server.CalculationData;
@@ -189,7 +190,7 @@ public class CalculationScript extends Script {
                     for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                         player.hurt(SScaryDamageTypes.calculation(player), Float.MAX_VALUE);
 
-                        if (Config.ULTRA_SCARY_MODE.get()) {
+                        if (CommonData.ultraScaryMode) {
                             for (int i = 0; i < 15; i++) {
                                 Vec3 pos = player.position();
                                 pos = pos.add(random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5, random.nextDouble() * 10 - 5);

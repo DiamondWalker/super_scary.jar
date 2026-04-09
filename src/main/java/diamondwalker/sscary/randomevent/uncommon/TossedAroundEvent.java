@@ -1,6 +1,7 @@
 package diamondwalker.sscary.randomevent.uncommon;
 
 import diamondwalker.sscary.Config;
+import diamondwalker.sscary.data.CommonData;
 import diamondwalker.sscary.handler.internal.PlayerFallHandler;
 import diamondwalker.sscary.randomevent.EnumEventRarity;
 import diamondwalker.sscary.randomevent.RandomEvent;
@@ -28,7 +29,7 @@ public class TossedAroundEvent extends RandomEvent {
                     player.addDeltaMovement(motion);
                     player.hurtMarked = true;
 
-                    if (!Config.ULTRA_SCARY_MODE.get()) PlayerFallHandler.disableFall(player);
+                    if (!CommonData.ultraScaryMode) PlayerFallHandler.disableFall(player);
                 });
             }
             builder.startScript();

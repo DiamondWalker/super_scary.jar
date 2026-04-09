@@ -54,6 +54,8 @@ public class ChooseExecutableState extends ConsoleState {
     protected void handleUserInput(String input) {
         if (input.equals("minecraft.jar")) {
             console.setState(new DisclaimerState(console));
+        } else if (input.equals("super_scary.jar")) {
+            console.setState(new UltraScaryState(console, this));
         } else {
             failedToFindExecutable = input;
             ticks = 0;

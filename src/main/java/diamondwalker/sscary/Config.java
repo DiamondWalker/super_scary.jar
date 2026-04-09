@@ -29,10 +29,6 @@ public class Config {
             .comment("The minimum time, in ticks, that will pass between random events.")
             .defineInRange("minimumEventInterval", 20 * 60,  20 * 30, Integer.MAX_VALUE); // 1.5 minutes
 
-    public static final ModConfigSpec.BooleanValue ULTRA_SCARY_MODE = BUILDER
-            .comment("Enable this if you hate yourself.")
-            .define("ultraScaryMode", false);
-
     public static final ModConfigSpec.BooleanValue QUICK_STARTUP = BUILDER
             .comment("When true, loading times in the Phantom OS are five times shorter.")
             .define("quickStartup", false);

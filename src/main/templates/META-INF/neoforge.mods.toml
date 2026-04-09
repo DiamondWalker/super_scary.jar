@@ -36,7 +36,7 @@ updateJSONURL="https://raw.githubusercontent.com/DiamondWalker/super_scary.jar/r
 displayURL="https://www.curseforge.com/minecraft/mc-mods/super-scary-jar" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="icon.png" #optional
+logoFile= "assets/sscary/icon.png" #optional
 
 # A text field displayed in the mod UI
 #credits="" #optional

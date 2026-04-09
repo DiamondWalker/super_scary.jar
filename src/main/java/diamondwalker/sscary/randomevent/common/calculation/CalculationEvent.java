@@ -1,6 +1,7 @@
 package diamondwalker.sscary.randomevent.common.calculation;
 
 import diamondwalker.sscary.Config;
+import diamondwalker.sscary.data.CommonData;
 import diamondwalker.sscary.data.server.CalculationData;
 import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.randomevent.EnumEventRarity;
@@ -27,7 +28,7 @@ public class CalculationEvent extends RandomEvent {
 
         RandomSource random = server.overworld().getRandom();
         data.calculation.impossibleQuestionCounter++;
-        boolean impossible = data.calculation.impossibleQuestionCounter >= 5 && Config.ULTRA_SCARY_MODE.get();
+        boolean impossible = data.calculation.impossibleQuestionCounter >= 5 && CommonData.ultraScaryMode;
 
         CalculationQuestion question;
         if (impossible) {
