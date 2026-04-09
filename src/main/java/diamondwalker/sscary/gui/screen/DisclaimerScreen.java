@@ -1,5 +1,6 @@
 package diamondwalker.sscary.gui.screen;
 
+import diamondwalker.sscary.gui.screen.console.ConsoleScreen;
 import diamondwalker.sscary.util.rendering.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,7 +21,7 @@ public class DisclaimerScreen extends Screen {
 
     @Override
     public void tick() {
-        if (time++ >= 200) {
+        if (time++ >= 240) {
             Minecraft.getInstance().setScreen(new ConsoleScreen(screen));
         }
     }
@@ -34,7 +35,7 @@ public class DisclaimerScreen extends Screen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.fill(0, 0, width, height, FastColor.ARGB32.color(255, 0, 0, 0));
 
-        float f = (partialTick + time) / 200;
+        float f = (partialTick + time) / 220;
 
         float f1 = Mth.clamp((f - 0.3f) / 0.1f, 0, 1);
         float f2 = Mth.clamp((f - 0.6f) / 0.1f, 0, 1);

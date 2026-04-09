@@ -40,6 +40,6 @@
   "sscary.configuration.title": "super_scary.jar Configs",
   "sscary.configuration.ultraScaryMode": "ultra_scary mode",
 
-  "sscary.screen.disclaimer_0": "This mod is still in alpha",
-  "sscary.screen.disclaimer_1": "Please don't use shaders as they break several effects and events"
+  "sscary.screen.disclaimer_0": "This mod is still in alpha. Bugs and unfinished content are to be expected.",
+  "sscary.screen.disclaimer_1": "Please don't use shaders as they break several effects and events."
 }

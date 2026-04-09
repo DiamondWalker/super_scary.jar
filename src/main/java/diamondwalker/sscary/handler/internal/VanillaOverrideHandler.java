@@ -8,7 +8,7 @@ import diamondwalker.sscary.gui.screen.ImmediatelyFastDisclaimerScreen;
 import diamondwalker.sscary.script.Script;
 import diamondwalker.sscary.sky.OverworldSpecialEffects;
 import diamondwalker.sscary.data.client.ClientData;
-import diamondwalker.sscary.gui.screen.ConsoleScreen;
+import diamondwalker.sscary.gui.screen.console.ConsoleScreen;
 import diamondwalker.sscary.gui.screen.FakePauseScreen;
 import diamondwalker.sscary.registry.SScaryMusic;
 import net.minecraft.client.Minecraft;
