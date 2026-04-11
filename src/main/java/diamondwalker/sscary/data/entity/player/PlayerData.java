@@ -2,6 +2,7 @@ package diamondwalker.sscary.data.entity.player;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -27,5 +28,12 @@ public class PlayerData implements INBTSerializable<CompoundTag> {
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         deathCounter = nbt.getInt("Deaths");
         eternalPurgatory = nbt.getBoolean("EternalPurgatory");
+    }
+
+    public PlayerData copyToNewPlayer(IAttachmentHolder holder, HolderLookup.Provider provider) {
+        PlayerData newData = new PlayerData();
+        newData.deathCounter = deathCounter;
+        newData.eternalPurgatory = eternalPurgatory;
+        return newData;
     }
 }
