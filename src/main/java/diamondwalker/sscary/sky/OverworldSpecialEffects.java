@@ -30,8 +30,6 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
     private static final ResourceLocation SUN_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/sun.png");
     private static final ResourceLocation MOON_LOCATION = ResourceLocation.fromNamespaceAndPath(SScary.MODID, "textures/moon.png");
 
-    private static final int WACKY_COLOR_TICKS = 4;
-
     @Override
     public boolean renderSky(ClientLevel level, int ticks, float partialTick, Matrix4f frustumMatrix, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable skyFogSetup) {
         skyFogSetup.run();
@@ -164,23 +162,6 @@ public class OverworldSpecialEffects extends DimensionSpecialEffects.OverworldEf
 
         for (Script script : ClientData.get().scripts.getScripts()) {
             script.modifyLightmap(level, partialTicks, skyDarken, blockLightRedFlicker, skyLight, pixelX, pixelY, colors);
-        }
-
-        if (data.wackyColors) {
-            Random thisTickRand = new Random(level.getGameTime() / WACKY_COLOR_TICKS * (pixelX + pixelY + 1));
-            Random nextTickRand = new Random((level.getGameTime() / WACKY_COLOR_TICKS + 1) * (pixelX + pixelY + 1));
-
-            float lerp = ((partialTicks + level.getGameTime()) % WACKY_COLOR_TICKS) / WACKY_COLOR_TICKS;
-
-            Vector3f thisTickCol = new Vector3f(thisTickRand.nextFloat(), thisTickRand.nextFloat(), thisTickRand.nextFloat()).mul(thisTickRand.nextFloat());
-            Vector3f nextTickCol = new Vector3f(nextTickRand.nextFloat(), nextTickRand.nextFloat(), nextTickRand.nextFloat()).mul(nextTickRand.nextFloat());
-            Vector3f col = thisTickCol.lerp(nextTickCol, lerp);
-
-            colors.set(col);
-        }
-
-        if (data.darkWorld) {
-            colors.set(0.0f, 0.0f, 0.0f);
         }
         //super.adjustLightmapColors(level, partialTicks, skyDarken, blockLightRedFlicker, skyLight, pixelX, pixelY, colors);
     }

@@ -3,6 +3,7 @@ package diamondwalker.sscary.registry;
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.data.chunk.ChunkData;
 import diamondwalker.sscary.data.entity.player.PlayerData;
+import diamondwalker.sscary.data.entity.player.PlayerSyncHandler;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -17,6 +18,7 @@ public class SScaryDataAttachments {
             "player", () -> AttachmentType.serializable(PlayerData::new)
                     .copyOnDeath()
                     .copyHandler(PlayerData::copyToNewPlayer)
+                    .sync(new PlayerSyncHandler())
                     .build()
     );
 

@@ -1,6 +1,5 @@
-package diamondwalker.sscary.script;
+package diamondwalker.sscary.script.randomevent;
 
-import diamondwalker.sscary.Config;
 import diamondwalker.sscary.data.CommonData;
 import diamondwalker.sscary.data.client.ClientData;
 import diamondwalker.sscary.data.client.ColorOverlayData;
@@ -11,6 +10,7 @@ import diamondwalker.sscary.network.NarratorPacket;
 import diamondwalker.sscary.randomevent.common.calculation.CalculationQuestion;
 import diamondwalker.sscary.registry.SScaryDamageTypes;
 import diamondwalker.sscary.registry.SScaryScripts;
+import diamondwalker.sscary.script.Script;
 import diamondwalker.sscary.script.variable.*;
 import diamondwalker.sscary.sound.CalculationSoundInstance;
 import diamondwalker.sscary.util.ChatUtil;
@@ -19,11 +19,9 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;

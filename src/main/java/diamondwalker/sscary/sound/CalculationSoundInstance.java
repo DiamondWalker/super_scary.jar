@@ -1,7 +1,7 @@
 package diamondwalker.sscary.sound;
 
 import diamondwalker.sscary.registry.SScarySounds;
-import diamondwalker.sscary.script.CalculationScript;
+import diamondwalker.sscary.script.randomevent.CalculationScript;
 import net.minecraft.sounds.SoundSource;
 
 public class CalculationSoundInstance extends LoopingSoundInstance {

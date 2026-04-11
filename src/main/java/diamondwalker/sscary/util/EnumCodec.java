@@ -1,6 +1,5 @@
 package diamondwalker.sscary.util;
 
-import diamondwalker.sscary.script.CalculationScript;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 

@@ -109,11 +109,6 @@ public class VanillaOverrideHandler {
             }
         }
 
-        if (data.wackyColors) {
-            event.overrideMusic(SScaryMusic.PARTY);
-            return;
-        }
-
         if (
                 !Config.ALLOW_VANILLA_MUSIC.get() ||
                 Minecraft.getInstance().screen instanceof ConsoleScreen

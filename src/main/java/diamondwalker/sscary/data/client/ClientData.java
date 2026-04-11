@@ -6,15 +6,10 @@ import diamondwalker.sscary.entity.entity.watchtower.EntityWatchtower;
 import net.minecraft.client.Minecraft;
 
 public class ClientData {
-    public boolean slience = false;
-
     private boolean isVisageActive = false;
     private boolean pauseBlocked = false;
 
     public int visageFogAmount = 0;
-
-    public boolean darkWorld = false;
-    public boolean wackyColors = false;
 
     public StaticData staticData = null;
 

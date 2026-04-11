@@ -1,9 +1,11 @@
 package diamondwalker.sscary.randomevent.extrarare;
 
-import diamondwalker.sscary.network.PartyTimePacket;
+import diamondwalker.sscary.data.server.WorldData;
 import diamondwalker.sscary.randomevent.EnumEventRarity;
 import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.registry.SScarySounds;
+import diamondwalker.sscary.script.randomevent.FriedSteveScript;
+import diamondwalker.sscary.script.randomevent.PartyScript;
 import diamondwalker.sscary.util.ScriptBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -14,27 +16,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 public class PartyEvent extends RandomEvent {
     public boolean execute(MinecraftServer server, ServerPlayer[] validPlayers) {
-        new ScriptBuilder(server)
-                .chatMessageForAll(Component.literal("PARTY TIME!!!!"))
-                .action((serv) -> {
-                    for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
-                        player.connection.send(new ClientboundSoundPacket(SScarySounds.PARTY_START, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 1.0F, 0.6F, serv.overworld().getRandom().nextLong()));
-                    }
-                })
-                .rest(40)
-                .action((serv -> {
-                    for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
-                        PacketDistributor.sendToPlayer(player, new PartyTimePacket(true));
-                    }
-                }))
-                .rest(1000)
-                .action((serv -> {
-                    for (ServerPlayer player : serv.getPlayerList().getPlayers()) {
-                        PacketDistributor.sendToPlayer(player, new PartyTimePacket(false));
-                    }
-                }))
-                .startScript();
-        return true;
+        return WorldData.get(server).newScripts.startScript(new PartyScript(server));
     }
 
     @Override

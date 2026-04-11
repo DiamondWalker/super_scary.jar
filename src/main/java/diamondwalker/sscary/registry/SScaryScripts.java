@@ -2,7 +2,10 @@ package diamondwalker.sscary.registry;
 
 import diamondwalker.sscary.SScary;
 import diamondwalker.sscary.script.*;
-import net.minecraft.server.MinecraftServer;
+import diamondwalker.sscary.script.randomevent.CalculationScript;
+import diamondwalker.sscary.script.randomevent.DarkWorldScript;
+import diamondwalker.sscary.script.randomevent.FriedSteveScript;
+import diamondwalker.sscary.script.randomevent.PartyScript;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -24,6 +27,16 @@ public class SScaryScripts {
     public static final Supplier<ScriptType<FriedSteveScript>> FRIED_STEVE = SCRIPTS.register(
             "fried_steve",
             () -> new ScriptType<>(FriedSteveScript::new, FriedSteveScript::new)
+    );
+
+    public static final Supplier<ScriptType<PartyScript>> PARTY = SCRIPTS.register(
+            "party",
+            () -> new ScriptType<>(PartyScript::new, PartyScript::new)
+    );
+
+    public static final Supplier<ScriptType<DarkWorldScript>> DARK_WORLD = SCRIPTS.register(
+            "dark_world",
+            () -> new ScriptType<>(DarkWorldScript::new, DarkWorldScript::new)
     );
 
     public static final Supplier<ScriptType<BoatExplosionScript>> BOAT_EXPLOSION = SCRIPTS.register(

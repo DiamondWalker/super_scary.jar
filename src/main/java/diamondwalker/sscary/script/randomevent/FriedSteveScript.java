@@ -1,12 +1,12 @@
-package diamondwalker.sscary.script;
+package diamondwalker.sscary.script.randomevent;
 
 import diamondwalker.sscary.data.server.WorldData;
-import diamondwalker.sscary.entity.entity.bizarrodude.EntityBizarroDude;
 import diamondwalker.sscary.entity.entity.friedsteve.EntityFriedSteve;
 import diamondwalker.sscary.randomevent.RandomEvent;
 import diamondwalker.sscary.registry.SScaryEntities;
 import diamondwalker.sscary.registry.SScaryMusic;
 import diamondwalker.sscary.registry.SScaryScripts;
+import diamondwalker.sscary.script.Script;
 import diamondwalker.sscary.script.variable.IntegerVariable;
 import diamondwalker.sscary.util.ChatUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
