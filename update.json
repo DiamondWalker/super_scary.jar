@@ -1,5 +1,5 @@
 {
-  "homepage": "https://www.curseforge.com/minecraft/mc-mods/super-scary-jar/files/7888675",
+  "homepage": "https://www.curseforge.com/minecraft/mc-mods/super-scary-jar/files/7909446",
   "1.21.1": {
     "0.0": "Initial Release",
     "0.0.1": "-removed a structure\n-disabled random event system outside the overworld\n-fixed game crash when Calculation tries to kill you\n-fixed the bed scare message not being properly localized\n-added a config option for disabling the screen effect\n-added a config option enabling vanilla music",
