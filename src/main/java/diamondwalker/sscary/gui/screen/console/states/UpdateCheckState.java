@@ -29,7 +29,7 @@ public class UpdateCheckState extends QueryYesNoState {
 
                 updateUrl = version.url();
             } else {
-                console.setState(new ChooseExecutableState(console));
+                console.setState(new ScanningExecutablesState(console));
             }
         }
     }
@@ -47,6 +47,6 @@ public class UpdateCheckState extends QueryYesNoState {
 
     @Override
     protected void handleNo() {
-        console.setState(new ChooseExecutableState(console));
+        console.setState(new ScanningExecutablesState(console));
     }
 }

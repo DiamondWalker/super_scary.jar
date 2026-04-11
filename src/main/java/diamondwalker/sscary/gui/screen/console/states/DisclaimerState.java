@@ -14,11 +14,8 @@ public class DisclaimerState extends QueryYesNoState {
     @Override
     protected void update() {
         switch (ticks) {
-            case 0 -> {
-                console.addLine(Component.empty());
-                break;
-            }
             case 28 -> {
+                console.addLine(Component.empty());
                 console.addLine(Component.literal("Preparing to launch executable 'minecraft.jar'..."));
                 break;
             }

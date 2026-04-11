@@ -6,23 +6,23 @@ import diamondwalker.sscary.gui.screen.console.ConsoleState;
 import net.minecraft.network.chat.Component;
 
 public class UltraScaryState extends QueryYesNoState {
-    private final ChooseExecutableState old;
     private boolean prompt = false;
 
-    protected UltraScaryState(ConsoleScreen console, ChooseExecutableState old) {
+    protected UltraScaryState(ConsoleScreen console) {
         super(console);
-        this.old = old;
     }
 
     @Override
     protected void update() {
         switch (ticks) {
             case 31 -> {
+                console.addLine(Component.empty());
                 console.addLine(Component.literal("Whoaoa thats a really scary name you typed"));
                 break;
             }
             case 64 -> {
-                console.addLine(Component.literal("Would you like to enable ultra_scary mode?"));
+                console.addLine(Component.empty());
+                console.addLine(Component.literal("Would you like to enable ultra_scary mode? (yes/no)"));
                 prompt = true;
                 break;
             }
@@ -42,6 +42,6 @@ public class UltraScaryState extends QueryYesNoState {
 
     @Override
     protected void handleNo() {
-        console.setState(old);
+        console.setState(new ChooseExecutableState(console));
     }
 }

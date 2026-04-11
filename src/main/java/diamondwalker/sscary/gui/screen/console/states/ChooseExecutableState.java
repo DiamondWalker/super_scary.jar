@@ -5,49 +5,31 @@ import diamondwalker.sscary.gui.screen.console.ConsoleState;
 import net.minecraft.network.chat.Component;
 
 public class ChooseExecutableState extends ConsoleState {
-    private boolean scanFinished = false;
-    private boolean inputAllowed = false;
+    private boolean failedToFind = false;
 
     private String failedToFindExecutable;
 
     protected ChooseExecutableState(ConsoleScreen console) {
         super(console);
+        console.addLine(Component.empty());
+        console.addLine(Component.literal("1 executable found:"));
+        console.addLine(Component.literal("minecraft.jar"));
+        console.addLine(Component.empty());
+        console.addLine(Component.literal("Please type the name of the executable you would like to launch."));
     }
 
     @Override
     protected void update() {
-        if (scanFinished) {
-            if (ticks == 11) {
-                console.addLine(Component.literal("Could not find executable '" + failedToFindExecutable + "'. Please select a valid executable."));
-                inputAllowed = true;
-            }
-        } else {
-            switch (ticks) {
-                case 0 -> {
-                    console.addLine(Component.empty());
-                    break;
-                }
-                case 35 -> {
-                    console.addLine(Component.literal("Scanning for executables..."));
-                    break;
-                }
-                case 75 -> {
-                    console.addLine(Component.empty());
-                    console.addLine(Component.literal("1 executable found:"));
-                    console.addLine(Component.literal("minecraft.jar"));
-                    console.addLine(Component.empty());
-                    console.addLine(Component.literal("Please type the name of the executable you would like to launch."));
-                    scanFinished = true;
-                    inputAllowed = true;
-                    break;
-                }
-            }
+        if (failedToFind && ticks == 11) {
+            console.addLine(Component.empty());
+            console.addLine(Component.literal("Could not find executable '" + failedToFindExecutable + "'. Please select a valid executable."));
+            failedToFind = false;
         }
     }
 
     @Override
     public boolean acceptingUserInput() {
-        return inputAllowed;
+        return !failedToFind;
     }
 
     @Override
@@ -55,11 +37,11 @@ public class ChooseExecutableState extends ConsoleState {
         if (input.equals("minecraft.jar")) {
             console.setState(new DisclaimerState(console));
         } else if (input.equals("super_scary.jar")) {
-            console.setState(new UltraScaryState(console, this));
+            console.setState(new UltraScaryState(console));
         } else {
             failedToFindExecutable = input;
             ticks = 0;
-            inputAllowed = false;
+            failedToFind = true;
         }
     }
 }

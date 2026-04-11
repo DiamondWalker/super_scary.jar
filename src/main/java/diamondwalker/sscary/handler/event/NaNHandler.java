@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 public class NaNHandler {
     @SubscribeEvent
     private static void handleChatMessage(ServerChatEvent event) {
-        if (event.getMessage().getString().toLowerCase().matches("(.+)?(go to hell|you suck|i hate you|kill yourself|kys|gtfo|screw you|fuck off|fuck you|asshole|dick|piece of shit|shut up)(.+)?")) {
+        if (event.getMessage().getString().toLowerCase().matches("(.+)?(go to hell|you suck|i hate you|kill yourself|kys|gtfo|screw you|fuck off|fuck you|asshole|dick|bitch|piece of shit|shut up|stfu|shut the hell up|shut the fuck up)(.+)?")) {
             MinecraftServer server = event.getPlayer().getServer();
             WorldData data = WorldData.get(server);
             if (!data.nan.offended) {
