@@ -8,6 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -112,7 +114,7 @@ public class EntityCensored extends Monster {
     public void setTarget(@Nullable LivingEntity target) {
         super.setTarget(target);
 
-        if (!sentMessage && target instanceof Player) {
+        if (!sentMessage && target instanceof ServerPlayer) {
             if (random.nextBoolean()) {
                 StringBuilder builder = new StringBuilder();
                 int words = random.nextInt(3, 9);
@@ -123,9 +125,12 @@ public class EntityCensored extends Monster {
                     builder.append(words > 0 ? ' ' : '.');
                 }
 
-                getServer().getPlayerList().broadcastSystemMessage(
-                        Component.literal(builder.toString()), false
-                );
+                MinecraftServer server = getServer();
+                if (server != null) {
+                    getServer().getPlayerList().broadcastSystemMessage(
+                            Component.literal(builder.toString()), false
+                    );
+                }
             }
             sentMessage = true;
         }

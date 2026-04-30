@@ -41,6 +41,7 @@ public class SScaryRandomEvents {
     public static final Supplier<RandomEvent> SOUND_OF_DEATH = RANDOM_EVENTS.register("sound_of_death", SoundOfDeathEvent::new);
     public static final Supplier<RandomEvent> PARTY = RANDOM_EVENTS.register("party", PartyEvent::new);
     public static final Supplier<RandomEvent> SNORE = RANDOM_EVENTS.register("snore", SnoreEvent::new);
+    public static final Supplier<RandomEvent> PLAYER_KILLER = RANDOM_EVENTS.register("player_killer", PlayerKillerEvent::new);
 
     public static void register(IEventBus bus) {
         RANDOM_EVENTS.register(bus);
