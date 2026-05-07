@@ -164,12 +164,20 @@ public class EntityCensored extends Monster {
         }
     }
 
+    @Override
+    public boolean canDisableShield() {
+        return true;
+    }
+
+    @Override
+    public boolean startRiding(Entity vehicle) {return false;}
+
     public static AttributeSupplier.Builder createAttributes() {
         return LivingEntity.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 10)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f)
                 .add(Attributes.FOLLOW_RANGE, 200)
-                .add(Attributes.ATTACK_DAMAGE, 2000)
+                .add(Attributes.ATTACK_DAMAGE, 20)
                 .add(Attributes.STEP_HEIGHT, 3)
                 .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 1.0f);
     }

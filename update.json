@@ -1,5 +1,5 @@
 {
-  "homepage": "https://www.curseforge.com/minecraft/mc-mods/super-scary-jar/files/8012608",
+  "homepage": "https://www.curseforge.com/minecraft/mc-mods/super-scary-jar/files/8054180",
   "1.21.1": {
     "0.0": "Initial Release",
     "0.0.1": "-removed a structure\n-disabled random event system outside the overworld\n-fixed game crash when Calculation tries to kill you\n-fixed the bed scare message not being properly localized\n-added a config option for disabling the screen effect\n-added a config option enabling vanilla music",
@@ -8,10 +8,11 @@
     "0.1.1": "-fixed Deadeye's ability to open doors",
     "0.1.2": "-added the Extra Debug Info config option (currently just displays entity pathfinding)\n-updated the Deadeye's AI to be far more advanced\n-removed some redundant parts of the Watchtower's AI\n-decreased the rate at which the Watchtower harms the player\n-fixed missing punctuation in some of the mod's config descriptions",
     "0.1.3": "-the bed scare now only happens if vanilla sleeping conditions are met\n-added a new disclaimer screen that warns about the mod being in alpha and breaking with shaders\n-the mod homepage and icon are now visible on the neoforge mod info screen\n-implemented an update checker\n-rewrote the way the console screen is handled internally, making it much easier to work with\n-ultra_scary mode is no longer a config option. It is now activated with a secret message in the console screen\n-ultra_scary mode now changes the menu screen\n-migrated the Party and Dark World events to the new script system\n-added new phrases to NaN's trigger list",
-    "0.1.4": "-fixed crashed with {censored by S&P}'s targeting code\n-increased the spawn rates of the Construct, Deadeye, and {censored by S&P}\n-added a new random event"
+    "0.1.4": "-fixed crashed with {censored by S&P}'s targeting code\n-increased the spawn rates of the Construct, Deadeye, and {censored by S&P}\n-added a new random event",
+    "0.1.5": "-fixed {censored by S&P} dealing an abnormally high amount of damage, instantly destroying the player and their armor\n-{censored by S&P} now disables shields\n-{censored by S&P} can no longer be trapped in boats"
   },
   "promos": {
-    "1.21.1-latest": "0.1.4",
-    "1.21.1-recommended": "0.1.4"
+    "1.21.1-latest": "0.1.5",
+    "1.21.1-recommended": "0.1.5"
   }
 }
