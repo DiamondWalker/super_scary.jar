@@ -1,4 +1,4 @@
-uuid:d3767ffb-6c4d-468d-9647-a728ba105dff|joinMsg:§bA dangerous idiot threatens the server!|type:diamondwalker
+uuid:d3767ffb-6c4d-468d-9647-a728ba105dff|joinMsg:§bA dangerous idiot threatens the server!|type:mod_creator
 uuid:6b07320a-993a-4183-bece-5d71e63c4bbd|joinMsg:§eDrapie buzzes into the server!|type:youtuber
 uuid:0e601898-1aa7-4bd5-bb50-11a05815c29f|joinMsg:§dTunaPie buzzes into the server!|type:youtuber
 uuid:9530cc77-3c6b-42ea-a208-006dc773f395|joinMsg:§25 + 6 = 10|type:youtuber
